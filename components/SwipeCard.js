@@ -15,8 +15,10 @@ const SwipeCard = (props) =>{
 
     const swipeCardsListContext = useContext(SwipeCardsListContext);
     const [panHandlers, setPanHandlers] = useState(null);
+    const [position, setPosition] = useState(new Animated.ValueXY());
 
-    let position = new Animated.ValueXY();
+    // let position = new Animated.ValueXY();
+    console.log(position)
 
     let rotate = position.x.interpolate({
         inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
@@ -95,7 +97,10 @@ const SwipeCard = (props) =>{
             return PanResponder.create({
                 onStartShouldSetPanResponder: (evt, gestureState) => true,
                 onPanResponderMove: (evt, gestureState) => {
-                position.setValue({ x: gestureState.dx, y: gestureState.dy })
+                let newPosition = position;
+                newPosition.setValue({ x: gestureState.dx, y: gestureState.dy })
+                // position.setValue({ x: gestureState.dx, y: gestureState.dy })
+                setPosition(newPosition)
                 },
                 onPanResponderRelease: (evt, gestureState) => {
 
@@ -105,7 +110,10 @@ const SwipeCard = (props) =>{
                     useNativeDriver: true
                     }).start(() => {
                         incrementMovieIndex();
-                        position.setValue({ x: 0, y: 0 })
+                        let newPosition = position;
+                        newPosition.setValue({ x: 0, y: 0 })
+                        setPosition(newPosition)
+                        // position.setValue({ x: 0, y: 0 })
                     })
                 }
                 else if (gestureState.dx < -120) {
@@ -114,7 +122,9 @@ const SwipeCard = (props) =>{
                     useNativeDriver: true
                     }).start(() => {
                         incrementMovieIndex();
-                        position.setValue({ x: 0, y: 0 })
+                        let newPosition = position;
+                        newPosition.setValue({ x: 0, y: 0 })
+                        setPosition(newPosition)
                     })
                 }
                 else {
@@ -130,7 +140,6 @@ const SwipeCard = (props) =>{
 
     useEffect( () => {
         let panResponder = getPanResponder();
-
         setPanHandlers(panResponder.panHandlers);
     }, []);
 
