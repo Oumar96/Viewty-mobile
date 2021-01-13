@@ -7,11 +7,11 @@ import SwipeCard from "../components/SwipeCard.js";
 
 
 const Movies = [
-    { id: "1", uri: require('./assets/1.jpg') },
-    { id: "2", uri: require('./assets/2.jpg') },
-    { id: "3", uri: require('./assets/3.jpg') },
-    { id: "4", uri: require('./assets/4.jpg') },
-    { id: "5", uri: require('./assets/5.jpg') },
+    { id: "1", uri: require('../assets/1.jpg') },
+    { id: "2", uri: require('../assets/2.jpg') },
+    { id: "3", uri: require('../assets/3.jpg') },
+    { id: "4", uri: require('../assets/4.jpg') },
+    { id: "5", uri: require('../assets/5.jpg') },
 ]
 
 
@@ -23,19 +23,23 @@ const SwipeCardsList = () =>{
     }
 
     const renderMovies = () =>{
-        return Movies.map((item, i) =>{
-            if (i < this.state.currentIndex) {
+        return Movies.map((movie, index) =>{
+            if (index < currentMovieIndex) {
                 return null
             } else{
-                <SwipeCard type={getSwipeCardType()}/>
+                return <SwipeCard key={movie.id} type={getSwipeCardType(index)} movie={movie}/>
             }
-        })
+        }).reverse();
     }
 
     return (
         <SwipeCardsListContext.Provider value={{
-            state:currentMovieIndex,
-            mutations:(index) =>setCurrentMovieIndex(index)
+            state:{
+                currentMovieIndex
+            },
+            mutations:{
+                setCurrentMovieIndex:(index) =>setCurrentMovieIndex(index)
+            }
         }}>
         <View style={{ flex: 1 }}>
             <View style={{ height: 60 }}>

@@ -3,5 +3,6 @@
   "lanType": "ip",
   "dev": true,
   "minify": false,
-  "urlRandomness": "ti-ii7"
+  "urlRandomness": "ti-ii7",
+  "https": false
 }
