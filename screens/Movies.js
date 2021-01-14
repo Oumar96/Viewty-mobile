@@ -1,6 +1,6 @@
 import React ,{useState } from 'react';
 import {View,Animated} from 'react-native';
-import SwipeCardsListContext from "../contexts/SwipeCardsListContext.js";
+import MoviesContext from "../contexts/MoviesContext.js";
 import SwipeCardsList from "../components/SwipeCardsList.js";
 
 const Movies = () =>{
@@ -15,7 +15,7 @@ const Movies = () =>{
     const [currentMovieIndex, setCurrentMovieIndex] = useState(0);
     const [topCardPosition, setTopCardPosition] = useState(new Animated.ValueXY());
     return(
-        <SwipeCardsListContext.Provider value={{
+        <MoviesContext.Provider value={{
             state:{
                 movies,
                 currentMovieIndex,
@@ -33,7 +33,7 @@ const Movies = () =>{
             <View style={{ height: 60 }}>
             </View>
         </View>
-        </SwipeCardsListContext.Provider>
+        </MoviesContext.Provider>
     )
 }
 

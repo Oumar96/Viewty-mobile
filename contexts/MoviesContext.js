@@ -1,6 +1,6 @@
 import React from "react";
 
-const SwipeCardsListContext = React.createContext({
+const MoviesContext = React.createContext({
     state:{
         movies:[],
         currentMovieIndex:0,
@@ -12,4 +12,4 @@ const SwipeCardsListContext = React.createContext({
     }
 })
 
-export default SwipeCardsListContext;
+export default MoviesContext;

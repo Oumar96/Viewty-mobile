@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext }from 'react';
 
 import { Text, Dimensions, Image, Animated, PanResponder } from 'react-native';
-import SwipeCardsListContext from "../contexts/SwipeCardsListContext.js";
+import MoviesContext from "../contexts/MoviesContext.js";
 
 const SCREEN_HEIGHT = Dimensions.get('window').height
 const SCREEN_WIDTH = Dimensions.get('window').width
@@ -13,10 +13,10 @@ const SwipeCard = (props) =>{
         movie = {},
     } = props;
 
-    const swipeCardsListContext = useContext(SwipeCardsListContext);
+    const moviesContext = useContext(MoviesContext);
     const [panHandlers, setPanHandlers] = useState(null);
 
-    let position = swipeCardsListContext.state.topCardPosition
+    let position = moviesContext.state.topCardPosition
 
     let rotate = position.x.interpolate({
         inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
@@ -76,13 +76,13 @@ const SwipeCard = (props) =>{
         }
     ]
     const incrementMovieIndex = () =>{
-        let newMovieIndex = swipeCardsListContext.state.currentMovieIndex+1;
-        swipeCardsListContext.mutations.setCurrentMovieIndex(newMovieIndex);
+        let newMovieIndex = moviesContext.state.currentMovieIndex+1;
+        moviesContext.mutations.setCurrentMovieIndex(newMovieIndex);
     }
     const removeCard = () =>{
         let newPosition = position;
         newPosition.setValue({ x: 0, y: 0 })
-        swipeCardsListContext.mutations.setTopCardPosition(newPosition)
+        moviesContext.mutations.setTopCardPosition(newPosition)
     }
     const getComponentProps = {
         "top-card": {
@@ -109,7 +109,7 @@ const SwipeCard = (props) =>{
                 onPanResponderMove: (evt, gestureState) => {
                 let newPosition = position;
                 newPosition.setValue({ x: gestureState.dx, y: gestureState.dy })
-                swipeCardsListContext.mutations.setTopCardPosition(newPosition)
+                moviesContext.mutations.setTopCardPosition(newPosition)
                 },
                 onPanResponderRelease: (evt, gestureState) => {
 
@@ -145,7 +145,7 @@ const SwipeCard = (props) =>{
     useEffect( () => {
         let panResponder = getPanResponder();
         setPanHandlers(panResponder.panHandlers);
-    }, [swipeCardsListContext.state.currentMovieIndex]);
+    }, [moviesContext.state.currentMovieIndex]);
 
     return (
         <Animated.View
