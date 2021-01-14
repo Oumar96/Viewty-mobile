@@ -15,10 +15,8 @@ const SwipeCard = (props) =>{
 
     const swipeCardsListContext = useContext(SwipeCardsListContext);
     const [panHandlers, setPanHandlers] = useState(null);
-    const [position, setPosition] = useState(new Animated.ValueXY());
 
-    // let position = new Animated.ValueXY();
-    console.log(position)
+    let position = swipeCardsListContext.state.topCardPosition
 
     let rotate = position.x.interpolate({
         inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
@@ -76,7 +74,7 @@ const SwipeCard = (props) =>{
                 opacity: nextCardOpacity,
                 transform: [
                     {
-                        scale: nextCardScale 
+                        scale: nextCardScale
                     }
                 ],
                 height: SCREEN_HEIGHT - 120,
@@ -87,20 +85,33 @@ const SwipeCard = (props) =>{
         ]
     }
     const incrementMovieIndex = () =>{
-        let currentMovieIndex = swipeCardsListContext.state.currentMovieIndex;
-        swipeCardsListContext.mutations.setCurrentMovieIndex(currentMovieIndex);
+        let newMovieIndex = swipeCardsListContext.state.currentMovieIndex+1;
+        swipeCardsListContext.mutations.setCurrentMovieIndex(newMovieIndex);
+        console.log("incrementMovieIndex", swipeCardsListContext.state.currentMovieIndex)
     }
     const getPanHandlers = () =>{
         return type === "top-card" ? panHandlers : {};
     }
+    // const getComponentProps = {
+    //         "top-card": {
+    //             "card-props":{
+    //                 ...panHandlers,
+    //                 key:movie.id,
+    //                 style:() => getTopCardStyle()
+    //             }
+    //         },
+    //         "bottom-card":{
+
+    //         }
+    //     }
+    // }
     const getPanResponder = () =>{
             return PanResponder.create({
                 onStartShouldSetPanResponder: (evt, gestureState) => true,
                 onPanResponderMove: (evt, gestureState) => {
                 let newPosition = position;
                 newPosition.setValue({ x: gestureState.dx, y: gestureState.dy })
-                // position.setValue({ x: gestureState.dx, y: gestureState.dy })
-                setPosition(newPosition)
+                swipeCardsListContext.mutations.setTopCardPosition(newPosition)
                 },
                 onPanResponderRelease: (evt, gestureState) => {
 
@@ -112,8 +123,7 @@ const SwipeCard = (props) =>{
                         incrementMovieIndex();
                         let newPosition = position;
                         newPosition.setValue({ x: 0, y: 0 })
-                        setPosition(newPosition)
-                        // position.setValue({ x: 0, y: 0 })
+                        swipeCardsListContext.mutations.setTopCardPosition(newPosition)
                     })
                 }
                 else if (gestureState.dx < -120) {
@@ -124,7 +134,7 @@ const SwipeCard = (props) =>{
                         incrementMovieIndex();
                         let newPosition = position;
                         newPosition.setValue({ x: 0, y: 0 })
-                        setPosition(newPosition)
+                        swipeCardsListContext.mutations.setTopCardPosition(newPosition)
                     })
                 }
                 else {
@@ -141,7 +151,7 @@ const SwipeCard = (props) =>{
     useEffect( () => {
         let panResponder = getPanResponder();
         setPanHandlers(panResponder.panHandlers);
-    }, []);
+    }, [swipeCardsListContext.state.currentMovieIndex]);
 
     return (
         <Animated.View

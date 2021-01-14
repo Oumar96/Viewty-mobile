@@ -17,6 +17,8 @@ const Movies = [
 
 const SwipeCardsList = () =>{
     const [currentMovieIndex, setCurrentMovieIndex] = useState(0);
+    const [topCardPosition, setTopCardPosition] = useState(new Animated.ValueXY());
+
 
     const getSwipeCardType = (index) =>{
         return index === currentMovieIndex ? "top-card": 'bottom-card';
@@ -35,10 +37,12 @@ const SwipeCardsList = () =>{
     return (
         <SwipeCardsListContext.Provider value={{
             state:{
-                currentMovieIndex
+                currentMovieIndex,
+                topCardPosition
             },
             mutations:{
-                setCurrentMovieIndex:(index) =>setCurrentMovieIndex(index)
+                setCurrentMovieIndex:(index) =>setCurrentMovieIndex(index),
+                setTopCardPosition:(position) => setTopCardPosition(position)
             }
         }}>
         <View style={{ flex: 1 }}>
