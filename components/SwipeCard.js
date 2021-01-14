@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext }from 'react';
 
-import { StyleSheet, Text, View, Dimensions, Image, Animated, PanResponder } from 'react-native';
+import { Text, Dimensions, Image, Animated, PanResponder } from 'react-native';
 import SwipeCardsListContext from "../contexts/SwipeCardsListContext.js";
 
 const SCREEN_HEIGHT = Dimensions.get('window').height
@@ -25,10 +25,10 @@ const SwipeCard = (props) =>{
     })
 
     let rotateAndTranslate = {
-    transform: [{
-        rotate
-    },
-    ...position.getTranslateTransform()
+        transform: [{
+            rotate
+        },
+        ...position.getTranslateTransform()
     ]
     }
     let likeOpacity = position.x.interpolate({
@@ -52,59 +52,57 @@ const SwipeCard = (props) =>{
         outputRange: [1, 0.8, 1],
         extrapolate: 'clamp'
     })
-
-    const getStyleStrategy = {
-        "top-card":() => getTopCardStyle(),
-        "bottom-card":() =>getBottomCardStyle(),
-    }
-    const getTopCardStyle = () =>{
-        return [
-            rotateAndTranslate,
-            {
-                height: SCREEN_HEIGHT - 120,
-                width: SCREEN_WIDTH,
-                padding: 10,
-                position: 'absolute'
-            }
-        ]
-    }
-    const getBottomCardStyle = () =>{
-        return [
-            {
-                opacity: nextCardOpacity,
-                transform: [
-                    {
-                        scale: nextCardScale
-                    }
-                ],
-                height: SCREEN_HEIGHT - 120,
-                width: SCREEN_WIDTH,
-                padding: 10,
-                position: 'absolute'
-            }
-        ]
-    }
+    const topCardStyle = [
+        rotateAndTranslate,
+        {
+            height: SCREEN_HEIGHT - 120,
+            width: SCREEN_WIDTH,
+            padding: 10,
+            position: 'absolute'
+        }
+    ]
+    const bottomCardStyle = [
+        {
+            opacity: nextCardOpacity,
+            transform: [
+                {
+                    scale: nextCardScale
+                }
+            ],
+            height: SCREEN_HEIGHT - 120,
+            width: SCREEN_WIDTH,
+            padding: 10,
+            position: 'absolute'
+        }
+    ]
     const incrementMovieIndex = () =>{
         let newMovieIndex = swipeCardsListContext.state.currentMovieIndex+1;
         swipeCardsListContext.mutations.setCurrentMovieIndex(newMovieIndex);
-        console.log("incrementMovieIndex", swipeCardsListContext.state.currentMovieIndex)
     }
-    const getPanHandlers = () =>{
-        return type === "top-card" ? panHandlers : {};
+    const removeCard = () =>{
+        let newPosition = position;
+        newPosition.setValue({ x: 0, y: 0 })
+        swipeCardsListContext.mutations.setTopCardPosition(newPosition)
     }
-    // const getComponentProps = {
-    //         "top-card": {
-    //             "card-props":{
-    //                 ...panHandlers,
-    //                 key:movie.id,
-    //                 style:() => getTopCardStyle()
-    //             }
-    //         },
-    //         "bottom-card":{
-
-    //         }
-    //     }
-    // }
+    const getComponentProps = {
+        "top-card": {
+            "card-props":{
+                ...panHandlers,
+                key:movie.id,
+                style:topCardStyle
+            },
+            "like-opacity":likeOpacity,
+            "dislike-opacity": dislikeOpacity
+        },
+        "bottom-card":{
+            "card-props":{
+                key:movie.id,
+                style:bottomCardStyle
+            },
+            "like-opacity":0,
+            "dislike-opacity": 0
+        }
+    }
     const getPanResponder = () =>{
             return PanResponder.create({
                 onStartShouldSetPanResponder: (evt, gestureState) => true,
@@ -121,9 +119,7 @@ const SwipeCard = (props) =>{
                     useNativeDriver: true
                     }).start(() => {
                         incrementMovieIndex();
-                        let newPosition = position;
-                        newPosition.setValue({ x: 0, y: 0 })
-                        swipeCardsListContext.mutations.setTopCardPosition(newPosition)
+                        removeCard();
                     })
                 }
                 else if (gestureState.dx < -120) {
@@ -132,9 +128,7 @@ const SwipeCard = (props) =>{
                     useNativeDriver: true
                     }).start(() => {
                         incrementMovieIndex();
-                        let newPosition = position;
-                        newPosition.setValue({ x: 0, y: 0 })
-                        swipeCardsListContext.mutations.setTopCardPosition(newPosition)
+                        removeCard();
                     })
                 }
                 else {
@@ -155,14 +149,14 @@ const SwipeCard = (props) =>{
 
     return (
         <Animated.View
-            {...getPanHandlers()}
-            key={movie.id} style={getStyleStrategy[type]()}>
-            <Animated.View style={{ opacity: likeOpacity, transform: [{ rotate: '-30deg' }], position: 'absolute', top: 50, left: 40, zIndex: 1000 }}>
+            {...getComponentProps[type]["card-props"]}
+        >
+            <Animated.View style={{ opacity: getComponentProps[type]["like-opacity"], transform: [{ rotate: '-30deg' }], position: 'absolute', top: 50, left: 40, zIndex: 1000 }}>
                 <Text style={{ borderWidth: 1, borderColor: 'green', color: 'green', fontSize: 32, fontWeight: '800', padding: 10 }}>LIKE</Text>
 
             </Animated.View>
 
-            <Animated.View style={{ opacity: dislikeOpacity, transform: [{ rotate: '30deg' }], position: 'absolute', top: 50, right: 40, zIndex: 1000 }}>
+            <Animated.View style={{ opacity: getComponentProps[type]["dislike-opacity"], transform: [{ rotate: '30deg' }], position: 'absolute', top: 50, right: 40, zIndex: 1000 }}>
                 <Text style={{ borderWidth: 1, borderColor: 'red', color: 'red', fontSize: 32, fontWeight: '800', padding: 10 }}>NOPE</Text>
 
             </Animated.View>
@@ -175,3 +169,12 @@ const SwipeCard = (props) =>{
 }
 
 export default SwipeCard;
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#fff',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+// });
