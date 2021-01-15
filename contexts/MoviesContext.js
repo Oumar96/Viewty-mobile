@@ -8,8 +8,8 @@ const MoviesContext = React.createContext({
     },
     mutations:{
         setCurrentMovieIndex: () =>{},
-        setTopCardPosition:()=>{}
-    }
+        setTopCardPosition:()=>{},
+    },
 })
 
 export default MoviesContext;

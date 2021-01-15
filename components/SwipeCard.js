@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext }from 'react';
 
-import { Text, Dimensions, Image, Animated, PanResponder } from 'react-native';
+import { StyleSheet, Text, Dimensions, Image, Animated, PanResponder } from 'react-native';
 import MoviesContext from "../contexts/MoviesContext.js";
 
 const SCREEN_HEIGHT = Dimensions.get('window').height
@@ -54,12 +54,7 @@ const SwipeCard = (props) =>{
     })
     const topCardStyle = [
         rotateAndTranslate,
-        {
-            height: SCREEN_HEIGHT - 120,
-            width: SCREEN_WIDTH,
-            padding: 10,
-            position: 'absolute'
-        }
+        styles.topCard
     ]
     const bottomCardStyle = [
         {
@@ -68,12 +63,9 @@ const SwipeCard = (props) =>{
                 {
                     scale: nextCardScale
                 }
-            ],
-            height: SCREEN_HEIGHT - 120,
-            width: SCREEN_WIDTH,
-            padding: 10,
-            position: 'absolute'
-        }
+            ]
+        },
+        styles.bottomCard
     ]
     const incrementMovieIndex = () =>{
         let newMovieIndex = moviesContext.state.currentMovieIndex+1;
@@ -151,18 +143,16 @@ const SwipeCard = (props) =>{
         <Animated.View
             {...getComponentProps[type]["card-props"]}
         >
-            <Animated.View style={{ opacity: getComponentProps[type]["like-opacity"], transform: [{ rotate: '-30deg' }], position: 'absolute', top: 50, left: 40, zIndex: 1000 }}>
-                <Text style={{ borderWidth: 1, borderColor: 'green', color: 'green', fontSize: 32, fontWeight: '800', padding: 10 }}>LIKE</Text>
-
+            <Animated.View
+                style={[{ opacity: getComponentProps[type]["like-opacity"]}, styles.like] }
+            >
+                <Text style={styles.likeText}>LIKE</Text>
             </Animated.View>
-
-            <Animated.View style={{ opacity: getComponentProps[type]["dislike-opacity"], transform: [{ rotate: '30deg' }], position: 'absolute', top: 50, right: 40, zIndex: 1000 }}>
-                <Text style={{ borderWidth: 1, borderColor: 'red', color: 'red', fontSize: 32, fontWeight: '800', padding: 10 }}>NOPE</Text>
-
+            <Animated.View style={[{ opacity: getComponentProps[type]["dislike-opacity"]}, styles.nope]}>
+                <Text style={styles.nopeText}>NOPE</Text>
             </Animated.View>
-
             <Image
-                style={{ flex: 1, height: null, width: null, resizeMode: 'cover', borderRadius: 20 }}
+                style={styles.image}
                 source={movie.uri} />
         </Animated.View>
     )
@@ -170,11 +160,54 @@ const SwipeCard = (props) =>{
 
 export default SwipeCard;
 
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#fff',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-// });
+const styles = StyleSheet.create({
+    topCard:{
+        height: SCREEN_HEIGHT - 120,
+        width: SCREEN_WIDTH,
+        padding: 10,
+        position: 'absolute'
+    },
+    bottomCard:{
+        height: SCREEN_HEIGHT - 120,
+        width: SCREEN_WIDTH,
+        padding: 10,
+        position: 'absolute'
+    },
+    like:{
+        transform: [{ rotate: '-30deg' }],
+        position: 'absolute',
+        top: 50,
+        left: 40,
+        zIndex: 1000
+    },
+    likeText:{
+        borderWidth: 1,
+        borderColor: 'green',
+        color: 'green',
+        fontSize: 32,
+        fontWeight: '800',
+        padding: 10
+    },
+    nope:{
+        transform: [{ rotate: '30deg' }],
+        position: 'absolute',
+        top: 50,
+        right: 40,
+        zIndex: 1000
+    },
+    nopeText:{
+        borderWidth: 1,
+        borderColor: 'red',
+        color: 'red',
+        fontSize: 32,
+        fontWeight: '800',
+        padding: 10
+    },
+    image:{
+        flex: 1,
+        height: null,
+        width: null,
+        resizeMode: 'cover',
+        borderRadius: 20
+    }
+});

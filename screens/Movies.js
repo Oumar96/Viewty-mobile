@@ -1,9 +1,26 @@
-import React ,{useState } from 'react';
+import React ,{useState, useEffect } from 'react';
 import {View,Animated} from 'react-native';
+import firebase from "../firebase/firebase.js";
+
 import MoviesContext from "../contexts/MoviesContext.js";
 import SwipeCardsList from "../components/SwipeCardsList.js";
 
 const Movies = () =>{
+    // just for testing
+    let [rooms, setRooms] = useState();
+
+    useEffect(() => {
+        const roomsRef = firebase.database().ref('rooms');
+        roomsRef.on('value', (snapshot) => {
+            let roomsSnap = snapshot.val();
+            const roomsList = [];
+            for (let room in roomsSnap) {
+                roomsList.push({ room, ...roomsSnap[room] });
+            }
+            setRooms(roomsList);
+        });
+    }, []);
+
     const movies = [
         { id: "1", uri: require('../assets/1.jpg') },
         { id: "2", uri: require('../assets/2.jpg') },
