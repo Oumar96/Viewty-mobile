@@ -4,34 +4,24 @@ import {StyleSheet, View, Text, TextInput, TouchableOpacity} from 'react-native'
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import firebase from "../firebase/firebase.js";
 
-export default App = () => {
-
+const Home = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [code, setCode] = useState('');
   const [verificationId, setVerificationId] = useState('');
   const recaptchaVerifier = useRef(null);
 
-// Function to be called when requesting for a verification code
-const sendVerification = () => {
+  const sendVerification = async () => {
     const phoneProvider = new firebase.auth.PhoneAuthProvider();
-    phoneProvider
-        .verifyPhoneNumber(phoneNumber, recaptchaVerifier.current)
-        .then(setVerificationId);
-    };
-  // Function to be called when confirming the verification code that we received
-  // from Firebase via SMS
-  const confirmCode = () => {
+    const responseVerifcationID = await phoneProvider.verifyPhoneNumber(phoneNumber, recaptchaVerifier.current);
+    setVerificationId(responseVerifcationID);
+  }
+
+  const confirmCode = async () => {
     const credential = firebase.auth.PhoneAuthProvider.credential(
       verificationId,
       code
     );
-    firebase
-      .auth()
-      .signInWithCredential(credential)
-      .then((result) => {
-        // Do something with the results here
-        console.log(result);
-      });
+    await firebase.auth().signInWithCredential(credential)
   }
 
   return (
@@ -60,13 +50,15 @@ const sendVerification = () => {
             </TouchableOpacity>
         </View>
         <FirebaseRecaptchaVerifierModal
-        ref={recaptchaVerifier}
-        firebaseConfig={firebase.app().options}
+          ref={recaptchaVerifier}
+          firebaseConfig={firebase.app().options}
         />
     </>
 
   );
 }
+
+export default Home;
 
 const styles = StyleSheet.create({
     container: {
