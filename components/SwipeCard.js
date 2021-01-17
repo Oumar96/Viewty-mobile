@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useContext }from 'react';
 
-import { StyleSheet, Text, Dimensions, Image, Animated, PanResponder } from 'react-native';
+import { StyleSheet, View, Text, Dimensions, Image, Animated, PanResponder } from 'react-native';
 import MoviesContext from "../contexts/MoviesContext.js";
-import {isEmpty} from "lodash";
+import {isEmpty, upperCase} from "lodash";
 
 const SCREEN_HEIGHT = Dimensions.get('window').height
 const SCREEN_WIDTH = Dimensions.get('window').width
@@ -151,7 +151,6 @@ const SwipeCard = (props) =>{
         setPanHandlers(panResponder.panHandlers);
     }, [moviesContext.state.currentMovieIndex]);
 
-    console.log(movie.name, movieImage)
     return (
         <Animated.View
             {...getComponentProps[type]["card-props"]}
@@ -164,6 +163,9 @@ const SwipeCard = (props) =>{
             <Animated.View style={[{ opacity: getComponentProps[type]["dislike-opacity"]}, styles.nope]}>
                 <Text style={styles.nopeText}>NOPE</Text>
             </Animated.View>
+            <View style={styles.movieName}>
+                <Text style={styles.movieNameText}>{upperCase(movie.name)}</Text>
+            </View>
             <Image
                 style={styles.image}
                 source={movieImage}
@@ -216,6 +218,20 @@ const styles = StyleSheet.create({
         fontSize: 32,
         fontWeight: '800',
         padding: 10
+    },
+    movieName:{
+        position: 'absolute',
+        bottom: 60,
+        left:30,
+        right:30,
+        alignItems:'center',
+        width:SCREEN_WIDTH-60,
+        zIndex: 1000
+    },
+    movieNameText:{
+        fontSize: 40,
+        color: 'white',
+        fontWeight: "bold",
     },
     image:{
         flex: 1,
