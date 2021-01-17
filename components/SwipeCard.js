@@ -2,10 +2,17 @@ import React, { useEffect, useState, useContext }from 'react';
 
 import { StyleSheet, Text, Dimensions, Image, Animated, PanResponder } from 'react-native';
 import MoviesContext from "../contexts/MoviesContext.js";
+import {isEmpty} from "lodash";
 
 const SCREEN_HEIGHT = Dimensions.get('window').height
 const SCREEN_WIDTH = Dimensions.get('window').width
 
+
+const getMovieImageInitialState = (image) =>{
+    return isEmpty(image) ?
+        require('../assets/1.jpg') :
+        {uri:image};
+}
 
 const SwipeCard = (props) =>{
     const {
@@ -15,6 +22,7 @@ const SwipeCard = (props) =>{
 
     const moviesContext = useContext(MoviesContext);
     const [panHandlers, setPanHandlers] = useState(null);
+    const [movieImage, setMovieImage] = useState(getMovieImageInitialState(movie.image));
 
     let position = moviesContext.state.topCardPosition
 
@@ -67,15 +75,6 @@ const SwipeCard = (props) =>{
         },
         styles.bottomCard
     ]
-    const incrementMovieIndex = () =>{
-        let newMovieIndex = moviesContext.state.currentMovieIndex+1;
-        moviesContext.mutations.setCurrentMovieIndex(newMovieIndex);
-    }
-    const removeCard = () =>{
-        let newPosition = position;
-        newPosition.setValue({ x: 0, y: 0 })
-        moviesContext.mutations.setTopCardPosition(newPosition)
-    }
     const getComponentProps = {
         "top-card": {
             "card-props":{
@@ -94,6 +93,19 @@ const SwipeCard = (props) =>{
             "like-opacity":0,
             "dislike-opacity": 0
         }
+    }
+
+    const incrementMovieIndex = () =>{
+        let newMovieIndex = moviesContext.state.currentMovieIndex+1;
+        moviesContext.mutations.setCurrentMovieIndex(newMovieIndex);
+    }
+    const removeCard = () =>{
+        let newPosition = position;
+        newPosition.setValue({ x: 0, y: 0 })
+        moviesContext.mutations.setTopCardPosition(newPosition)
+    }
+    const setMovieImageToDefault = () =>{
+        setMovieImage(require('../assets/1.jpg'));
     }
     const getPanResponder = () =>{
             return PanResponder.create({
@@ -139,6 +151,7 @@ const SwipeCard = (props) =>{
         setPanHandlers(panResponder.panHandlers);
     }, [moviesContext.state.currentMovieIndex]);
 
+    console.log(movie.name, movieImage)
     return (
         <Animated.View
             {...getComponentProps[type]["card-props"]}
@@ -153,7 +166,8 @@ const SwipeCard = (props) =>{
             </Animated.View>
             <Image
                 style={styles.image}
-                source={movie.uri} />
+                source={movieImage}
+                onError={setMovieImageToDefault} />
         </Animated.View>
     )
 }

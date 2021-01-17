@@ -19,7 +19,7 @@ const SwipeCardsList = () =>{
             if (index < currentMovieIndex) {
                 return null
             } else{
-                return <SwipeCard key={movie.id} type={getSwipeCardType(index)} movie={movie}/>
+                return <SwipeCard key={index} type={getSwipeCardType(index)} movie={movie}/>
             }
         }).reverse();
     }
