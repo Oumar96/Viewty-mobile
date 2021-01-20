@@ -1,6 +1,6 @@
 
 import React, {useState, useRef} from 'react';
-import {StyleSheet, View, Text, TextInput, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, Text, TextInput, ImageBackground, TouchableOpacity} from 'react-native';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import firebase from "../firebase/firebase.js";
 
@@ -27,32 +27,37 @@ const Home = () => {
   return (
 
     <>
-        <View style={styles.container}>
-            <TextInput
-                placeholder="Phone Number"
-                onChangeText={setPhoneNumber}
-                autoCompleteType="tel"
-                style={styles.option}
-            />
-            <TouchableOpacity style={styles.button} onPress={sendVerification}>
-                <Text style={styles.option}>Send Verification Code</Text>
-            </TouchableOpacity>
-        </View>
+        <ImageBackground
+            style={styles.image}
+            source={require('../assets/popcorn.jpg')}
+        >
+            <View style={styles.container}>
+                <TextInput
+                    placeholder="Phone Number"
+                    onChangeText={setPhoneNumber}
+                    autoCompleteType="tel"
+                    style={styles.option}
+                />
+                <TouchableOpacity style={styles.button} onPress={sendVerification}>
+                    <Text style={styles.option}>Send Verification Code</Text>
+                </TouchableOpacity>
+            </View>
 
-        <View style={styles.container}>
-            <TextInput
-                placeholder="Confirmation Code"
-                onChangeText={setCode}
-                style={styles.option}
+            <View style={styles.container}>
+                <TextInput
+                    placeholder="Confirmation Code"
+                    onChangeText={setCode}
+                    style={styles.option}
+                />
+                <TouchableOpacity style={styles.button} onPress={confirmCode}>
+                    <Text style={styles.option}>Verify Code</Text>
+                </TouchableOpacity>
+            </View>
+            <FirebaseRecaptchaVerifierModal
+            ref={recaptchaVerifier}
+            firebaseConfig={firebase.app().options}
             />
-            <TouchableOpacity style={styles.button} onPress={confirmCode}>
-                <Text style={styles.option}>Verify Code</Text>
-            </TouchableOpacity>
-        </View>
-        <FirebaseRecaptchaVerifierModal
-          ref={recaptchaVerifier}
-          firebaseConfig={firebase.app().options}
-        />
+        </ImageBackground>
     </>
 
   );
@@ -64,7 +69,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 24,
-        backgroundColor: "#eaeaea"
     },
     button: {
         top: 200,
@@ -79,6 +83,13 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontSize: 30,
         fontWeight: "bold"
+    },
+    image:{
+        flex: 1,
+        height: null,
+        width: null,
+        resizeMode: 'cover',
+        borderRadius: 20
     }
   });
 
