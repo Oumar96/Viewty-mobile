@@ -1,28 +1,29 @@
 
 import React, {useState, useRef} from 'react';
-import {StyleSheet, View, Text, TextInput, ImageBackground, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, Text, TextInput, ImageBackground,TouchableHighlight, TouchableOpacity} from 'react-native';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import firebase from "../firebase/firebase.js";
+import HomePhoneNumberForm from '../components/HomePhoneNumberForm.js';
 
 const Home = () => {
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [code, setCode] = useState('');
-  const [verificationId, setVerificationId] = useState('');
-  const recaptchaVerifier = useRef(null);
+//   const [phoneNumber, setPhoneNumber] = useState('');
+//   const [code, setCode] = useState('');
+//   const [verificationId, setVerificationId] = useState('');
+//   const recaptchaVerifier = useRef(null);
 
-  const sendVerification = async () => {
-    const phoneProvider = new firebase.auth.PhoneAuthProvider();
-    const responseVerifcationID = await phoneProvider.verifyPhoneNumber(phoneNumber, recaptchaVerifier.current);
-    setVerificationId(responseVerifcationID);
-  }
+//   const sendVerification = async () => {
+//     const phoneProvider = new firebase.auth.PhoneAuthProvider();
+//     const responseVerifcationID = await phoneProvider.verifyPhoneNumber(phoneNumber, recaptchaVerifier.current);
+//     setVerificationId(responseVerifcationID);
+//   }
 
-  const confirmCode = async () => {
-    const credential = firebase.auth.PhoneAuthProvider.credential(
-      verificationId,
-      code
-    );
-    await firebase.auth().signInWithCredential(credential)
-  }
+//   const confirmCode = async () => {
+//     const credential = firebase.auth.PhoneAuthProvider.credential(
+//       verificationId,
+//       code
+//     );
+//     await firebase.auth().signInWithCredential(credential)
+//   }
 
   return (
 
@@ -30,8 +31,16 @@ const Home = () => {
         <ImageBackground
             style={styles.image}
             source={require('../assets/popcorn.jpg')}
-        >
-            <View style={styles.container}>
+        >   
+            <View style={styles.container} >
+                <HomePhoneNumberForm />
+            </View>
+            <View style={styles.footer}>
+                <TouchableHighlight style={styles.getStarted}>
+                    <Text style={styles.getStartedText}>Get started</Text>
+                </TouchableHighlight>
+            </View>
+            {/* <View style={styles.container}>
                 <TextInput
                     placeholder="Phone Number"
                     onChangeText={setPhoneNumber}
@@ -56,7 +65,7 @@ const Home = () => {
             <FirebaseRecaptchaVerifierModal
             ref={recaptchaVerifier}
             firebaseConfig={firebase.app().options}
-            />
+            /> */}
         </ImageBackground>
     </>
 
@@ -67,29 +76,37 @@ export default Home;
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        padding: 24,
+        flex: 1, 
+        alignItems: 'center',
+        justifyContent: 'center', 
     },
-    button: {
-        top: 200,
-        paddingVertical: 8,
-        borderWidth: 4,
-        borderColor: "#20232a",
-        borderRadius: 6,
-        backgroundColor: "#ffffff",
+    footer:{
+        justifyContent:"space-around",
+        alignItems: 'center',
+        marginBottom:50,
+    },  
+    getStarted:{
+        backgroundColor: "#f77ea7",
+        borderRadius:10,
+        alignItems: 'center',
+        justifyContent: 'center', 
+        width:"60%",
+        shadowColor: '#000000',
+        elevation: 7,
+        shadowRadius: 3,
+        shadowOpacity: 0.3,
+        height: 50
     },
-    option:{
-        color: "#20232a",
-        textAlign: "center",
-        fontSize: 30,
-        fontWeight: "bold"
-    },
+    getStartedText:{
+        fontSize: 16,
+        fontWeight: "800",
+        color: "white"
+    },  
     image:{
-        flex: 1,
-        height: null,
-        width: null,
+        height: "100%",
+        width: "100%",
         resizeMode: 'cover',
         borderRadius: 20
-    }
-  });
+    },
+});
 
