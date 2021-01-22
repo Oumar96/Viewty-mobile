@@ -80,7 +80,7 @@ const Home = () => {
                 </Animated.View>
                 <View style={styles.footer}>
                     {isShowingGetStartedButton &&
-                        <TouchableHighlight style={styles.getStarted} onPress={getStarted}>
+                        <TouchableHighlight style={styles.getStarted} underlayColor="#8dc3f0" onPress={getStarted}>
                             <Text style={styles.getStartedText}>Get started</Text>
                         </TouchableHighlight>
                     }

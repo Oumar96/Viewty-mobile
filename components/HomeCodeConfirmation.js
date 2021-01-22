@@ -12,10 +12,10 @@ const HomeCodeConfirmation = () =>{
                 style={styles.confirmationCodeInput}
             />
             <View style={styles.confirmCodedButtonContainer}>
-                <TouchableHighlight style={styles.confirmCodeButton}>
+                <TouchableHighlight style={styles.confirmCodeButton} underlayColor="#8dc3f0">
                     <Text style={styles.confirmCodeText}> Confirm Code </Text>
                 </TouchableHighlight>
-                <TouchableHighlight style={styles.cancelButton} onPress={homeContext.actions.animateHomeContainerBackward}>
+                <TouchableHighlight style={styles.cancelButton} underlayColor="#f5f5f5" onPress={homeContext.actions.animateHomeContainerBackward}>
                     <Text style={styles.cancelCodeText}> Cancel </Text>
                 </TouchableHighlight>
             </View>
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
         shadowRadius: 3,
         shadowOpacity: 0.1,
         width: 200,
-        height:50,
+        height:70,
         borderWidth:1,
         borderColor:'#cdcccf',
         backgroundColor:'white',
@@ -87,6 +87,6 @@ const styles = StyleSheet.create({
     cancelCodeText:{
         fontSize: 16,
         fontWeight: "800",
-        color: "gray"
+        color: "#c8c7c9"
     }
 });

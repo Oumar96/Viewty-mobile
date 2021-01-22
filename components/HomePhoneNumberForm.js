@@ -15,7 +15,7 @@ const HomePhoneNumberForm = () =>{
                 textContainerStyle={styles.textContainerStyle}
             />
             <View style={styles.sendCodeButtonContainer}>
-                <TouchableHighlight style={styles.sendCodeButton} onPress={homeContext.actions.animateHomeContainerForward}>
+                <TouchableHighlight style={styles.sendCodeButton} underlayColor="#8dc3f0" onPress={homeContext.actions.animateHomeContainerForward}>
                     <Text style={styles.sendCodeText}> Send Code </Text>
                 </TouchableHighlight>
             </View>
