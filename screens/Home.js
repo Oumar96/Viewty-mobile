@@ -3,12 +3,16 @@ import React, {useState, useRef, useEffect} from 'react';
 import {StyleSheet, View, Text, Dimensions, Animated, TextInput, ImageBackground,TouchableHighlight, TouchableOpacity} from 'react-native';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import firebase from "../firebase/firebase.js";
+
+import HomeContext from "../contexts/HomeContext.js"
 import HomePhoneNumberForm from '../components/HomePhoneNumberForm.js';
+import HomeCodeConfirmation from '../components/HomeCodeConfirmation.js';
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 
 const Home = () => {
     const homeNumberPhonePosition = useRef(new Animated.Value(SCREEN_WIDTH)).current;
+    const [currentContainerPosition, setCurrentContainerPosition] = useState(SCREEN_WIDTH);
     const [isShowingGetStartedButton, setIsShowingGetStartedButton] = useState(true);
 //   const [phoneNumber, setPhoneNumber] = useState('');
 //   const [code, setCode] = useState('');
@@ -28,13 +32,26 @@ const Home = () => {
 //     );
 //     await firebase.auth().signInWithCredential(credential)
 //   }
-    const showHomePhoneNumber = () =>{
+
+    const getStarted = () =>{
         setIsShowingGetStartedButton(false);
+        animateHomeContainerForward();
+    }
+    const animateHomeContainerForward = () =>{
         Animated.timing(homeNumberPhonePosition, {
-            toValue:0,
-            duration: 1000,
+            toValue:currentContainerPosition-SCREEN_WIDTH,
+            duration: 500,
             useNativeDriver: true
         }).start();
+        setCurrentContainerPosition(currentContainerPosition-SCREEN_WIDTH)
+    }
+    const animateHomeContainerBackward = () =>{
+        Animated.timing(homeNumberPhonePosition, {
+            toValue:currentContainerPosition+SCREEN_WIDTH,
+            duration: 500,
+            useNativeDriver: true
+        }).start();
+        setCurrentContainerPosition(currentContainerPosition+SCREEN_WIDTH)
     }
     const homePhoneNumberTranslate = {
         transform:[{
@@ -43,17 +60,27 @@ const Home = () => {
     }
 
     return (
-        <>
+        <HomeContext.Provider value={{
+            actions:{
+                animateHomeContainerForward,
+                animateHomeContainerBackward,
+            }
+        }}>
             <ImageBackground
                 style={styles.image}
                 source={require('../assets/popcorn.jpg')}
             >
                 <Animated.View style={[styles.container, homePhoneNumberTranslate]} >
-                    <HomePhoneNumberForm />
+                    <View style={styles.homePhoneNumberFormContainer}>
+                        <HomePhoneNumberForm/>
+                    </View>
+                    <View style={styles.homeCodeConfirmationContainer}>
+                        <HomeCodeConfirmation/>
+                    </View>
                 </Animated.View>
                 <View style={styles.footer}>
                     {isShowingGetStartedButton &&
-                        <TouchableHighlight style={styles.getStarted} onPress={showHomePhoneNumber}>
+                        <TouchableHighlight style={styles.getStarted} onPress={getStarted}>
                             <Text style={styles.getStartedText}>Get started</Text>
                         </TouchableHighlight>
                     }
@@ -85,7 +112,7 @@ const Home = () => {
                 firebaseConfig={firebase.app().options}
                 /> */}
             </ImageBackground>
-        </>
+        </HomeContext.Provider>
     );
 }
 
@@ -96,14 +123,26 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+        flexDirection: 'row',
+        width: SCREEN_WIDTH*2
     },
     footer:{
         justifyContent:"space-around",
         alignItems: 'center',
         marginBottom:50,
     },
+    homePhoneNumberFormContainer:{
+        alignItems: 'center',
+        justifyContent: 'center',
+        width:SCREEN_WIDTH
+    },
+    homeCodeConfirmationContainer:{
+        alignItems: 'center',
+        justifyContent: 'center',
+        width:SCREEN_WIDTH
+    },
     getStarted:{
-        backgroundColor: "#f77ea7",
+        backgroundColor: "#0f9bf2",
         borderRadius:10,
         alignItems: 'center',
         justifyContent: 'center',
