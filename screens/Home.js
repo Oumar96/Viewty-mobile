@@ -1,11 +1,15 @@
 
-import React, {useState, useRef} from 'react';
-import {StyleSheet, View, Text, TextInput, ImageBackground,TouchableHighlight, TouchableOpacity} from 'react-native';
+import React, {useState, useRef, useEffect} from 'react';
+import {StyleSheet, View, Text, Dimensions, Animated, TextInput, ImageBackground,TouchableHighlight, TouchableOpacity} from 'react-native';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import firebase from "../firebase/firebase.js";
 import HomePhoneNumberForm from '../components/HomePhoneNumberForm.js';
 
+const SCREEN_WIDTH = Dimensions.get('window').width
+
 const Home = () => {
+    const homeNumberPhonePosition = useRef(new Animated.Value(SCREEN_WIDTH)).current;
+    const [isShowingGetStartedButton, setIsShowingGetStartedButton] = useState(true);
 //   const [phoneNumber, setPhoneNumber] = useState('');
 //   const [code, setCode] = useState('');
 //   const [verificationId, setVerificationId] = useState('');
@@ -24,84 +28,97 @@ const Home = () => {
 //     );
 //     await firebase.auth().signInWithCredential(credential)
 //   }
+    const showHomePhoneNumber = () =>{
+        setIsShowingGetStartedButton(false);
+        Animated.timing(homeNumberPhonePosition, {
+            toValue:0,
+            duration: 1000,
+            useNativeDriver: true
+        }).start();
+    }
+    const homePhoneNumberTranslate = {
+        transform:[{
+            translateX: homeNumberPhonePosition,
+        }]
+    }
 
-  return (
+    return (
+        <>
+            <ImageBackground
+                style={styles.image}
+                source={require('../assets/popcorn.jpg')}
+            >
+                <Animated.View style={[styles.container, homePhoneNumberTranslate]} >
+                    <HomePhoneNumberForm />
+                </Animated.View>
+                <View style={styles.footer}>
+                    {isShowingGetStartedButton &&
+                        <TouchableHighlight style={styles.getStarted} onPress={showHomePhoneNumber}>
+                            <Text style={styles.getStartedText}>Get started</Text>
+                        </TouchableHighlight>
+                    }
+                </View>
+                {/* <View style={styles.container}>
+                    <TextInput
+                        placeholder="Phone Number"
+                        onChangeText={setPhoneNumber}
+                        autoCompleteType="tel"
+                        style={styles.option}
+                    />
+                    <TouchableOpacity style={styles.button} onPress={sendVerification}>
+                        <Text style={styles.option}>Send Verification Code</Text>
+                    </TouchableOpacity>
+                </View>
 
-    <>
-        <ImageBackground
-            style={styles.image}
-            source={require('../assets/popcorn.jpg')}
-        >   
-            <View style={styles.container} >
-                <HomePhoneNumberForm />
-            </View>
-            <View style={styles.footer}>
-                <TouchableHighlight style={styles.getStarted}>
-                    <Text style={styles.getStartedText}>Get started</Text>
-                </TouchableHighlight>
-            </View>
-            {/* <View style={styles.container}>
-                <TextInput
-                    placeholder="Phone Number"
-                    onChangeText={setPhoneNumber}
-                    autoCompleteType="tel"
-                    style={styles.option}
-                />
-                <TouchableOpacity style={styles.button} onPress={sendVerification}>
-                    <Text style={styles.option}>Send Verification Code</Text>
-                </TouchableOpacity>
-            </View>
-
-            <View style={styles.container}>
-                <TextInput
-                    placeholder="Confirmation Code"
-                    onChangeText={setCode}
-                    style={styles.option}
-                />
-                <TouchableOpacity style={styles.button} onPress={confirmCode}>
-                    <Text style={styles.option}>Verify Code</Text>
-                </TouchableOpacity>
-            </View>
-            <FirebaseRecaptchaVerifierModal
-            ref={recaptchaVerifier}
-            firebaseConfig={firebase.app().options}
-            /> */}
-        </ImageBackground>
-    </>
-
-  );
+                <View style={styles.container}>
+                    <TextInput
+                        placeholder="Confirmation Code"
+                        onChangeText={setCode}
+                        style={styles.option}
+                    />
+                    <TouchableOpacity style={styles.button} onPress={confirmCode}>
+                        <Text style={styles.option}>Verify Code</Text>
+                    </TouchableOpacity>
+                </View>
+                <FirebaseRecaptchaVerifierModal
+                ref={recaptchaVerifier}
+                firebaseConfig={firebase.app().options}
+                /> */}
+            </ImageBackground>
+        </>
+    );
 }
 
 export default Home;
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1, 
+        flex: 1,
         alignItems: 'center',
-        justifyContent: 'center', 
+        justifyContent: 'center',
     },
     footer:{
         justifyContent:"space-around",
         alignItems: 'center',
         marginBottom:50,
-    },  
+    },
     getStarted:{
         backgroundColor: "#f77ea7",
         borderRadius:10,
         alignItems: 'center',
-        justifyContent: 'center', 
+        justifyContent: 'center',
         width:"60%",
         shadowColor: '#000000',
         elevation: 7,
         shadowRadius: 3,
-        shadowOpacity: 0.3,
+        shadowOpacity: 0.15,
         height: 50
     },
     getStartedText:{
         fontSize: 16,
         fontWeight: "800",
         color: "white"
-    },  
+    },
     image:{
         height: "100%",
         width: "100%",

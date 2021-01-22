@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
         shadowColor: '#000000',
         elevation: 7,
         shadowRadius: 3,
-        shadowOpacity: 0.3
+        shadowOpacity: 0.15
     },
     sendCodeText:{
         fontSize: 16,
