@@ -1,9 +1,9 @@
 {
   "devToolsPort": 19002,
   "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 5156,
+  "packagerPort": 19005,
+  "packagerPid": 2490,
   "expoServerNgrokUrl": "https://ti-ii7.anonymous.viewty-mobile.exp.direct",
   "packagerNgrokUrl": "https://packager.ti-ii7.anonymous.viewty-mobile.exp.direct",
-  "ngrokPid": 5232
+  "ngrokPid": 2524
 }
