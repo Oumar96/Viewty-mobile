@@ -29,6 +29,7 @@ const HomePhoneNumberForm = () =>{
         "auth/captcha-check-failed": "reCAPTCHA failed please try again. If the problem persists contact support.",
         "auth/invalid-phone-number": "The phone number is invalid",
         "auth/missing-phone-number": "The phone number is missing",
+        "auth/too-many-requests": "Your device is blocked due to too many requests. Try again later.",
         "default" : "There was an issue processing your request. Please contact support",
     }
 

@@ -20,8 +20,8 @@ const SCREEN_HEIGHT = Dimensions.get('window').height
 
 
 const Home = () => {
-    const homeNumberPhonePosition = useRef(new Animated.Value(SCREEN_WIDTH)).current;
-    const [currentContainerPosition, setCurrentContainerPosition] = useState(SCREEN_WIDTH);
+    const homeNumberPhonePosition = useRef(new Animated.Value(0)).current;
+    const [currentContainerPosition, setCurrentContainerPosition] = useState(0);
     const [isShowingGetStartedButton, setIsShowingGetStartedButton] = useState(true);
     const [phoneNumberVerificationId, setPhoneNumberVerificationId] = useState('');
 
@@ -70,6 +70,10 @@ const Home = () => {
             >
                 <View style={styles.container}>
                     <Animated.View style={[styles.content, homePhoneNumberTranslate]} >
+                        <View style={styles.welcomeMessageContainer}>
+                            <Text style={styles.welcomeText}>WELCOME TO VIEWTY</Text>
+                            <Text style={styles.swipeWithFriendsText}>Swipe with friends and find the perfect film for movie night</Text>
+                        </View>
                         <View style={styles.homePhoneNumberFormContainer}>
                             <HomePhoneNumberForm/>
                         </View>
@@ -104,11 +108,29 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         flexDirection: 'row',
         height:SCREEN_HEIGHT*0.75,
-        width: SCREEN_WIDTH*2
+        width: SCREEN_WIDTH*3
     },
     footer:{
         alignItems: 'center',
         justifyContent: 'flex-start',
+    },
+    welcomeMessageContainer:{
+        width:SCREEN_WIDTH,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop:80
+    },
+    welcomeText:{
+        fontSize:30,
+        color: 'white',
+        fontWeight: '800'
+    },
+    swipeWithFriendsText:{
+        fontSize:18,
+        color: '#dbd8d7',
+        textAlign:'center',
+        width:300,
+        marginTop: 20
     },
     homePhoneNumberFormContainer:{
         alignItems: 'center',
