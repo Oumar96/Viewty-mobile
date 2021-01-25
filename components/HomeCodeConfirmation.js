@@ -1,6 +1,9 @@
-import React, { useEffect, useState, useContext } from 'react';
-import {StyleSheet, TextInput, Dimensions, TouchableHighlight, View, Text} from 'react-native';
+import React, {useState, useContext } from 'react';
+//components
+import {StyleSheet, TextInput, TouchableHighlight, View, Text} from 'react-native';
+// context
 import HomeContext from "../contexts/HomeContext.js";
+// libs
 import firebase from "../firebase/firebase.js";
 
 

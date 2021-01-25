@@ -1,12 +1,19 @@
 
-import React, {useState, useRef, useEffect} from 'react';
-import {StyleSheet, View, Text, Dimensions, Animated, TextInput, ImageBackground,TouchableHighlight, TouchableOpacity} from 'react-native';
-import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
-import firebase from "../firebase/firebase.js";
-
-import HomeContext from "../contexts/HomeContext.js"
+import React, {useState, useRef} from 'react';
+// components
+import {
+    StyleSheet,
+    View,
+    Text,
+    Dimensions,
+    Animated,
+    ImageBackground,
+    TouchableHighlight
+} from 'react-native';
 import HomePhoneNumberForm from '../components/HomePhoneNumberForm.js';
 import HomeCodeConfirmation from '../components/HomeCodeConfirmation.js';
+// context
+import HomeContext from "../contexts/HomeContext.js";
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height
@@ -16,24 +23,7 @@ const Home = () => {
     const homeNumberPhonePosition = useRef(new Animated.Value(SCREEN_WIDTH)).current;
     const [currentContainerPosition, setCurrentContainerPosition] = useState(SCREEN_WIDTH);
     const [isShowingGetStartedButton, setIsShowingGetStartedButton] = useState(true);
-//   const [phoneNumber, setPhoneNumber] = useState('');
-//   const [code, setCode] = useState('');
     const [phoneNumberVerificationId, setPhoneNumberVerificationId] = useState('');
-//   const recaptchaVerifier = useRef(null);
-
-//   const sendVerification = async () => {
-//     const phoneProvider = new firebase.auth.PhoneAuthProvider();
-//     const responseVerifcationID = await phoneProvider.verifyPhoneNumber(phoneNumber, recaptchaVerifier.current);
-//     setVerificationId(responseVerifcationID);
-//   }
-
-//   const confirmCode = async () => {
-//     const credential = firebase.auth.PhoneAuthProvider.credential(
-//       verificationId,
-//       code
-//     );
-//     await firebase.auth().signInWithCredential(credential)
-//   }
 
     const getStarted = () =>{
         setIsShowingGetStartedButton(false);
@@ -95,32 +85,6 @@ const Home = () => {
                         }
                     </View>
                 </View>
-                {/* <View style={styles.container}>
-                    <TextInput
-                        placeholder="Phone Number"
-                        onChangeText={setPhoneNumber}
-                        autoCompleteType="tel"
-                        style={styles.option}
-                    />
-                    <TouchableOpacity style={styles.button} onPress={sendVerification}>
-                        <Text style={styles.option}>Send Verification Code</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.container}>
-                    <TextInput
-                        placeholder="Confirmation Code"
-                        onChangeText={setCode}
-                        style={styles.option}
-                    />
-                    <TouchableOpacity style={styles.button} onPress={confirmCode}>
-                        <Text style={styles.option}>Verify Code</Text>
-                    </TouchableOpacity>
-                </View>
-                <FirebaseRecaptchaVerifierModal
-                ref={recaptchaVerifier}
-                firebaseConfig={firebase.app().options}
-                /> */}
             </ImageBackground>
         </HomeContext.Provider>
     );

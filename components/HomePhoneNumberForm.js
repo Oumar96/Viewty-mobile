@@ -1,7 +1,10 @@
 import React, { useRef, useState, useContext } from 'react';
-import {StyleSheet, Dimensions, TouchableHighlight, View, Text} from 'react-native';
+// components
+import {StyleSheet, TouchableHighlight, View, Text} from 'react-native';
 import PhoneInput from "react-native-phone-number-input";
+// context
 import HomeContext from "../contexts/HomeContext.js";
+// libs
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import firebase from "../firebase/firebase.js";
 
