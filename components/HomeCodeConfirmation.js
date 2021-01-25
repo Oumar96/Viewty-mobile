@@ -1,22 +1,53 @@
 import React, { useEffect, useState, useContext } from 'react';
 import {StyleSheet, TextInput, Dimensions, TouchableHighlight, View, Text} from 'react-native';
-import HomeContext from "../contexts/HomeContext.js"
+import HomeContext from "../contexts/HomeContext.js";
+import firebase from "../firebase/firebase.js";
+
 
 
 const HomeCodeConfirmation = () =>{
     const homeContext = useContext(HomeContext);
+    const [confirmCodeTextColor, setConfirmCodeTextColor] = useState({color:'#0f9bf2'});
+    const [cancelCodeTextColor, setCancelCodeTextColor] = useState({color:'red'});
+    const [phoneVerificationCode, setPhoneVerificationCode] = useState('');
+
+    const confirmCode = async () => {
+        try{
+            const phoneNumberVerificationId = homeContext.state.phoneNumberVerificationId;
+            const credential = firebase.auth.PhoneAuthProvider.credential(
+                phoneNumberVerificationId,
+                phoneVerificationCode
+            );
+            await firebase.auth().signInWithCredential(credential)
+        } catch (error){
+        }
+    };
+
     return(
         <View styles={styles.codeConfirmation}>
             <TextInput
                 placeholder="Code"
+                onChangeText={setPhoneVerificationCode}
                 style={styles.confirmationCodeInput}
             />
             <View style={styles.confirmCodedButtonContainer}>
-                <TouchableHighlight style={styles.confirmCodeButton} underlayColor="#8dc3f0">
-                    <Text style={styles.confirmCodeText}> Confirm Code </Text>
+                <TouchableHighlight
+                    style={styles.confirmCodeButton}
+                    underlayColor="#0f9bf2"
+                    onPress={confirmCode}
+                    onShowUnderlay={() => {setConfirmCodeTextColor({color:'white'})}}
+                    onHideUnderlay={() => {setConfirmCodeTextColor({color:'#0f9bf2'})}}
+                >
+                    <Text style={[styles.confirmCodeText,confirmCodeTextColor]}> Confirm Code </Text>
                 </TouchableHighlight>
-                <TouchableHighlight style={styles.cancelButton} underlayColor="#f5f5f5" onPress={homeContext.actions.animateHomeContainerBackward}>
-                    <Text style={styles.cancelCodeText}> Cancel </Text>
+                <TouchableHighlight
+                    style={styles.cancelButton}
+                    underlayColor="red"
+                    onShowUnderlay={() => {setCancelCodeTextColor({color:'white'})}}
+                    onHideUnderlay={() => {setCancelCodeTextColor({color:'red'})}}
+                    onPress={homeContext.actions.animateHomeContainerBackward}
+                >
+                    <Text style={[styles.cancelCodeText,cancelCodeTextColor]}> Cancel </Text>
                 </TouchableHighlight>
             </View>
         </View>
@@ -31,6 +62,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         textAlign:'center',
+        width:350
     },
     confirmationCodeInput:{
         borderRadius: 10,
@@ -59,12 +91,14 @@ const styles = StyleSheet.create({
         height: 50,
         justifyContent: 'center',
         alignItems:'center',
-        backgroundColor: "#0f9bf2",
-        borderRadius:10,
+        backgroundColor: "white",
+        borderRadius:50,
         shadowColor: '#000000',
         elevation: 7,
         shadowRadius: 3,
-        shadowOpacity: 0.15
+        shadowOpacity: 0.15,
+        borderWidth:1,
+        borderColor:'#0f9bf2',
     },
     cancelButton:{
         width: 300,
@@ -73,20 +107,22 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems:'center',
         backgroundColor: "white",
-        borderRadius:10,
+        borderRadius:50,
         shadowColor: '#000000',
         elevation: 7,
         shadowRadius: 3,
-        shadowOpacity: 0.15
+        shadowOpacity: 0.15,
+        borderColor:"red",
+        borderWidth:1
     },
     confirmCodeText:{
         fontSize: 16,
         fontWeight: "800",
-        color: "white"
+        color: "#0f9bf2"
     },
     cancelCodeText:{
         fontSize: 16,
         fontWeight: "800",
-        color: "#c8c7c9"
+        color: "red"
     }
 });

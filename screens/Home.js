@@ -8,7 +8,9 @@ import HomeContext from "../contexts/HomeContext.js"
 import HomePhoneNumberForm from '../components/HomePhoneNumberForm.js';
 import HomeCodeConfirmation from '../components/HomeCodeConfirmation.js';
 
-const SCREEN_WIDTH = Dimensions.get('window').width
+const SCREEN_WIDTH = Dimensions.get('window').width;
+const SCREEN_HEIGHT = Dimensions.get('window').height
+
 
 const Home = () => {
     const homeNumberPhonePosition = useRef(new Animated.Value(SCREEN_WIDTH)).current;
@@ -16,7 +18,7 @@ const Home = () => {
     const [isShowingGetStartedButton, setIsShowingGetStartedButton] = useState(true);
 //   const [phoneNumber, setPhoneNumber] = useState('');
 //   const [code, setCode] = useState('');
-//   const [verificationId, setVerificationId] = useState('');
+    const [phoneNumberVerificationId, setPhoneNumberVerificationId] = useState('');
 //   const recaptchaVerifier = useRef(null);
 
 //   const sendVerification = async () => {
@@ -61,6 +63,12 @@ const Home = () => {
 
     return (
         <HomeContext.Provider value={{
+            state:{
+                phoneNumberVerificationId
+            },
+            mutations:{
+                setPhoneNumberVerificationId,
+            },
             actions:{
                 animateHomeContainerForward,
                 animateHomeContainerBackward,
@@ -70,20 +78,22 @@ const Home = () => {
                 style={styles.image}
                 source={require('../assets/popcorn.jpg')}
             >
-                <Animated.View style={[styles.container, homePhoneNumberTranslate]} >
-                    <View style={styles.homePhoneNumberFormContainer}>
-                        <HomePhoneNumberForm/>
+                <View style={styles.container}>
+                    <Animated.View style={[styles.content, homePhoneNumberTranslate]} >
+                        <View style={styles.homePhoneNumberFormContainer}>
+                            <HomePhoneNumberForm/>
+                        </View>
+                        <View style={styles.homeCodeConfirmationContainer}>
+                            <HomeCodeConfirmation/>
+                        </View>
+                    </Animated.View>
+                    <View style={styles.footer}>
+                        {isShowingGetStartedButton &&
+                            <TouchableHighlight style={styles.getStarted} underlayColor="#8dc3f0" onPress={getStarted}>
+                                <Text style={styles.getStartedText}>Get started</Text>
+                            </TouchableHighlight>
+                        }
                     </View>
-                    <View style={styles.homeCodeConfirmationContainer}>
-                        <HomeCodeConfirmation/>
-                    </View>
-                </Animated.View>
-                <View style={styles.footer}>
-                    {isShowingGetStartedButton &&
-                        <TouchableHighlight style={styles.getStarted} underlayColor="#8dc3f0" onPress={getStarted}>
-                            <Text style={styles.getStartedText}>Get started</Text>
-                        </TouchableHighlight>
-                    }
                 </View>
                 {/* <View style={styles.container}>
                     <TextInput
@@ -119,17 +129,22 @@ const Home = () => {
 export default Home;
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
+    container:{
+        backgroundColor:'rgba(0,0,0,0.5)',
+        justifyContent: 'space-around',
+        height: "100%",
+        flex:1
+    },
+    content: {
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'row',
+        height:SCREEN_HEIGHT*0.75,
         width: SCREEN_WIDTH*2
     },
     footer:{
-        justifyContent:"space-around",
         alignItems: 'center',
-        marginBottom:50,
+        justifyContent: 'flex-start',
     },
     homePhoneNumberFormContainer:{
         alignItems: 'center',
@@ -151,7 +166,8 @@ const styles = StyleSheet.create({
         elevation: 7,
         shadowRadius: 3,
         shadowOpacity: 0.15,
-        height: 50
+        height: 50,
+        width: SCREEN_WIDTH - 50
     },
     getStartedText:{
         fontSize: 16,
@@ -162,7 +178,7 @@ const styles = StyleSheet.create({
         height: "100%",
         width: "100%",
         resizeMode: 'cover',
-        borderRadius: 20
+        borderRadius: 20,
     },
 });
 
