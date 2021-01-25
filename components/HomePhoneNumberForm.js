@@ -1,12 +1,14 @@
 import React, { useRef, useState, useContext } from 'react';
 // components
 import {StyleSheet, TouchableHighlight, View, Text} from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 import PhoneInput from "react-native-phone-number-input";
 // context
 import HomeContext from "../contexts/HomeContext.js";
 // libs
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import firebase from "../firebase/firebase.js";
+import {isEmpty} from "lodash";
 
 
 
@@ -14,6 +16,7 @@ const HomePhoneNumberForm = () =>{
     const homeContext = useContext(HomeContext);
     const [sendCodeTextColor, setSendCodeTextColor] = useState({color:'#0f9bf2'});
     const [phoneNumber, setPhoneNumber] = useState('');
+    const [error, setError] = useState('');
     const recaptchaVerifier = useRef(null);
 
     const sendVerification = async () => {
@@ -22,16 +25,23 @@ const HomePhoneNumberForm = () =>{
         homeContext.mutations.setPhoneNumberVerificationId(responseVerifcationID);
     }
 
+    const errors = {
+        "auth/captcha-check-failed": "reCAPTCHA failed please try again. If the problem persists contact support.",
+        "auth/invalid-phone-number": "The phone number is invalid",
+        "auth/missing-phone-number": "The phone number is missing",
+        "default" : "There was an issue processing your request. Please contact support",
+    }
+
     const sendCode = async () =>{
         try{
             await sendVerification();
             homeContext.actions.animateHomeContainerForward();
         } catch(e){
-            // handle error
+            if(e.code !== "ERR_FIREBASE_RECAPTCHA_CANCEL"){
+                !isEmpty(errors[e.code]) ? setError(errors[e.code]): setError(errors["default"]);
+            }
         }
     }
-
-    
     return(
         <View styles={styles.phoneNumberForm}>
             <PhoneInput
@@ -40,6 +50,13 @@ const HomePhoneNumberForm = () =>{
                 containerStyle={styles.containerStyle}
                 textContainerStyle={styles.textContainerStyle}
             />
+            {
+                error !== '' &&
+                <View style={styles.errorContainer}>
+                    <MaterialIcons name="error" size={24} color="red"/>
+                    <Text style={styles.errorText}>{error}</Text>
+                </View>
+            }
             <View style={styles.sendCodeButtonContainer}>
                 <TouchableHighlight
                     style={styles.sendCodeButton}
@@ -78,6 +95,18 @@ const styles = StyleSheet.create({
     textContainerStyle:{
         borderTopRightRadius: 10,
         borderBottomRightRadius:10,
+    },
+    errorContainer:{
+        alignItems: 'center',
+        flexDirection:'row',
+        justifyContent:'flex-start',
+        marginTop: 20,
+        width: 350
+    },
+    errorText:{
+        fontWeight: "800",
+        color: 'red',
+        marginLeft:10
     },
     sendCodeButtonContainer:{
         alignItems: 'center',
