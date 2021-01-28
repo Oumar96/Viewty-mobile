@@ -59,22 +59,30 @@ const HomePhoneNumberForm = () =>{
                     <Text style={styles.errorText}>{error}</Text>
                 </View>
             }
-            <View style={styles.sendCodeButtonContainer}>
-                <TouchableHighlight
-                    style={styles.sendCodeButton}
-                    underlayColor="#0f9bf2"
-                    onShowUnderlay={() => {setSendCodeTextColor({color:'white'})}}
-                    onHideUnderlay={() => {setSendCodeTextColor({color:'#0f9bf2'})}}
-                    onPress={sendCode}
-                >
-                    <Text style={[styles.sendCodeText, sendCodeTextColor]}> Send Code </Text>
-                </TouchableHighlight>
-            </View>
-            <FirebaseRecaptchaVerifierModal
-                ref={recaptchaVerifier}
-                firebaseConfig={firebase.app().options}
-                attemptInvisibleVerification={attemptInvisibleVerification}
-            />
+
+            {!phoneNumber ? (
+                <></>
+            ) : (
+                <>
+                    <View style={styles.sendCodeButtonContainer}>
+                        <TouchableHighlight
+                            style={styles.sendCodeButton}
+                            underlayColor="#0f9bf2"
+                            onShowUnderlay={() => {setSendCodeTextColor({color:'white'})}}
+                            onHideUnderlay={() => {setSendCodeTextColor({color:'#0f9bf2'})}}
+                            onPress={sendCode}
+                        >
+                            <Text style={[styles.sendCodeText, sendCodeTextColor]}> Send Code </Text>
+                        </TouchableHighlight>
+                    </View>
+                    <FirebaseRecaptchaVerifierModal
+                        ref={recaptchaVerifier}
+                        firebaseConfig={firebase.app().options}
+                        attemptInvisibleVerification={attemptInvisibleVerification}
+                    />
+                </>
+            )
+            }
         </View>
     )
 }
