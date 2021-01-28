@@ -18,6 +18,7 @@ const HomePhoneNumberForm = () =>{
     const [phoneNumber, setPhoneNumber] = useState('');
     const [error, setError] = useState('');
     const recaptchaVerifier = useRef(null);
+    const attemptInvisibleVerification = true;
 
     const sendVerification = async () => {
         const phoneProvider = new firebase.auth.PhoneAuthProvider();
@@ -72,6 +73,7 @@ const HomePhoneNumberForm = () =>{
             <FirebaseRecaptchaVerifierModal
                 ref={recaptchaVerifier}
                 firebaseConfig={firebase.app().options}
+                attemptInvisibleVerification={attemptInvisibleVerification}
             />
         </View>
     )
