@@ -2,6 +2,8 @@ import React from "react";
 
 const MoviesContext = React.createContext({
     state:{
+        currentUserId:"",
+        currentRoomId:"",
         movies:[],
         currentMovieIndex:0,
         topCardPosition:null,
@@ -10,6 +12,9 @@ const MoviesContext = React.createContext({
         setCurrentMovieIndex: () =>{},
         setTopCardPosition:()=>{},
     },
+    actions:{
+        vote:() =>{},
+    }
 })
 
 export default MoviesContext;

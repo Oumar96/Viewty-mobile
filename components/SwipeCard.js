@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useContext }from 'react';
-
+import React, { useEffect, useState, useContext } from 'react';
 import { StyleSheet, View, Text, Dimensions, Image, Animated, PanResponder } from 'react-native';
 import MoviesContext from "../contexts/MoviesContext.js";
 import {isEmpty, upperCase} from "lodash";
@@ -21,11 +20,18 @@ const SwipeCard = (props) =>{
     } = props;
 
     const moviesContext = useContext(MoviesContext);
+    // context states
+    const currentUserId = moviesContext.state.currentUserId;
+    const currentRoomId = moviesContext.state.currentRoomId;
+    let position = moviesContext.state.topCardPosition;
+    // context actions
+    const vote = moviesContext.actions.vote;
+
+    // state
     const [panHandlers, setPanHandlers] = useState(null);
     const [movieImage, setMovieImage] = useState(getMovieImageInitialState(movie.image));
 
-    let position = moviesContext.state.topCardPosition
-
+    // data
     let rotate = position.x.interpolate({
         inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
         outputRange: ['-10deg', '0deg', '10deg'],
@@ -95,6 +101,7 @@ const SwipeCard = (props) =>{
         }
     }
 
+    //functions
     const incrementMovieIndex = () =>{
         let newMovieIndex = moviesContext.state.currentMovieIndex+1;
         moviesContext.mutations.setCurrentMovieIndex(newMovieIndex);
@@ -103,6 +110,20 @@ const SwipeCard = (props) =>{
         let newPosition = position;
         newPosition.setValue({ x: 0, y: 0 })
         moviesContext.mutations.setTopCardPosition(newPosition)
+    }
+    const likeMovie = async () =>{
+        let body = {
+            user: currentUserId,
+            room: currentRoomId,
+            vote: "like"
+        };
+        try{
+            await vote(movie.name, body)
+            incrementMovieIndex();
+            removeCard();
+        } catch(error){
+            console.log(error)
+        }
     }
     const setMovieImageToDefault = () =>{
         setMovieImage(require('../assets/1.jpg'));
@@ -122,8 +143,7 @@ const SwipeCard = (props) =>{
                     toValue: { x: SCREEN_WIDTH + 100, y: gestureState.dy },
                     useNativeDriver: true
                     }).start(() => {
-                        incrementMovieIndex();
-                        removeCard();
+                        likeMovie()
                     })
                 }
                 else if (gestureState.dx < -120) {
