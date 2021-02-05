@@ -23,7 +23,12 @@ const SwipeCard = (props) =>{
     // context states
     const currentUserId = moviesContext.state.currentUserId;
     const currentRoomId = moviesContext.state.currentRoomId;
+    let currentMovieIndex = moviesContext.state.currentMovieIndex;
     let position = moviesContext.state.topCardPosition;
+    // context mutations
+    const setCurrentMovieIndex = moviesContext.mutations.setCurrentMovieIndex;
+    const setTopCardPosition = moviesContext.mutations.setTopCardPosition;
+
     // context actions
     const vote = moviesContext.actions.vote;
 
@@ -103,13 +108,13 @@ const SwipeCard = (props) =>{
 
     //functions
     const incrementMovieIndex = () =>{
-        let newMovieIndex = moviesContext.state.currentMovieIndex+1;
-        moviesContext.mutations.setCurrentMovieIndex(newMovieIndex);
+        let newMovieIndex = currentMovieIndex+1;
+        setCurrentMovieIndex(newMovieIndex);
     }
     const removeCard = () =>{
         let newPosition = position;
         newPosition.setValue({ x: 0, y: 0 })
-        moviesContext.mutations.setTopCardPosition(newPosition)
+        setTopCardPosition(newPosition)
     }
     const likeMovie = async () =>{
         let body = {
@@ -118,7 +123,7 @@ const SwipeCard = (props) =>{
             vote: "like"
         };
         try{
-            await vote(movie.name, body)
+            // await vote(movie.name, body)
             incrementMovieIndex();
             removeCard();
         } catch(error){
@@ -132,9 +137,9 @@ const SwipeCard = (props) =>{
             return PanResponder.create({
                 onStartShouldSetPanResponder: (evt, gestureState) => true,
                 onPanResponderMove: (evt, gestureState) => {
-                let newPosition = position;
-                newPosition.setValue({ x: gestureState.dx, y: gestureState.dy })
-                moviesContext.mutations.setTopCardPosition(newPosition)
+                    let newPosition = position;
+                    newPosition.setValue({ x: gestureState.dx, y: gestureState.dy })
+                    setTopCardPosition(newPosition)
                 },
                 onPanResponderRelease: (evt, gestureState) => {
 
@@ -169,7 +174,7 @@ const SwipeCard = (props) =>{
     useEffect( () => {
         let panResponder = getPanResponder();
         setPanHandlers(panResponder.panHandlers);
-    }, [moviesContext.state.currentMovieIndex]);
+    }, [currentMovieIndex]);
 
     return (
         <Animated.View
