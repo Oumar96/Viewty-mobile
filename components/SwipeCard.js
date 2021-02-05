@@ -6,7 +6,11 @@ import {isEmpty, upperCase} from "lodash";
 const SCREEN_HEIGHT = Dimensions.get('window').height
 const SCREEN_WIDTH = Dimensions.get('window').width
 
-
+/**
+ *
+ * @param {String} image
+ * @returns {uri}
+ */
 const getMovieImageInitialState = (image) =>{
     return isEmpty(image) ?
         require('../assets/1.jpg') :
@@ -20,23 +24,33 @@ const SwipeCard = (props) =>{
     } = props;
 
     const moviesContext = useContext(MoviesContext);
-    // context states
+    /***********
+     * Context State
+     ***********/
     const currentUserId = moviesContext.state.currentUserId;
     const currentRoomId = moviesContext.state.currentRoomId;
     let currentMovieIndex = moviesContext.state.currentMovieIndex;
     let position = moviesContext.state.topCardPosition;
-    // context mutations
+    /***********
+     * Context Mutations
+     ***********/
     const setCurrentMovieIndex = moviesContext.mutations.setCurrentMovieIndex;
     const setTopCardPosition = moviesContext.mutations.setTopCardPosition;
 
-    // context actions
+    /***********
+     * Context Actions
+     ***********/
     const vote = moviesContext.actions.vote;
 
-    // state
+    /***********
+     * State
+     ***********/
     const [panHandlers, setPanHandlers] = useState(null);
     const [movieImage, setMovieImage] = useState(getMovieImageInitialState(movie.image));
 
-    // data
+    /***********
+     * Data
+     ***********/
     let rotate = position.x.interpolate({
         inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
         outputRange: ['-10deg', '0deg', '10deg'],
@@ -106,33 +120,83 @@ const SwipeCard = (props) =>{
         }
     }
 
-    //functions
+    /***********
+     * Methods
+     ***********/
+
     const incrementMovieIndex = () =>{
         let newMovieIndex = currentMovieIndex+1;
         setCurrentMovieIndex(newMovieIndex);
     }
-    const removeCard = () =>{
+    const setNextCardCenter = () =>{
         let newPosition = position;
         newPosition.setValue({ x: 0, y: 0 })
         setTopCardPosition(newPosition)
     }
-    const likeMovie = async () =>{
+
+    /**
+     *
+     * @param {String} direction
+     * @param {Number} yPosition
+     */
+    const removeCard = (direction, yPosition) => {
+        let data ={
+            left: {
+                exitPosition:{
+                    x: -SCREEN_WIDTH - 100,
+                    y: yPosition
+                },
+                vote:"dislike"
+            },
+            right:{
+                exitPosition:{
+                    x: SCREEN_WIDTH + 100,
+                    y: yPosition
+                },
+                vote:"like"
+            }
+        }
+        Animated.spring(position, {
+            toValue: data[direction].exitPosition,
+            useNativeDriver: true
+        }).start(() => {
+            voteMovie(data[direction].vote)
+        })
+    }
+    const resetCardPosition = () =>{
+        Animated.spring(position, {
+            toValue: { x: 0, y: 0 },
+            friction: 4,
+            useNativeDriver: true
+        }).start()
+    }
+    /**
+     *
+     * @param {String} vote
+     */
+    const voteMovie = async (vote) =>{
         let body = {
             user: currentUserId,
             room: currentRoomId,
-            vote: "like"
+            vote
         };
+        console.log("called", body)
         try{
             // await vote(movie.name, body)
+            dksb
             incrementMovieIndex();
-            removeCard();
+            setNextCardCenter();
         } catch(error){
             console.log(error)
+            resetCardPosition()
         }
     }
     const setMovieImageToDefault = () =>{
         setMovieImage(require('../assets/1.jpg'));
     }
+    /**
+     * @returns {PanResponder}
+     */
     const getPanResponder = () =>{
             return PanResponder.create({
                 onStartShouldSetPanResponder: (evt, gestureState) => true,
@@ -143,30 +207,15 @@ const SwipeCard = (props) =>{
                 },
                 onPanResponderRelease: (evt, gestureState) => {
 
-                if (gestureState.dx > 120) {
-                    Animated.spring(position, {
-                    toValue: { x: SCREEN_WIDTH + 100, y: gestureState.dy },
-                    useNativeDriver: true
-                    }).start(() => {
-                        likeMovie()
-                    })
-                }
-                else if (gestureState.dx < -120) {
-                    Animated.spring(position, {
-                    toValue: { x: -SCREEN_WIDTH - 100, y: gestureState.dy },
-                    useNativeDriver: true
-                    }).start(() => {
-                        incrementMovieIndex();
-                        removeCard();
-                    })
-                }
-                else {
-                    Animated.spring(position, {
-                    toValue: { x: 0, y: 0 },
-                    friction: 4,
-                    useNativeDriver: true
-                    }).start()
-                }
+                    if (gestureState.dx > 120) {
+                        removeCard("right", gestureState.dy)
+                    }
+                    else if (gestureState.dx < -120) {
+                        removeCard("left", gestureState.dy)
+                    }
+                    else {
+                        resetCardPosition();
+                    }
                 }
             })
     }

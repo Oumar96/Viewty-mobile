@@ -13,11 +13,37 @@ const USER_ID = "5145753393";
 const ROOM_ID = "a9ee2bb6-66d7-4e1f-a282-3ecbc01cb707";
 
 const Movies = () =>{
+    /***********
+     * State
+     ***********/
     const [movies, setMovies] = useState([]);
     const [currentUserId, setCurrentUserId] = useState(USER_ID);
     const [currentRoomId, setCurrentRoomId] = useState(ROOM_ID);
     const [currentMovieIndex, setCurrentMovieIndex] = useState(0);
     const [topCardPosition, setTopCardPosition] = useState(new Animated.ValueXY());
+
+    /***********
+     * Methods
+     ***********/
+
+    /**
+     *
+     * @param {String} name
+     * @param {Object} payload
+     * @param {String} payload.user
+     * @param {String} payload.room
+     * @param {String} payload.vote
+     * @returns {Promise}
+     */
+    const vote = async (name, payload) =>{
+        try{
+            let response = await MoviesApi.vote(name, payload);
+            return Promise.resolve(response)
+        }
+        catch(error){
+            return Promise.reject(error)
+        }
+    }
 
     useEffect(() => {
         const roomsRef = firebase.database().ref('rooms');
@@ -37,15 +63,6 @@ const Movies = () =>{
         });
     }, []);
 
-    const vote = async (name, payload) =>{
-        try{
-            let response = await MoviesApi.vote(name, payload);
-            return Promise.resolve(response)
-        }
-        catch(error){
-            return Promise.reject(error)
-        }
-    }
     return(
         <MoviesContext.Provider value={{
             state:{
