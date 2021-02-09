@@ -17,6 +17,8 @@ const Movies = () =>{
      * State
      ***********/
     const [movies, setMovies] = useState([]);
+    const [fetchedMovies, setFetchedMovies] = useState([]);
+    const [isInitialMoviesLoaded, setIsInitialMoviesLoaded] = useState(false);
     const [currentUserId, setCurrentUserId] = useState(USER_ID);
     const [currentRoomId, setCurrentRoomId] = useState(ROOM_ID);
     const [currentMovieIndex, setCurrentMovieIndex] = useState(0);
@@ -46,22 +48,35 @@ const Movies = () =>{
     }
 
     useEffect(() => {
-        const roomsRef = firebase.database().ref('rooms');
-        roomsRef.on('value', (snapshot) => {
-            let currentRoom = snapshot.child(ROOM_ID)
-            let roomMovies = currentRoom.child("movies").val();
-            let movies = [];
-            for (let movie in roomMovies){
-                if(isNil(roomMovies[movie][USER_ID])){
-                    movies.push({
-                        name:movie,
-                        ...roomMovies[movie]
+        const moviesRef = firebase.database().ref(`rooms/${ROOM_ID}/movies`);
+        moviesRef.on('value', (snapshot) => {
+            let roomMovies = snapshot.val();
+            let moviesTemp = [];
+            for (let newMovie in roomMovies){
+                if(isNil(roomMovies[newMovie][USER_ID])){
+                    moviesTemp.push({
+                        name:newMovie,
+                        ...roomMovies[newMovie]
                     })
                 }
             }
-            setMovies(movies)
+            setFetchedMovies(moviesTemp)
+            setIsInitialMoviesLoaded(true);
         });
     }, []);
+
+    useEffect(() =>{
+        let moviesTemp = [...movies];
+        fetchedMovies.forEach((fetchedMovie) =>{
+            let isMovieAlreadyLoaded = moviesTemp.some(movie => {
+                return movie.name.toString() === fetchedMovie.name.toString()
+            });
+            if(!isMovieAlreadyLoaded){
+                moviesTemp.push(fetchedMovie)
+            }
+        })
+        setMovies(moviesTemp)
+    }, [fetchedMovies])
 
     return(
         <MoviesContext.Provider value={{

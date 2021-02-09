@@ -146,21 +146,21 @@ const SwipeCard = (props) =>{
                     x: -SCREEN_WIDTH - 100,
                     y: yPosition
                 },
-                vote:"dislike"
+                choice:"dislike"
             },
             right:{
                 exitPosition:{
                     x: SCREEN_WIDTH + 100,
                     y: yPosition
                 },
-                vote:"like"
+                choice:"like"
             }
         }
         Animated.spring(position, {
             toValue: data[direction].exitPosition,
             useNativeDriver: true
         }).start(() => {
-            voteMovie(data[direction].vote)
+            voteMovie(data[direction].choice)
         })
     }
     const resetCardPosition = () =>{
@@ -174,16 +174,16 @@ const SwipeCard = (props) =>{
      *
      * @param {String} vote
      */
-    const voteMovie = async (vote) =>{
+    const voteMovie = async (choice) =>{
         let body = {
             user: currentUserId,
             room: currentRoomId,
-            vote
+            vote: choice
         };
-        console.log("called", body)
+        console.log("called vote", body)
         try{
             // await vote(movie.name, body)
-            dksb
+            // dksb
             incrementMovieIndex();
             setNextCardCenter();
         } catch(error){
