@@ -2,7 +2,7 @@ import React ,{useState, useEffect } from 'react';
 
 import {View,Animated} from 'react-native';
 import firebase from "../firebase/firebase.js";
-import {isNil} from "lodash";
+import {isNil, isEmpty} from "lodash";
 
 import MoviesApi from "../api/Movies.js";
 
@@ -17,8 +17,7 @@ const Movies = () =>{
      * State
      ***********/
     const [movies, setMovies] = useState([]);
-    const [fetchedMovies, setFetchedMovies] = useState([]);
-    const [isInitialMoviesLoaded, setIsInitialMoviesLoaded] = useState(false);
+    const [initialMovies, setInitialMovies] = useState([]);
     const [currentUserId, setCurrentUserId] = useState(USER_ID);
     const [currentRoomId, setCurrentRoomId] = useState(ROOM_ID);
     const [currentMovieIndex, setCurrentMovieIndex] = useState(0);
@@ -60,23 +59,25 @@ const Movies = () =>{
                     })
                 }
             }
-            setFetchedMovies(moviesTemp)
-            setIsInitialMoviesLoaded(true);
+            setInitialMovies(moviesTemp)
         });
     }, []);
 
     useEffect(() =>{
-        let moviesTemp = [...movies];
-        fetchedMovies.forEach((fetchedMovie) =>{
-            let isMovieAlreadyLoaded = moviesTemp.some(movie => {
-                return movie.name.toString() === fetchedMovie.name.toString()
-            });
-            if(!isMovieAlreadyLoaded){
-                moviesTemp.push(fetchedMovie)
+        let currentMovies = [...movies];
+        const moviesRef = firebase.database().ref(`rooms/${ROOM_ID}/movies`);
+        moviesRef.on("child_added", (snapshot) =>{
+            let newMovie = {
+                name:snapshot.key,
+                ...snapshot.val()
+            }
+            let isMovieInCurrentMovies = currentMovies.some(movie => movie.name === newMovie.name);
+            if(!isMovieInCurrentMovies && !isEmpty(initialMovies) && isNil(newMovie[USER_ID])){
+                currentMovies.push(newMovie)
             }
         })
-        setMovies(moviesTemp)
-    }, [fetchedMovies])
+        setMovies(currentMovies)
+    }, [initialMovies])
 
     return(
         <MoviesContext.Provider value={{
