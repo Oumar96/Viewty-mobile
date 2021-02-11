@@ -1,5 +1,5 @@
 
-import React, {useState, useRef} from 'react';
+import React, { useRef, useState, useContext }from 'react';
 // components
 import {
     StyleSheet,
@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import HomePhoneNumberForm from '../components/HomePhoneNumberForm.js';
 import HomeCodeConfirmation from '../components/HomeCodeConfirmation.js';
+import Movies from './Movies.js';
 // context
 import HomeContext from "../contexts/HomeContext.js";
 
@@ -20,12 +21,15 @@ const SCREEN_HEIGHT = Dimensions.get('window').height
 
 
 const Home = () => {
+    const homeContext = useContext(HomeContext);
     const homeNumberPhonePosition = useRef(new Animated.Value(0)).current;
     const [currentContainerPosition, setCurrentContainerPosition] = useState(0);
     const [isShowingGetStartedButton, setIsShowingGetStartedButton] = useState(true);
     const [phoneNumberVerificationId, setPhoneNumberVerificationId] = useState('');
+    const [isSignedIn, setIsSignedIn] = useState(false);
 
     const getStarted = () =>{
+        setIsSignedIn(false);
         setIsShowingGetStartedButton(false);
         animateHomeContainerForward();
     }
@@ -51,13 +55,19 @@ const Home = () => {
         }]
     }
 
+    const confirmSignIn = () => {
+        return homeContext.state.isSignedIn;
+    }
+
     return (
         <HomeContext.Provider value={{
             state:{
-                phoneNumberVerificationId
+                phoneNumberVerificationId,
+                isSignedIn,
             },
             mutations:{
                 setPhoneNumberVerificationId,
+                setIsSignedIn,
             },
             actions:{
                 animateHomeContainerForward,
@@ -69,25 +79,34 @@ const Home = () => {
                 source={require('../assets/popcorn.jpg')}
             >
                 <View style={styles.container}>
-                    <Animated.View style={[styles.content, homePhoneNumberTranslate]} >
-                        <View style={styles.welcomeMessageContainer}>
-                            <Text style={styles.welcomeText}>WELCOME TO VIEWTY</Text>
-                            <Text style={styles.swipeWithFriendsText}>Swipe with friends and find the perfect film for movie night</Text>
+                    {confirmSignIn ? (
+                        <>
+                        <Animated.View style={[styles.content, homePhoneNumberTranslate]} >
+                            <View style={styles.welcomeMessageContainer}>
+                                <Text style={styles.welcomeText}>WELCOME TO VIEWTY</Text>
+                                <Text style={styles.swipeWithFriendsText}>Swipe with friends and find the perfect film for movie night</Text>
+                            </View>
+                            <View style={styles.homePhoneNumberFormContainer}>
+                                <HomePhoneNumberForm/>
+                            </View>
+                            <View style={styles.homeCodeConfirmationContainer}>
+                                <HomeCodeConfirmation/>
+                            </View>
+                        </Animated.View>
+                        <View style={styles.footer}>
+                            {isShowingGetStartedButton &&
+                                <TouchableHighlight style={styles.getStarted} underlayColor="#8dc3f0" onPress={getStarted}>
+                                    <Text style={styles.getStartedText}>Get started</Text>
+                                </TouchableHighlight>
+                            }
                         </View>
-                        <View style={styles.homePhoneNumberFormContainer}>
-                            <HomePhoneNumberForm/>
-                        </View>
-                        <View style={styles.homeCodeConfirmationContainer}>
-                            <HomeCodeConfirmation/>
-                        </View>
-                    </Animated.View>
-                    <View style={styles.footer}>
-                        {isShowingGetStartedButton &&
-                            <TouchableHighlight style={styles.getStarted} underlayColor="#8dc3f0" onPress={getStarted}>
-                                <Text style={styles.getStartedText}>Get started</Text>
-                            </TouchableHighlight>
-                        }
-                    </View>
+                        </>
+                    ) : (
+                        <>
+                            <Movies/>
+                        </>
+                    )
+                    }
                 </View>
             </ImageBackground>
         </HomeContext.Provider>

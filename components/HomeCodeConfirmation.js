@@ -16,16 +16,32 @@ const HomeCodeConfirmation = () =>{
 
     const confirmCode = async () => {
         try{
+            console.log("confirm")
             const phoneNumberVerificationId = homeContext.state.phoneNumberVerificationId;
             const credential = firebase.auth.PhoneAuthProvider.credential(
                 phoneNumberVerificationId,
                 phoneVerificationCode
             );
-            await firebase.auth().signInWithCredential(credential)
+            await firebase.auth().signInWithCredential(credential);
+            homeContext.mutations.setIsSignedIn(true);
         } catch (error){
+            console.log(error);
+            
         }
     };
 
+    const statePersistence = () => {
+        try{
+            firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+            .then(() => {
+              console.log("state persistence")
+              confirmCode();
+            })
+        }
+        catch(error) {
+            console.log(error);
+        };
+    }
     return(
         <View styles={styles.codeConfirmation}>
             <TextInput
@@ -37,7 +53,7 @@ const HomeCodeConfirmation = () =>{
                 <TouchableHighlight
                     style={styles.confirmCodeButton}
                     underlayColor="#0f9bf2"
-                    onPress={confirmCode}
+                    onPress={statePersistence}
                     onShowUnderlay={() => {setConfirmCodeTextColor({color:'white'})}}
                     onHideUnderlay={() => {setConfirmCodeTextColor({color:'#0f9bf2'})}}
                 >
