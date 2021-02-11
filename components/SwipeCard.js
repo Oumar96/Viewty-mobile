@@ -41,6 +41,7 @@ const SwipeCard = (props) =>{
      * Context Actions
      ***********/
     const vote = moviesContext.actions.vote;
+    const showErrorModal = moviesContext.actions.showErrorModal;
 
     /***********
      * State
@@ -180,14 +181,13 @@ const SwipeCard = (props) =>{
             room: currentRoomId,
             vote: choice
         };
-        console.log("called vote", body)
         try{
             // await vote(movie.name, body)
-            // dksb
+            dksb
             incrementMovieIndex();
             setNextCardCenter();
         } catch(error){
-            console.log(error)
+            showErrorModal()
             resetCardPosition()
         }
     }

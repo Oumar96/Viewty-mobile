@@ -1,6 +1,6 @@
 import React ,{useState, useEffect } from 'react';
 
-import {View,Animated} from 'react-native';
+import {View, Animated} from 'react-native';
 import firebase from "../firebase/firebase.js";
 import {isNil, isEmpty} from "lodash";
 
@@ -8,6 +8,7 @@ import MoviesApi from "../api/Movies.js";
 
 import MoviesContext from "../contexts/MoviesContext.js";
 import SwipeCardsList from "../components/SwipeCardsList.js";
+import ErrorModal from "../components/ErrorModal.js"
 
 const USER_ID = "5145753393";
 const ROOM_ID = "a9ee2bb6-66d7-4e1f-a282-3ecbc01cb707";
@@ -22,6 +23,7 @@ const Movies = () =>{
     const [currentRoomId, setCurrentRoomId] = useState(ROOM_ID);
     const [currentMovieIndex, setCurrentMovieIndex] = useState(0);
     const [topCardPosition, setTopCardPosition] = useState(new Animated.ValueXY());
+    const [isShowErrorModal, setIsShowErrorModal] = useState(false);
 
     /***********
      * Methods
@@ -61,6 +63,9 @@ const Movies = () =>{
             }
             setInitialMovies(moviesTemp)
         });
+        moviesRef.on('child_changed', (snapshot) =>{
+            console.log("child_changed", snapshot)
+        })
     }, []);
 
     useEffect(() =>{
@@ -86,14 +91,15 @@ const Movies = () =>{
                 currentRoomId,
                 movies,
                 currentMovieIndex,
-                topCardPosition
+                topCardPosition,
             },
             mutations:{
                 setCurrentMovieIndex:(index) =>setCurrentMovieIndex(index),
-                setTopCardPosition:(position) => setTopCardPosition(position)
+                setTopCardPosition:(position) => setTopCardPosition(position),
             },
             actions:{
-                vote
+                vote,
+                showErrorModal: () => setIsShowErrorModal(true)
             }
         }}>
         <View style={{ flex: 1 }}>
@@ -103,6 +109,10 @@ const Movies = () =>{
             <View style={{ height: 60 }}>
             </View>
         </View>
+        <ErrorModal
+            isVisible={isShowErrorModal}
+            hide={() =>setIsShowErrorModal(false)}
+        />
         </MoviesContext.Provider>
     )
 }

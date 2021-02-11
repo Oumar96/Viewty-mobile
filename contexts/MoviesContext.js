@@ -14,6 +14,7 @@ const MoviesContext = React.createContext({
     },
     actions:{
         vote:() =>{},
+        showErrorModal:() =>{}
     }
 })
 
