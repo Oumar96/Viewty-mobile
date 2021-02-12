@@ -22,29 +22,26 @@ const ErrorModal = (props) =>{
     }
 
     return (
-        isVisible &&
-        <View style={styles.container}>
-            <Modal
-            animationType="fade"
-            transparent={true}
-            visible={isVisible}
-            >
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <Text style={styles.modalText}>An error occured! Please try again. If the error persists contact support</Text>
-                        <TouchableHighlight
-                            style={styles.buttonClose}
-                            onPress={hideModal}
-                            underlayColor="red"
-                            onShowUnderlay={() => {setButtonTextColor({color:'white'})}}
-                            onHideUnderlay={() => {setButtonTextColor({color:'red'})}}
-                        >
-                            <Text style={[styles.textStyle, buttonTextColor]}>Close</Text>
-                        </TouchableHighlight>
-                    </View>
-                </View>
-            </Modal>
-        </View>
+      <Modal
+      animationType="fade"
+      transparent={true}
+      visible={isVisible}
+      >
+          <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                  <Text style={styles.modalText}>An error occured! Please try again. If the error persists contact support</Text>
+                  <TouchableHighlight
+                      style={styles.buttonClose}
+                      onPress={hideModal}
+                      underlayColor="red"
+                      onShowUnderlay={() => {setButtonTextColor({color:'white'})}}
+                      onHideUnderlay={() => {setButtonTextColor({color:'red'})}}
+                  >
+                      <Text style={[styles.textStyle, buttonTextColor]}>Close</Text>
+                  </TouchableHighlight>
+              </View>
+          </View>
+      </Modal>
     )
 }
 
@@ -53,13 +50,11 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        marginTop: 22,
     },
     centeredView: {
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
-      marginTop: 22,
       backgroundColor:"rgba(0, 0, 0, 0.5)",
     },
     modalView: {

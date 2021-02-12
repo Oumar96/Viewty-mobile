@@ -8,7 +8,8 @@ import MoviesApi from "../api/Movies.js";
 
 import MoviesContext from "../contexts/MoviesContext.js";
 import SwipeCardsList from "../components/SwipeCardsList.js";
-import ErrorModal from "../components/ErrorModal.js"
+import ErrorModal from "../components/ErrorModal.js";
+import Match from "../components/Match.js";
 
 const USER_ID = "5145753393";
 const ROOM_ID = "a9ee2bb6-66d7-4e1f-a282-3ecbc01cb707";
@@ -109,6 +110,7 @@ const Movies = () =>{
             <View style={{ height: 60 }}>
             </View>
         </View>
+        <Match/>
         <ErrorModal
             isVisible={isShowErrorModal}
             hide={() =>setIsShowErrorModal(false)}
