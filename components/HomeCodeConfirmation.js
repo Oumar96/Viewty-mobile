@@ -23,7 +23,6 @@ const HomeCodeConfirmation = () =>{
                 phoneVerificationCode
             );
             await firebase.auth().signInWithCredential(credential);
-            homeContext.mutations.setIsSignedIn(true);
         } catch (error){
             console.log(error);
             
@@ -32,10 +31,9 @@ const HomeCodeConfirmation = () =>{
 
     const statePersistence = () => {
         try{
-            firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-            .then(() => {
-              console.log("state persistence")
-              confirmCode();
+            firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE)
+            .then(async () => {
+              await confirmCode();
             })
         }
         catch(error) {
