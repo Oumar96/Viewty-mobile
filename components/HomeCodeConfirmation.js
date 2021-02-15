@@ -29,12 +29,10 @@ const HomeCodeConfirmation = () =>{
         }
     };
 
-    const statePersistence = () => {
+    const statePersistence = async () => {
         try{
-            firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE)
-            .then(async () => {
-              await confirmCode();
-            })
+            await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
+            await confirmCode();
         }
         catch(error) {
             console.log(error);
