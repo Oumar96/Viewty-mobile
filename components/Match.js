@@ -8,7 +8,7 @@ const Match = () =>{
     return (
         <View style={styles.container}>
             <View style={styles.newMatch}>
-                <Text style={styles.newMatchText}>New Match</Text>
+                <Text style={styles.newMatchText}>New Match!</Text>
             </View>
             <View style={styles.movieMatched}>
                 <View>
@@ -52,14 +52,14 @@ const styles = StyleSheet.create({
     },
     newMatch:{
         flex:2,
-        backgroundColor:'blue',
         width:'100%',
         justifyContent:'center',
         alignItems:'center'
     },
     newMatchText:{
         color:'white',
-        fontSize:30
+        fontSize:30,
+        fontFamily: 'Pacifico_400Regular',
     },
     movieMatched:{
         flex:4,
