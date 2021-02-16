@@ -21,7 +21,7 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 
-const Home = () => {
+const Home = ({navigation}) => {
     const homeNumberPhonePosition = useRef(new Animated.Value(0)).current;
     const [currentContainerPosition, setCurrentContainerPosition] = useState(0);
     const [isShowingGetStartedButton, setIsShowingGetStartedButton] = useState(true);
@@ -54,24 +54,17 @@ const Home = () => {
         }]
     }
 
-    const goToMovies= ({navigation}) => {
-        navigation.navigate('Movies');       
-    }
-
     useEffect(() => {
         console.log("onauthchange");
-        const unsubscribe = firebase.auth().onAuthStateChanged(user => {
+        firebase.auth().onAuthStateChanged(user => {
             if(user) { 
                 console.log("one user");
                 setUser(user);
-                console.log("uuuuuuser", user);
-                goToMovies();
+                navigation.navigate('Room');       
             } else {
-                console.log("null");
-                setUser(null);
+                console.log("no users");
             }
          });
-         return () => unsubscribe();
     },[]);
 
 
