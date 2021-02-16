@@ -1,5 +1,5 @@
 
-import React, { useRef, useState }from 'react';
+import React, { useEffect, useRef, useState }from 'react';
 // components
 import {
     StyleSheet,
@@ -18,7 +18,7 @@ import HomeContext from "../contexts/HomeContext.js";
 import firebase from "../firebase/firebase.js";
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
-const SCREEN_HEIGHT = Dimensions.get('window').height
+const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 
 const Home = () => {
@@ -26,12 +26,11 @@ const Home = () => {
     const [currentContainerPosition, setCurrentContainerPosition] = useState(0);
     const [isShowingGetStartedButton, setIsShowingGetStartedButton] = useState(true);
     const [phoneNumberVerificationId, setPhoneNumberVerificationId] = useState('');
+    const [user, setUser] = useState(false);
 
     const getStarted = () =>{
         setIsShowingGetStartedButton(false);
         animateHomeContainerForward();
-        signedIn();
-        
     }
     const animateHomeContainerForward = () =>{
         Animated.timing(homeNumberPhonePosition, {
@@ -55,28 +54,26 @@ const Home = () => {
         }]
     }
 
-    const signedIn = ({ navigation }) =>{
-        console.log("hello");
-        firebase.auth().onAuthStateChanged(user => {
-            {user ? (
-                navigation.navigate('Movies') 
-            ) : (
-                <>
-                    <View style={styles.welcomeMessageContainer}>
-                        <Text style={styles.welcomeText}>WELCOME TO VIEWTY</Text>
-                        <Text style={styles.swipeWithFriendsText}>Swipe with friends and find the perfect film for movie night</Text>
-                    </View>
-                    <View style={styles.homePhoneNumberFormContainer}>
-                        <HomePhoneNumberForm/>
-                    </View>
-                    <View style={styles.homeCodeConfirmationContainer}>
-                        <HomeCodeConfirmation/>
-                    </View>
-                </>
-            )         
-            }
-        })
+    const goToMovies= ({navigation}) => {
+        navigation.navigate('Movies');       
     }
+
+    useEffect(() => {
+        console.log("onauthchange");
+        const unsubscribe = firebase.auth().onAuthStateChanged(user => {
+            if(user) { 
+                console.log("one user");
+                setUser(user);
+                console.log("uuuuuuser", user);
+                goToMovies();
+            } else {
+                console.log("null");
+                setUser(null);
+            }
+         });
+         return () => unsubscribe();
+    },[]);
+
 
     return (
         <HomeContext.Provider value={{
@@ -97,7 +94,7 @@ const Home = () => {
             >
                 <View style={styles.container}>
                     <Animated.View style={[styles.content, homePhoneNumberTranslate]} >
-                        {/* <View style={styles.welcomeMessageContainer}>
+                        <View style={styles.welcomeMessageContainer}>
                             <Text style={styles.welcomeText}>WELCOME TO VIEWTY</Text>
                             <Text style={styles.swipeWithFriendsText}>Swipe with friends and find the perfect film for movie night</Text>
                         </View>
@@ -106,7 +103,7 @@ const Home = () => {
                         </View>
                         <View style={styles.homeCodeConfirmationContainer}>
                             <HomeCodeConfirmation/>
-                        </View> */}
+                        </View>
                     </Animated.View>
                     <View style={styles.footer}>
                         {isShowingGetStartedButton &&

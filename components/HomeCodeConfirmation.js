@@ -16,23 +16,24 @@ const HomeCodeConfirmation = () =>{
 
     const confirmCode = async () => {
         try{
-            console.log("confirm")
+            console.log("confirm");
             const phoneNumberVerificationId = homeContext.state.phoneNumberVerificationId;
             const credential = firebase.auth.PhoneAuthProvider.credential(
                 phoneNumberVerificationId,
                 phoneVerificationCode
             );
-            await firebase.auth().signInWithCredential(credential);
+            let response = await firebase.auth().signInWithCredential(credential);
+            console.log("response", response);
         } catch (error){
-            console.log(error);
-            
+            console.log(error); 
         }
     };
 
     const statePersistence = async () => {
         try{
+            console.log("persistence");
             await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
-            await confirmCode();
+            confirmCode();
         }
         catch(error) {
             console.log(error);
