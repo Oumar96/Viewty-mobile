@@ -1,10 +1,38 @@
-import React from "react";
-import {StyleSheet, Text, Dimensions, TouchableHighlight, View } from "react-native";
+import React, {useState} from "react";
+import {StyleSheet, Text, Dimensions, Image, TouchableHighlight, View } from "react-native";
+import {isEmpty} from "lodash";
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
-const Match = () =>{
+/**
+ *
+ * @param {String} image
+ * @returns {uri}
+ */
+const getMovieImageInitialState = (image) =>{
+    return isEmpty(image) ?
+        require('../assets/1.jpg') :
+        {uri:image};
+}
+const Match = (props) =>{
+    const {
+        name="Batman",
+        image="https://i.pinimg.com/originals/f8/4c/75/f84c755544f81ec1bcd2d6396112566b.png"
+    } = props;
+
+    /***********
+     * State
+     ***********/
+    const [movieImage, setMovieImage] = useState(getMovieImageInitialState(image));
+
+    /***********
+     * Methods
+     ***********/
+
+    const setMovieImageToDefault = () =>{
+        setMovieImage(require('../assets/1.jpg'));
+    }
     return (
         <View style={styles.container}>
             <View style={styles.newMatch}>
@@ -12,13 +40,17 @@ const Match = () =>{
             </View>
             <View style={styles.movieMatched}>
                 <View>
-                    <Text>You both liked</Text>
+                    <Text style={styles.bothLikeText}>You and your guest both liked</Text>
                 </View>
                 <View>
-                    <Text>Movie</Text>
+                    <Text style={styles.movieNameText}>{name}</Text>
                 </View>
                 <View>
-                    <Text>Image</Text>
+                    <Image
+                        style={styles.movieImage}
+                        source={movieImage}
+                        onError={setMovieImageToDefault}
+                    />
                 </View>
             </View>
             <View style={styles.choiceButtons}>
@@ -58,17 +90,34 @@ const styles = StyleSheet.create({
     },
     newMatchText:{
         color:'white',
-        fontSize:30,
+        fontSize:35,
         fontFamily: 'Pacifico_400Regular',
     },
     movieMatched:{
         flex:4,
-        backgroundColor:'red',
-        width:'100%'
+        width:'100%',
+        justifyContent:'space-around',
+        alignItems:'center',
     },
     choiceButtons:{
-        flex:3,
+        flex:5,
         backgroundColor:'green',
         width:'100%'
+    },
+    movieImage:{
+        width:100,
+        height:100,
+        borderRadius:50,
+        borderWidth:1,
+        borderColor:'white'
+    },
+    bothLikeText:{
+        fontSize:22,
+        color:'white'
+    },
+    movieNameText:{
+        fontSize:35,
+        fontWeight:'bold',
+        color:'white'
     }
 })
