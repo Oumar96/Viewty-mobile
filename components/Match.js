@@ -25,6 +25,7 @@ const Match = (props) =>{
      * State
      ***********/
     const [movieImage, setMovieImage] = useState(getMovieImageInitialState(image));
+    const [continueRoomButtonTextColor, setContinueRoomButtonTextColor] = useState({color:'white'});
 
     /***********
      * Methods
@@ -39,27 +40,31 @@ const Match = (props) =>{
                 <Text style={styles.newMatchText}>New Match!</Text>
             </View>
             <View style={styles.movieMatched}>
-                <View>
-                    <Text style={styles.bothLikeText}>You and your guest both liked</Text>
-                </View>
-                <View>
-                    <Text style={styles.movieNameText}>{name}</Text>
-                </View>
-                <View>
-                    <Image
-                        style={styles.movieImage}
-                        source={movieImage}
-                        onError={setMovieImageToDefault}
-                    />
-                </View>
+                <Text style={styles.bothLikeText}>You and your friend both liked</Text>
+                <Text style={styles.movieNameText}>{name}</Text>
+                <Image
+                    style={styles.movieImage}
+                    source={movieImage}
+                    onError={setMovieImageToDefault}
+                />
             </View>
             <View style={styles.choiceButtons}>
-                <View>
-                    <Text>End</Text>
-                </View>
-                <View>
-                    <Text>Continue Swipping</Text>
-                </View>
+                <TouchableHighlight
+                    style={styles.button}
+                    onPress={()=>{}}
+                    underlayColor="#0f9bf2"
+                >
+                    <Text style={[styles.buttonText]}>Complete Room</Text>
+                </TouchableHighlight>
+                <TouchableHighlight
+                    style={styles.button}
+                    onPress={()=>{}}
+                    underlayColor="white"
+                    onShowUnderlay={() => {setContinueRoomButtonTextColor({color:'black'})}}
+                    onHideUnderlay={() => {setContinueRoomButtonTextColor({color:'white'})}}
+                >
+                    <Text style={[styles.buttonText, continueRoomButtonTextColor]}>Continue Swipping</Text>
+                </TouchableHighlight>
             </View>
         </View>
     )
@@ -76,8 +81,8 @@ const styles = StyleSheet.create({
         position:'absolute',
         height:SCREEN_HEIGHT,
         width:SCREEN_WIDTH,
-        paddingTop:70,
-        paddingBottom:70,
+        paddingTop:100,
+        paddingBottom:100,
         paddingLeft:40,
         paddingRight:40,
         zIndex:1000,
@@ -90,7 +95,7 @@ const styles = StyleSheet.create({
     },
     newMatchText:{
         color:'white',
-        fontSize:35,
+        fontSize:40,
         fontFamily: 'Pacifico_400Regular',
     },
     movieMatched:{
@@ -98,11 +103,13 @@ const styles = StyleSheet.create({
         width:'100%',
         justifyContent:'space-around',
         alignItems:'center',
+        paddingTop:20,
     },
     choiceButtons:{
         flex:5,
-        backgroundColor:'green',
-        width:'100%'
+        width:'100%',
+        justifyContent:'center',
+        alignItems:'center'
     },
     movieImage:{
         width:100,
@@ -119,5 +126,25 @@ const styles = StyleSheet.create({
         fontSize:35,
         fontWeight:'bold',
         color:'white'
-    }
+    },
+    button:{
+      backgroundColor: "transparent",
+      borderColor:"white",
+      borderWidth:1,
+      borderRadius: 50,
+      padding: 10,
+      elevation: 2,
+      width: 250,
+      height:50,
+      justifyContent:'center',
+      color:'white',
+      marginTop:10,
+      marginBottom:10
+    },
+    buttonText:{
+      color: "white",
+      fontWeight: "bold",
+      textAlign: "center",
+      fontSize:15
+    },
 })
