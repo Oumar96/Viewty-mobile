@@ -1,6 +1,9 @@
-import React, {useState} from "react";
+import React, {useState, useContext} from "react";
 import {StyleSheet, Text, Dimensions, Image, TouchableHighlight, View } from "react-native";
 import {isEmpty} from "lodash";
+
+import MoviesContext from "../contexts/MoviesContext.js";
+
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -21,6 +24,18 @@ const Match = (props) =>{
         image="https://i.pinimg.com/originals/f8/4c/75/f84c755544f81ec1bcd2d6396112566b.png"
     } = props;
 
+    const moviesContext = useContext(MoviesContext);
+
+    /***********
+     * Context Mutations
+     ***********/
+    const setIsShowingMatch = moviesContext.mutations.setIsShowingMatch;
+
+    /***********
+     * Context Actions
+     ***********/
+    const endRoom = moviesContext.actions.endRoom;
+
     /***********
      * State
      ***********/
@@ -30,9 +45,20 @@ const Match = (props) =>{
     /***********
      * Methods
      ***********/
-
     const setMovieImageToDefault = () =>{
         setMovieImage(require('../assets/1.jpg'));
+    }
+    const continueSwipping = () =>{
+        setIsShowingMatch(false)
+    }
+    const completeRoom = async () =>{
+        try{
+            await endRoom();
+        } catch(error){
+            //handle error
+        } finally{
+            setIsShowingMatch(false)
+        }
     }
     return (
         <View style={styles.container}>
@@ -51,14 +77,14 @@ const Match = (props) =>{
             <View style={styles.choiceButtons}>
                 <TouchableHighlight
                     style={styles.button}
-                    onPress={()=>{}}
+                    onPress={completeRoom}
                     underlayColor="#0f9bf2"
                 >
                     <Text style={[styles.buttonText]}>Complete Room</Text>
                 </TouchableHighlight>
                 <TouchableHighlight
                     style={styles.button}
-                    onPress={()=>{}}
+                    onPress={continueSwipping}
                     underlayColor="white"
                     onShowUnderlay={() => {setContinueRoomButtonTextColor({color:'black'})}}
                     onHideUnderlay={() => {setContinueRoomButtonTextColor({color:'white'})}}

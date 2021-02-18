@@ -7,13 +7,16 @@ const MoviesContext = React.createContext({
         movies:[],
         currentMovieIndex:0,
         topCardPosition:null,
+        isShowingMatch:false
     },
     mutations:{
         setCurrentMovieIndex: () =>{},
         setTopCardPosition:()=>{},
+        setIsShowingMatch:() =>{}
     },
     actions:{
         vote:() =>{},
+        endRoom:() => {},
         showErrorModal:() =>{}
     }
 })

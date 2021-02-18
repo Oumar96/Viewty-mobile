@@ -25,6 +25,7 @@ const Movies = () =>{
     const [currentMovieIndex, setCurrentMovieIndex] = useState(0);
     const [topCardPosition, setTopCardPosition] = useState(new Animated.ValueXY());
     const [isShowErrorModal, setIsShowErrorModal] = useState(false);
+    const [isShowingMatch, setIsShowingMatch] = useState(true);
 
     /***********
      * Methods
@@ -43,8 +44,20 @@ const Movies = () =>{
         try{
             let response = await MoviesApi.vote(name, payload);
             return Promise.resolve(response)
+        }catch(error){
+            return Promise.reject(error)
         }
-        catch(error){
+    }
+
+    /**
+     *
+     * @returns {Promise}
+     */
+    const endRoom = async () =>{
+        try{
+            let response = await MoviesApi.endRoom();
+            return Promise.resolve(response)
+        } catch(error){
             return Promise.reject(error)
         }
     }
@@ -97,9 +110,11 @@ const Movies = () =>{
             mutations:{
                 setCurrentMovieIndex:(index) =>setCurrentMovieIndex(index),
                 setTopCardPosition:(position) => setTopCardPosition(position),
+                setIsShowingMatch:(value) => setIsShowingMatch(value)
             },
             actions:{
                 vote,
+                endRoom,
                 showErrorModal: () => setIsShowErrorModal(true)
             }
         }}>
@@ -110,7 +125,7 @@ const Movies = () =>{
             <View style={{ height: 60 }}>
             </View>
         </View>
-        <Match/>
+        {isShowingMatch && <Match/>}
         <ErrorModal
             isVisible={isShowErrorModal}
             hide={() =>setIsShowErrorModal(false)}
