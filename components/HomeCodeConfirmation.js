@@ -16,14 +16,12 @@ const HomeCodeConfirmation = () =>{
 
     const confirmCode = async () => {
         try{
-            console.log("confirm");
             const phoneNumberVerificationId = homeContext.state.phoneNumberVerificationId;
             const credential = firebase.auth.PhoneAuthProvider.credential(
                 phoneNumberVerificationId,
                 phoneVerificationCode
             );
-            let response = await firebase.auth().signInWithCredential(credential);
-            console.log("response", response);
+            await firebase.auth().signInWithCredential(credential);
         } catch (error){
             console.log(error); 
         }
@@ -31,14 +29,14 @@ const HomeCodeConfirmation = () =>{
 
     const statePersistence = async () => {
         try{
-            console.log("persistence");
-            await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
+            await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
             confirmCode();
         }
         catch(error) {
             console.log(error);
         };
-    }
+    };
+
     return(
         <View styles={styles.codeConfirmation}>
             <TextInput

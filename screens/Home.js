@@ -26,7 +26,7 @@ const Home = ({navigation}) => {
     const [currentContainerPosition, setCurrentContainerPosition] = useState(0);
     const [isShowingGetStartedButton, setIsShowingGetStartedButton] = useState(true);
     const [phoneNumberVerificationId, setPhoneNumberVerificationId] = useState('');
-    const [user, setUser] = useState(false);
+    const [user, setUser] = useState(null);
 
     const getStarted = () =>{
         setIsShowingGetStartedButton(false);
@@ -55,16 +55,12 @@ const Home = ({navigation}) => {
     }
 
     useEffect(() => {
-        console.log("onauthchange");
         firebase.auth().onAuthStateChanged(user => {
             if(user) { 
-                console.log("one user");
                 setUser(user);
                 navigation.navigate('Room');       
-            } else {
-                console.log("no users");
-            }
-         });
+            } 
+        });
     },[]);
 
 
