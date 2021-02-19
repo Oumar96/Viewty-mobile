@@ -1,6 +1,7 @@
 import React, {useState, useContext} from "react";
 import {StyleSheet, Text, Dimensions, Image, TouchableHighlight, View } from "react-native";
-import {isEmpty} from "lodash";
+import { MaterialIcons, AntDesign } from '@expo/vector-icons';
+import {isEmpty, upperFirst} from "lodash";
 
 import MoviesContext from "../contexts/MoviesContext.js";
 
@@ -18,11 +19,7 @@ const getMovieImageInitialState = (image) =>{
         require('../assets/1.jpg') :
         {uri:image};
 }
-const Match = (props) =>{
-    const {
-        name="Batman",
-        image="https://i.pinimg.com/originals/f8/4c/75/f84c755544f81ec1bcd2d6396112566b.png"
-    } = props;
+const Match = () =>{
 
     const moviesContext = useContext(MoviesContext);
 
@@ -45,7 +42,7 @@ const Match = (props) =>{
      * State
      ***********/
     const [movieImage, setMovieImage] = useState(getMovieImageInitialState(matchedMovie.image));
-    const [continueRoomButtonTextColor, setContinueRoomButtonTextColor] = useState({color:'white'});
+    const [contineRoomButtonContentColor, setContinueRoomButtonTextColor] = useState({color:'white'});
 
     /***********
      * Methods
@@ -72,7 +69,7 @@ const Match = (props) =>{
             </View>
             <View style={styles.movieMatched}>
                 <Text style={styles.bothLikeText}>You and your friend both liked</Text>
-                <Text style={styles.movieNameText}>{matchedMovie.name}</Text>
+                <Text style={styles.movieNameText}>{upperFirst(matchedMovie.name)}</Text>
                 <Image
                     style={styles.movieImage}
                     source={movieImage}
@@ -85,7 +82,10 @@ const Match = (props) =>{
                     onPress={completeRoom}
                     underlayColor="#0f9bf2"
                 >
-                    <Text style={[styles.buttonText]}>Complete Room</Text>
+                    <View style={styles.buttonContent}>
+                        <AntDesign name="checkcircleo" style={styles.icon} size={24} color="white" />
+                        <Text style={styles.buttonText}>Complete Room</Text>
+                    </View>
                 </TouchableHighlight>
                 <TouchableHighlight
                     style={styles.button}
@@ -94,7 +94,10 @@ const Match = (props) =>{
                     onShowUnderlay={() => {setContinueRoomButtonTextColor({color:'black'})}}
                     onHideUnderlay={() => {setContinueRoomButtonTextColor({color:'white'})}}
                 >
-                    <Text style={[styles.buttonText, continueRoomButtonTextColor]}>Continue Swipping</Text>
+                    <View style={styles.buttonContent}>
+                        <MaterialIcons name="swipe" style={[styles.icon, contineRoomButtonContentColor]} size={24} color="white" />
+                        <Text style={[styles.buttonText, contineRoomButtonContentColor]}>Continue Swipping</Text>
+                    </View>
                 </TouchableHighlight>
             </View>
         </View>
@@ -171,6 +174,15 @@ const styles = StyleSheet.create({
       color:'white',
       marginTop:10,
       marginBottom:10
+    },
+    buttonContent:{
+        alignItems:'center',
+        flexDirection:'row',
+        justifyContent: 'center'
+    },
+    icon:{
+        marginRight:15,
+        alignSelf:'flex-end'
     },
     buttonText:{
       color: "white",
