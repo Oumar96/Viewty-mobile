@@ -27,9 +27,14 @@ const Match = (props) =>{
     const moviesContext = useContext(MoviesContext);
 
     /***********
+     * Context State
+     ***********/
+    const matchedMovie = moviesContext.state.matchedMovie;
+
+    /***********
      * Context Mutations
      ***********/
-    const setIsShowingMatch = moviesContext.mutations.setIsShowingMatch;
+    const setMatchedMovie = moviesContext.mutations.setMatchedMovie;
 
     /***********
      * Context Actions
@@ -39,7 +44,7 @@ const Match = (props) =>{
     /***********
      * State
      ***********/
-    const [movieImage, setMovieImage] = useState(getMovieImageInitialState(image));
+    const [movieImage, setMovieImage] = useState(getMovieImageInitialState(matchedMovie.image));
     const [continueRoomButtonTextColor, setContinueRoomButtonTextColor] = useState({color:'white'});
 
     /***********
@@ -49,7 +54,7 @@ const Match = (props) =>{
         setMovieImage(require('../assets/1.jpg'));
     }
     const continueSwipping = () =>{
-        setIsShowingMatch(false)
+        setMatchedMovie(null)
     }
     const completeRoom = async () =>{
         try{
@@ -57,7 +62,7 @@ const Match = (props) =>{
         } catch(error){
             //handle error
         } finally{
-            setIsShowingMatch(false)
+            setMatchedMovie(null)
         }
     }
     return (
@@ -67,7 +72,7 @@ const Match = (props) =>{
             </View>
             <View style={styles.movieMatched}>
                 <Text style={styles.bothLikeText}>You and your friend both liked</Text>
-                <Text style={styles.movieNameText}>{name}</Text>
+                <Text style={styles.movieNameText}>{matchedMovie.name}</Text>
                 <Image
                     style={styles.movieImage}
                     source={movieImage}
