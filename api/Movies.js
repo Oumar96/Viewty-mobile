@@ -1,5 +1,6 @@
 import axios from 'axios';
-
+import config from '../config.js';
+const api = config.api;
 export default {
     /**
      *
@@ -11,7 +12,7 @@ export default {
      * @returns {Promise}
      */
     async vote(movieName, data){
-        await axios.put(`https://us-central1-view-and-party.cloudfunctions.net/api/movies/${movieName}/vote`, data)
+        await axios.put(`${api}/movies/${movieName}/vote`, data)
     },
     /**
      *

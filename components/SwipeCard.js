@@ -147,14 +147,14 @@ const SwipeCard = (props) =>{
                     x: -SCREEN_WIDTH - 100,
                     y: yPosition
                 },
-                choice:"disliked"
+                choice:"dislike"
             },
             right:{
                 exitPosition:{
                     x: SCREEN_WIDTH + 100,
                     y: yPosition
                 },
-                choice:"liked"
+                choice:"like"
             }
         }
         Animated.spring(position, {
@@ -182,11 +182,10 @@ const SwipeCard = (props) =>{
             vote: choice
         };
         try{
-            await vote(movie.name, body)
+            await vote(movie.name, body);
             incrementMovieIndex();
             setNextCardCenter();
         } catch(error){
-            console.log(error.message)
             showErrorModal()
             resetCardPosition()
         }
