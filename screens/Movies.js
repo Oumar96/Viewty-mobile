@@ -27,11 +27,21 @@ const Movies = () =>{
     const [currentMovieIndex, setCurrentMovieIndex] = useState(0);
     const [topCardPosition, setTopCardPosition] = useState(new Animated.ValueXY());
     const [isShowErrorModal, setIsShowErrorModal] = useState(false);
-    const [matchedMovie, setMatchedMovie] = useState(null)
+    const [matchedMovie, setMatchedMovie] = useState(null);
+    const [matchedMovieName, setMatchedMovieName] = useState('');
 
     /***********
      * Methods
      ***********/
+
+    /**
+     * 
+     * @param {Object} movies
+     * @returns {String}
+     */
+    const getMoviesNames = (movies) =>{
+        return Object.keys(movies).join()
+    }
 
     /**
      *
@@ -45,8 +55,17 @@ const Movies = () =>{
     const vote = async (name, payload) =>{
         try{
             let response = await MoviesApi.vote(name, payload);
-            return Promise.resolve(response)
+            return Promise.resolve(response.data)
         }catch(error){
+            return Promise.reject(error)
+        }
+    }
+
+    const getMoviesDetails = async (movieNames)=>{
+        try{
+            let response = await MoviesApi.getMoviesDetails(movieNames);
+            return Promise.resolve(response.data)
+        } catch(error){
             return Promise.reject(error)
         }
     }
@@ -58,21 +77,26 @@ const Movies = () =>{
     const endRoom = async () =>{
         try{
             let response = await MoviesApi.endRoom();
-            return Promise.resolve(response)
+            return Promise.resolve(response.data)
         } catch(error){
             return Promise.reject(error)
         }
     }
 
     useEffect(() => {
-        moviesRef.on('value', (snapshot) => {
+        moviesRef.on('value', async (snapshot) => {
             let roomMovies = snapshot.val();
             let moviesTemp = [];
-            for (let newMovie in roomMovies){
-                if(isNil(roomMovies[newMovie][USER_ID])){
+            let moviesNames = getMoviesNames(roomMovies);
+            let moviesDetails = await getMoviesDetails({names:moviesNames});
+            for (let movie in roomMovies){
+                if(isNil(roomMovies[movie][USER_ID])){
+                    let movieDetails = !isNil(moviesDetails[movie]) ? moviesDetails[movie] : null;
+                    movieDetails.name = movieDetails.name.toLowerCase();
                     moviesTemp.push({
-                        name:newMovie,
-                        ...roomMovies[newMovie]
+                        name:movie,
+                        ...roomMovies[movie],
+                        ...movieDetails
                     })
                 }
             }
@@ -80,29 +104,37 @@ const Movies = () =>{
         });
         moviesRef.on('child_changed', (snapshot) =>{
             if(snapshot.val().likes === 2){
-                setMatchedMovie({
-                    name:snapshot.key,
-                    image:!isNil(snapshot.val().image) ? snapshot.val().image : ""
-                })
+                setMatchedMovieName(snapshot.key.toLowerCase());
             }
         })
     }, []);
 
     useEffect(() =>{
-        let currentMovies = [...movies];
-        moviesRef.on("child_added", (snapshot) =>{
+        let matchedMovie = movies.find(movie => movie.name.toLowerCase() === matchedMovieName);
+        setMatchedMovie(matchedMovie)
+    }, [matchedMovieName])
+
+    useEffect(() =>{
+        let currentMovies = !isEmpty(movies)? [...movies] : [...initialMovies];
+        moviesRef.on("child_added", async (snapshot) =>{
             let newMovie = {
                 name:snapshot.key,
                 ...snapshot.val()
             }
-            let isMovieInCurrentMovies = currentMovies.some(movie => movie.name === newMovie.name);
+            let isMovieInCurrentMovies = currentMovies.some(movie => movie.name.toLowerCase() === newMovie.name.toLowerCase());
             if(!isMovieInCurrentMovies && !isEmpty(initialMovies) && isNil(newMovie[USER_ID])){
-                currentMovies.push(newMovie)
+                let moviesDetails = await getMoviesDetails({names:snapshot.key});
+                let details = moviesDetails[snapshot.key]
+                details.name = details.name.toLowerCase();
+                let movie = {
+                    ...newMovie,
+                    ...details
+                }
+                currentMovies.push(movie)
             }
         })
         setMovies(currentMovies)
     }, [initialMovies])
-
     return(
         <MoviesContext.Provider value={{
             state:{

@@ -47,8 +47,7 @@ const SwipeCard = (props) =>{
      * State
      ***********/
     const [panHandlers, setPanHandlers] = useState(null);
-    const [movieImage, setMovieImage] = useState(getMovieImageInitialState(movie.image));
-
+    const [movieImage, setMovieImage] = useState(getMovieImageInitialState(movie.poster));
     /***********
      * Data
      ***********/
@@ -190,7 +189,7 @@ const SwipeCard = (props) =>{
             resetCardPosition()
         }
     }
-    const setMovieImageToDefault = () =>{
+    const setMovieImageToDefault = (e) =>{
         setMovieImage(require('../assets/1.jpg'));
     }
     /**

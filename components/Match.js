@@ -41,9 +41,8 @@ const Match = () =>{
     /***********
      * State
      ***********/
-    const [movieImage, setMovieImage] = useState(getMovieImageInitialState(matchedMovie.image));
+    const [movieImage, setMovieImage] = useState(getMovieImageInitialState(matchedMovie.poster));
     const [contineRoomButtonContentColor, setContinueRoomButtonTextColor] = useState({color:'white'});
-
     /***********
      * Methods
      ***********/
