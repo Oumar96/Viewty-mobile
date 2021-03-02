@@ -143,10 +143,9 @@ const Movies = () =>{
                 currentMovies.push(newMovie)
             }
         })
-        console.log(currentMovies)
         setMovies(currentMovies)
     }, [initialMovies])
-    
+
     return(
         <MoviesContext.Provider value={{
             state:{
