@@ -21,6 +21,7 @@ const HomeCodeConfirmation = () =>{
             phoneVerificationCode
         );
         await firebase.auth().signInWithCredential(credential);
+        console.log(credential);
     };
 
     const statePersistence = async () => {
