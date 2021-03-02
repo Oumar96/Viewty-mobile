@@ -4,6 +4,8 @@ import {View, Animated} from 'react-native';
 import firebase from "../firebase/firebase.js";
 import {isNil, isEmpty} from "lodash";
 
+import Movie from '../classes/Movie.js';
+
 import MoviesApi from "../api/Movies.js";
 
 import MoviesContext from "../contexts/MoviesContext.js";
@@ -39,7 +41,7 @@ const Movies = () =>{
      * @param {Object} movies
      * @returns {String}
      */
-    const getMoviesNames = (movies) =>{
+    const getConcatenatedMovieName = (movies) =>{
         return Object.keys(movies).join()
     }
 
@@ -61,6 +63,11 @@ const Movies = () =>{
         }
     }
 
+    /**
+     * 
+     * @param {String} movieNames 
+     * @returns {Promise}
+     */
     const getMoviesDetails = async (movieNames)=>{
         try{
             let response = await MoviesApi.getMoviesDetails(movieNames);
@@ -86,24 +93,29 @@ const Movies = () =>{
     useEffect(() => {
         moviesRef.on('value', async (snapshot) => {
             let roomMovies = snapshot.val();
-            let moviesTemp = [];
-            let moviesNames = getMoviesNames(roomMovies);
-            let moviesDetails = await getMoviesDetails({names:moviesNames});
-            for (let movie in roomMovies){
-                if(isNil(roomMovies[movie][USER_ID])){
-                    let movieDetails = !isNil(moviesDetails[movie]) ? moviesDetails[movie] : null;
-                    moviesTemp.push({
-                        name:movie,
-                        ...roomMovies[movie],
+            let movies = [];
+            let moviesDetails = await getMoviesDetails({
+                names:getConcatenatedMovieName(roomMovies)
+            });
+            for (let roomMovie in roomMovies){
+                const isCurrentUserVoted = !isNil(roomMovies[roomMovie][USER_ID]);
+                if(!isCurrentUserVoted){
+                    let movieDetails = !isNil(moviesDetails[roomMovie]) ? moviesDetails[roomMovie] : null;
+                    let movie = new Movie({
+                        name:roomMovie,
+                        ...roomMovies[roomMovie],
                         ...movieDetails
                     })
+                    movies.push(movie)
                 }
             }
-            setInitialMovies(moviesTemp)
+            setInitialMovies(movies)
         });
         moviesRef.on('child_changed', (snapshot) =>{
-            if(snapshot.val().likes === 2){
-                setMatchedMovieName(snapshot.key);
+            const isMovieHasTwoLikes = snapshot.val().likes === 2;
+            if(isMovieHasTwoLikes){
+                const movieName = snapshot.key;
+                setMatchedMovieName(movieName);
             }
         })
     }, []);
@@ -116,23 +128,25 @@ const Movies = () =>{
     useEffect(() =>{
         let currentMovies = !isEmpty(movies)? [...movies] : [...initialMovies];
         moviesRef.on("child_added", async (snapshot) =>{
-            let newMovie = {
-                name:snapshot.key,
-                ...snapshot.val()
-            }
-            let isMovieInCurrentMovies = currentMovies.some(movie => movie.name === newMovie.name);
-            if(!isMovieInCurrentMovies && !isEmpty(initialMovies) && isNil(newMovie[USER_ID])){
-                let moviesDetails = await getMoviesDetails({names:snapshot.key});
-                let details = moviesDetails[snapshot.key]
-                let movie = {
-                    ...newMovie,
+            let addedMovieName = snapshot.key;
+            let addedMovieValues = snapshot.val();
+            let isMovieInCurrentMovies = currentMovies.some(movie => movie.name === addedMovieName);
+            let isCurrentUserVoted = !isNil(addedMovieValues[USER_ID])
+            if(!isMovieInCurrentMovies && !isEmpty(initialMovies) && !isCurrentUserVoted){
+                let moviesDetails = await getMoviesDetails({names:addedMovieName});
+                let details = moviesDetails[addedMovieName]
+                let newMovie = new Movie({
+                    name:addedMovieName,
+                    ...addedMovieValues,
                     ...details
-                }
-                currentMovies.push(movie)
+                })
+                currentMovies.push(newMovie)
             }
         })
+        console.log(currentMovies)
         setMovies(currentMovies)
     }, [initialMovies])
+    
     return(
         <MoviesContext.Provider value={{
             state:{
