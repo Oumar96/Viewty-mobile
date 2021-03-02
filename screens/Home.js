@@ -58,6 +58,11 @@ const Home = ({navigation}) => {
         firebase.auth().onAuthStateChanged(user => {
             if(user) { 
                 setUser(user);
+                userRef = firebase.database().ref('users').child(user.uid);
+                userRef.set({
+                    date_of_birth: "June 23, 1912",
+                    full_name: "Alan Turing",                  
+                })
                 navigation.navigate('Room');       
             } 
         });

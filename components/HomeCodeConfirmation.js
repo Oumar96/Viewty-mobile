@@ -13,28 +13,19 @@ const HomeCodeConfirmation = () =>{
     const [confirmCodeTextColor, setConfirmCodeTextColor] = useState({color:'#0f9bf2'});
     const [cancelCodeTextColor, setCancelCodeTextColor] = useState({color:'red'});
     const [phoneVerificationCode, setPhoneVerificationCode] = useState('');
-
+    
     const confirmCode = async () => {
-        try{
-            const phoneNumberVerificationId = homeContext.state.phoneNumberVerificationId;
-            const credential = firebase.auth.PhoneAuthProvider.credential(
-                phoneNumberVerificationId,
-                phoneVerificationCode
-            );
-            await firebase.auth().signInWithCredential(credential);
-        } catch (error){
-            console.log(error); 
-        }
+        const phoneNumberVerificationId = homeContext.state.phoneNumberVerificationId;
+        const credential = firebase.auth.PhoneAuthProvider.credential(
+            phoneNumberVerificationId,
+            phoneVerificationCode
+        );
+        await firebase.auth().signInWithCredential(credential);
     };
 
     const statePersistence = async () => {
-        try{
             await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
             confirmCode();
-        }
-        catch(error) {
-            console.log(error);
-        };
     };
 
     return(
