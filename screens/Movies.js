@@ -92,7 +92,6 @@ const Movies = () =>{
             for (let movie in roomMovies){
                 if(isNil(roomMovies[movie][USER_ID])){
                     let movieDetails = !isNil(moviesDetails[movie]) ? moviesDetails[movie] : null;
-                    movieDetails.name = movieDetails.name.toLowerCase();
                     moviesTemp.push({
                         name:movie,
                         ...roomMovies[movie],
@@ -104,13 +103,13 @@ const Movies = () =>{
         });
         moviesRef.on('child_changed', (snapshot) =>{
             if(snapshot.val().likes === 2){
-                setMatchedMovieName(snapshot.key.toLowerCase());
+                setMatchedMovieName(snapshot.key);
             }
         })
     }, []);
 
     useEffect(() =>{
-        let matchedMovie = movies.find(movie => movie.name.toLowerCase() === matchedMovieName);
+        let matchedMovie = movies.find(movie => movie.name === matchedMovieName);
         setMatchedMovie(matchedMovie)
     }, [matchedMovieName])
 
@@ -121,11 +120,10 @@ const Movies = () =>{
                 name:snapshot.key,
                 ...snapshot.val()
             }
-            let isMovieInCurrentMovies = currentMovies.some(movie => movie.name.toLowerCase() === newMovie.name.toLowerCase());
+            let isMovieInCurrentMovies = currentMovies.some(movie => movie.name === newMovie.name);
             if(!isMovieInCurrentMovies && !isEmpty(initialMovies) && isNil(newMovie[USER_ID])){
                 let moviesDetails = await getMoviesDetails({names:snapshot.key});
                 let details = moviesDetails[snapshot.key]
-                details.name = details.name.toLowerCase();
                 let movie = {
                     ...newMovie,
                     ...details
