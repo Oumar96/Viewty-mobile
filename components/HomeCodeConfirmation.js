@@ -10,10 +10,17 @@ import firebase from "../firebase/firebase.js";
 
 const HomeCodeConfirmation = () =>{
     const homeContext = useContext(HomeContext);
+    
+    /***********
+     * State
+     ***********/
     const [confirmCodeTextColor, setConfirmCodeTextColor] = useState({color:'#0f9bf2'});
     const [cancelCodeTextColor, setCancelCodeTextColor] = useState({color:'red'});
     const [phoneVerificationCode, setPhoneVerificationCode] = useState('');
-
+    
+    /***********
+     * Methods
+     ***********/
     const confirmCode = async () => {
         try{
             const phoneNumberVerificationId = homeContext.state.phoneNumberVerificationId;
