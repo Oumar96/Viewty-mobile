@@ -6,7 +6,9 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "lint": "prettier --check .",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@react-native-community/masked-view": "0.1.10",
@@ -30,7 +32,8 @@
     "react-native-webview": "11.0.0"
   },
   "devDependencies": {
-    "@babel/core": "~7.9.0"
+    "@babel/core": "~7.9.0",
+    "prettier": "^2.2.1"
   },
   "private": true
 }
