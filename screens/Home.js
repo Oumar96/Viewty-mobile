@@ -57,12 +57,18 @@ const Home = ({navigation}) => {
     useEffect(() => {
         firebase.auth().onAuthStateChanged(user => {
             if(user) { 
+                user.getIdToken(true).then(function(idToken) {
+                    console.log("===========");
+                    console.log(idToken);
+                  }).catch(function(error) {
+                    console.log(error);
+                  });
                 setUser(user);
-                userRef = firebase.database().ref('users').child(user.uid);
-                userRef.set({
-                    date_of_birth: "June 23, 1912",
-                    full_name: "Alan Turing",                  
-                })
+                // userRef = firebase.database().ref('users').child(user.uid);
+                // userRef.set({
+                //     date_of_birth: "June 23, 1912",
+                //     full_name: "Alan Turing",                  
+                // })
                 navigation.navigate('Room');       
             } 
         });
