@@ -1,6 +1,12 @@
 import React, { useRef, useState, useContext } from "react";
 // components
-import { StyleSheet, TouchableHighlight, View, Text } from "react-native";
+import {
+  StyleSheet,
+  TouchableHighlight,
+  View,
+  Text,
+  Keyboard,
+} from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import PhoneInput from "react-native-phone-number-input";
 // context
@@ -55,6 +61,7 @@ const HomePhoneNumberForm = () => {
 
   const sendCode = async () => {
     try {
+      setError("");
       await sendVerification();
       homeContext.actions.animateHomeContainerForward();
     } catch (e) {
@@ -63,6 +70,8 @@ const HomePhoneNumberForm = () => {
           ? setError(errors[e.code])
           : setError(errors["default"]);
       }
+    } finally {
+      Keyboard.dismiss();
     }
   };
   return (
@@ -92,8 +101,7 @@ const HomePhoneNumberForm = () => {
           onPress={sendCode}
         >
           <Text style={[styles.sendCodeText, sendCodeTextColor]}>
-            {" "}
-            Send Code{" "}
+            Send Code
           </Text>
         </TouchableHighlight>
       </View>

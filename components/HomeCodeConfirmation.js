@@ -6,6 +6,7 @@ import {
   TouchableHighlight,
   View,
   Text,
+  Keyboard,
 } from "react-native";
 // context
 import HomeContext from "../contexts/HomeContext.js";
@@ -38,7 +39,10 @@ const HomeCodeConfirmation = () => {
         phoneVerificationCode
       );
       await firebase.auth().signInWithCredential(credential);
-    } catch (error) {}
+    } catch (error) {
+    } finally {
+      Keyboard.dismiss();
+    }
   };
 
   return (
@@ -61,8 +65,7 @@ const HomeCodeConfirmation = () => {
           }}
         >
           <Text style={[styles.confirmCodeText, confirmCodeTextColor]}>
-            {" "}
-            Confirm Code{" "}
+            Confirm Code
           </Text>
         </TouchableHighlight>
         <TouchableHighlight
@@ -77,8 +80,7 @@ const HomeCodeConfirmation = () => {
           onPress={homeContext.actions.animateHomeContainerBackward}
         >
           <Text style={[styles.cancelCodeText, cancelCodeTextColor]}>
-            {" "}
-            Cancel{" "}
+            Cancel
           </Text>
         </TouchableHighlight>
       </View>

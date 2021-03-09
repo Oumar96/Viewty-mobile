@@ -22,13 +22,13 @@ export default function App() {
       <Stack.Navigator>
         <Stack.Screen
           options={{ headerShown: false }}
-          name="Movies"
-          component={Movies}
+          name="Home"
+          component={Home}
         />
         <Stack.Screen
           options={{ headerShown: false }}
-          name="Home"
-          component={Home}
+          name="Movies"
+          component={Movies}
         />
       </Stack.Navigator>
     </NavigationContainer>
