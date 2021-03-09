@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 // components
 import {
   StyleSheet,
@@ -13,8 +13,6 @@ import HomePhoneNumberForm from "../components/HomePhoneNumberForm.js";
 import HomeCodeConfirmation from "../components/HomeCodeConfirmation.js";
 // context
 import HomeContext from "../contexts/HomeContext.js";
-//libs
-import firebase from "../firebase/firebase.js";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_HEIGHT = Dimensions.get("window").height;
@@ -35,7 +33,6 @@ const Home = ({ navigation }) => {
   const [phoneNumberVerificationId, setPhoneNumberVerificationId] = useState(
     ""
   );
-  const [user, setUser] = useState(null);
 
   /***********
    * Data
@@ -72,28 +69,9 @@ const Home = ({ navigation }) => {
     setCurrentContainerPosition(currentContainerPosition + SCREEN_WIDTH);
   };
 
-  useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        user
-          .getIdToken(true)
-          .then(function (idToken) {
-            console.log("===========");
-            console.log(idToken);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-        setUser(user);
-        // userRef = firebase.database().ref('users').child(user.uid);
-        // userRef.set({
-        //     date_of_birth: "June 23, 1912",
-        //     full_name: "Alan Turing",
-        // })
-        navigation.navigate("Room");
-      }
-    });
-  }, []);
+  const navigateToRooms = () => {
+    navigation.navigate("Rooms");
+  };
 
   return (
     <HomeContext.Provider
@@ -107,6 +85,7 @@ const Home = ({ navigation }) => {
         actions: {
           animateHomeContainerForward,
           animateHomeContainerBackward,
+          navigateToRooms,
         },
       }}
     >

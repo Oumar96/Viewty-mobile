@@ -10,6 +10,7 @@ const HomeContext = React.createContext({
   actions: {
     animateHomeContainerForward: () => {},
     animateHomeContainerBackward: () => {},
+    navigateToRooms: () => {},
   },
 });
 

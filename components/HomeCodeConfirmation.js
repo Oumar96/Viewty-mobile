@@ -15,7 +15,16 @@ import firebase from "../firebase/firebase.js";
 
 const HomeCodeConfirmation = () => {
   const homeContext = useContext(HomeContext);
-
+  /***********
+   * Context State
+   ***********/
+  const phoneNumberVerificationId = homeContext.state.phoneNumberVerificationId;
+  /***********
+   * Context Actions
+   ***********/
+  const navigateToRooms = homeContext.actions.navigateToRooms;
+  const animateHomeContainerBackward =
+    homeContext.actions.animateHomeContainerBackward;
   /***********
    * State
    ***********/
@@ -32,8 +41,6 @@ const HomeCodeConfirmation = () => {
    ***********/
   const confirmCode = async () => {
     try {
-      const phoneNumberVerificationId =
-        homeContext.state.phoneNumberVerificationId;
       const credential = firebase.auth.PhoneAuthProvider.credential(
         phoneNumberVerificationId,
         phoneVerificationCode
@@ -43,6 +50,7 @@ const HomeCodeConfirmation = () => {
         .auth()
         .setPersistence(firebase.auth.Auth.Persistence.LOCAL);
       console.log(credential);
+      navigateToRooms();
     } catch (error) {
       // handle this
     } finally {
@@ -82,7 +90,7 @@ const HomeCodeConfirmation = () => {
           onHideUnderlay={() => {
             setCancelCodeTextColor({ color: "red" });
           }}
-          onPress={homeContext.actions.animateHomeContainerBackward}
+          onPress={animateHomeContainerBackward}
         >
           <Text style={[styles.cancelCodeText, cancelCodeTextColor]}>
             Cancel
