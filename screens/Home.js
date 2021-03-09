@@ -18,7 +18,14 @@ const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 const Home = () => {
+  /***********
+   * Refs
+   ***********/
   const homeNumberPhonePosition = useRef(new Animated.Value(0)).current;
+
+  /***********
+   * State
+   ***********/
   const [currentContainerPosition, setCurrentContainerPosition] = useState(0);
   const [isShowingGetStartedButton, setIsShowingGetStartedButton] = useState(
     true
@@ -27,6 +34,20 @@ const Home = () => {
     ""
   );
 
+  /***********
+   * Data
+   ***********/
+  const homePhoneNumberTranslate = {
+    transform: [
+      {
+        translateX: homeNumberPhonePosition,
+      },
+    ],
+  };
+
+  /***********
+   * Methods
+   ***********/
   const getStarted = () => {
     setIsShowingGetStartedButton(false);
     animateHomeContainerForward();
@@ -46,13 +67,6 @@ const Home = () => {
       useNativeDriver: true,
     }).start();
     setCurrentContainerPosition(currentContainerPosition + SCREEN_WIDTH);
-  };
-  const homePhoneNumberTranslate = {
-    transform: [
-      {
-        translateX: homeNumberPhonePosition,
-      },
-    ],
   };
 
   return (

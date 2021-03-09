@@ -1,56 +1,181 @@
 import React, { useState, useEffect } from "react";
+
 import { View, Animated } from "react-native";
 import firebase from "../firebase/firebase.js";
+import { isNil, isEmpty } from "lodash";
+
+import Movie from "../classes/Movie.js";
+
+import MoviesApi from "../api/Movies.js";
 
 import MoviesContext from "../contexts/MoviesContext.js";
 import SwipeCardsList from "../components/SwipeCardsList.js";
+import ErrorModal from "../components/ErrorModal.js";
+import Match from "../components/Match.js";
+
 const USER_ID = "5145753393";
 const ROOM_ID = "a9ee2bb6-66d7-4e1f-a282-3ecbc01cb707";
+
 const Movies = () => {
-  // just for testing
-  let [movies, setMovies] = useState([]);
+  const moviesRef = firebase.database().ref(`rooms/${ROOM_ID}/movies`);
 
-  useEffect(() => {
-    const roomsRef = firebase.database().ref("rooms");
-    roomsRef.on("value", (snapshot) => {
-      let currentRoom = snapshot.child(ROOM_ID);
-      let roomMovies = currentRoom.child("movies").val();
-      let movies = [];
-      for (let movie in roomMovies) {
-        if (roomMovies[movie][USER_ID] === "none") {
-          movies.push({
-            name: movie,
-            ...roomMovies[movie],
-          });
-        }
-      }
-      setMovies(movies);
-    });
-  }, []);
-
-  // const movies = [
-  //     { id: "1", uri: require('../assets/1.jpg') },
-  //     { id: "2", uri: require('../assets/2.jpg') },
-  //     { id: "3", uri: require('../assets/3.jpg') },
-  //     { id: "4", uri: require('../assets/4.jpg') },
-  //     { id: "5", uri: require('../assets/5.jpg') },
-  // ]
-
+  /***********
+   * State
+   ***********/
+  const [movies, setMovies] = useState([]);
+  const [initialMovies, setInitialMovies] = useState([]);
+  const [currentUserId, setCurrentUserId] = useState(USER_ID);
+  const [currentRoomId, setCurrentRoomId] = useState(ROOM_ID);
   const [currentMovieIndex, setCurrentMovieIndex] = useState(0);
   const [topCardPosition, setTopCardPosition] = useState(
     new Animated.ValueXY()
   );
+  const [isShowErrorModal, setIsShowErrorModal] = useState(false);
+  const [matchedMovie, setMatchedMovie] = useState(null);
+  const [matchedMovieName, setMatchedMovieName] = useState("");
+
+  /***********
+   * Methods
+   ***********/
+
+  /**
+   *
+   * @param {Object} movies
+   * @returns {String}
+   */
+  const getConcatenatedMovieName = (movies) => {
+    return Object.keys(movies).join();
+  };
+
+  /**
+   *
+   * @param {String} name
+   * @param {Object} payload
+   * @param {String} payload.user
+   * @param {String} payload.room
+   * @param {String} payload.vote
+   * @returns {Promise}
+   */
+  const vote = async (name, payload) => {
+    try {
+      let response = await MoviesApi.vote(name, payload);
+      return Promise.resolve(response.data);
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  };
+
+  /**
+   *
+   * @param {String} movieNames
+   * @returns {Promise}
+   */
+  const getMoviesDetails = async (movieNames) => {
+    try {
+      let response = await MoviesApi.getMoviesDetails(movieNames);
+      return Promise.resolve(response.data);
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  };
+
+  /**
+   *
+   * @returns {Promise}
+   */
+  const endRoom = async () => {
+    try {
+      let response = await MoviesApi.endRoom();
+      return Promise.resolve(response.data);
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  };
+
+  useEffect(() => {
+    moviesRef.on("value", async (snapshot) => {
+      let roomMovies = snapshot.val();
+      let movies = [];
+      let moviesDetails = await getMoviesDetails({
+        names: getConcatenatedMovieName(roomMovies),
+      });
+      for (let roomMovie in roomMovies) {
+        const isCurrentUserVoted = !isNil(roomMovies[roomMovie][USER_ID]);
+        if (!isCurrentUserVoted) {
+          let movieDetails = !isNil(moviesDetails[roomMovie])
+            ? moviesDetails[roomMovie]
+            : null;
+          let movie = new Movie({
+            name: roomMovie,
+            ...roomMovies[roomMovie],
+            ...movieDetails,
+          });
+          movies.push(movie);
+        }
+      }
+      setInitialMovies(movies);
+    });
+    moviesRef.on("child_changed", (snapshot) => {
+      const isMovieHasTwoLikes = snapshot.val().likes === 2;
+      if (isMovieHasTwoLikes) {
+        const movieName = snapshot.key;
+        setMatchedMovieName(movieName);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    let matchedMovie = movies.find((movie) => movie.name === matchedMovieName);
+    setMatchedMovie(matchedMovie);
+  }, [matchedMovieName]);
+
+  useEffect(() => {
+    let currentMovies = !isEmpty(movies) ? [...movies] : [...initialMovies];
+    moviesRef.on("child_added", async (snapshot) => {
+      let addedMovieName = snapshot.key;
+      let addedMovieValues = snapshot.val();
+      let isMovieInCurrentMovies = currentMovies.some(
+        (movie) => movie.name === addedMovieName
+      );
+      let isCurrentUserVoted = !isNil(addedMovieValues[USER_ID]);
+      if (
+        !isMovieInCurrentMovies &&
+        !isEmpty(initialMovies) &&
+        !isCurrentUserVoted
+      ) {
+        let moviesDetails = await getMoviesDetails({ names: addedMovieName });
+        let details = moviesDetails[addedMovieName];
+        let newMovie = new Movie({
+          name: addedMovieName,
+          ...addedMovieValues,
+          ...details,
+        });
+        currentMovies.push(newMovie);
+      }
+    });
+    setMovies(currentMovies);
+  }, [initialMovies]);
+
   return (
     <MoviesContext.Provider
       value={{
         state: {
+          currentUserId,
+          currentRoomId,
           movies,
           currentMovieIndex,
           topCardPosition,
+          matchedMovie,
         },
         mutations: {
           setCurrentMovieIndex: (index) => setCurrentMovieIndex(index),
           setTopCardPosition: (position) => setTopCardPosition(position),
+          setMatchedMovie,
+        },
+        actions: {
+          vote,
+          endRoom,
+          showErrorModal: () => setIsShowErrorModal(true),
         },
       }}
     >
@@ -59,6 +184,11 @@ const Movies = () => {
         <SwipeCardsList />
         <View style={{ height: 60 }}></View>
       </View>
+      {!isNil(matchedMovie) && <Match />}
+      <ErrorModal
+        isVisible={isShowErrorModal}
+        hide={() => setIsShowErrorModal(false)}
+      />
     </MoviesContext.Provider>
   );
 };

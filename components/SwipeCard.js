@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useContext } from "react";
-
 import {
   StyleSheet,
   View,
@@ -15,6 +14,11 @@ import { isEmpty, upperCase } from "lodash";
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
+/**
+ *
+ * @param {String} image
+ * @returns {uri}
+ */
 const getMovieImageInitialState = (image) => {
   return isEmpty(image) ? require("../assets/1.jpg") : { uri: image };
 };
@@ -23,13 +27,36 @@ const SwipeCard = (props) => {
   const { type = "top-card", movie = {} } = props;
 
   const moviesContext = useContext(MoviesContext);
+  /***********
+   * Context State
+   ***********/
+  const currentUserId = moviesContext.state.currentUserId;
+  const currentRoomId = moviesContext.state.currentRoomId;
+  let currentMovieIndex = moviesContext.state.currentMovieIndex;
+  let position = moviesContext.state.topCardPosition;
+  /***********
+   * Context Mutations
+   ***********/
+  const setCurrentMovieIndex = moviesContext.mutations.setCurrentMovieIndex;
+  const setTopCardPosition = moviesContext.mutations.setTopCardPosition;
+
+  /***********
+   * Context Actions
+   ***********/
+  const vote = moviesContext.actions.vote;
+  const showErrorModal = moviesContext.actions.showErrorModal;
+
+  /***********
+   * State
+   ***********/
   const [panHandlers, setPanHandlers] = useState(null);
   const [movieImage, setMovieImage] = useState(
-    getMovieImageInitialState(movie.image)
+    getMovieImageInitialState(movie.poster)
   );
 
-  let position = moviesContext.state.topCardPosition;
-
+  /***********
+   * Data
+   ***********/
   let rotate = position.x.interpolate({
     inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
     outputRange: ["-10deg", "0deg", "10deg"],
@@ -97,49 +124,97 @@ const SwipeCard = (props) => {
     },
   };
 
+  /***********
+   * Methods
+   ***********/
+
   const incrementMovieIndex = () => {
-    let newMovieIndex = moviesContext.state.currentMovieIndex + 1;
-    moviesContext.mutations.setCurrentMovieIndex(newMovieIndex);
+    let newMovieIndex = currentMovieIndex + 1;
+    setCurrentMovieIndex(newMovieIndex);
   };
-  const removeCard = () => {
+  const setNextCardCenter = () => {
     let newPosition = position;
     newPosition.setValue({ x: 0, y: 0 });
-    moviesContext.mutations.setTopCardPosition(newPosition);
+    setTopCardPosition(newPosition);
   };
-  const setMovieImageToDefault = () => {
+
+  /**
+   *
+   * @param {String} direction
+   * @param {Number} yPosition
+   */
+  const removeCard = (direction, yPosition) => {
+    let data = {
+      left: {
+        exitPosition: {
+          x: -SCREEN_WIDTH - 100,
+          y: yPosition,
+        },
+        choice: "dislike",
+      },
+      right: {
+        exitPosition: {
+          x: SCREEN_WIDTH + 100,
+          y: yPosition,
+        },
+        choice: "like",
+      },
+    };
+    Animated.spring(position, {
+      toValue: data[direction].exitPosition,
+      useNativeDriver: true,
+    }).start(() => {
+      voteMovie(data[direction].choice);
+    });
+  };
+  const resetCardPosition = () => {
+    Animated.spring(position, {
+      toValue: { x: 0, y: 0 },
+      friction: 4,
+      useNativeDriver: true,
+    }).start();
+  };
+  /**
+   *
+   * @param {String} vote
+   */
+  const voteMovie = async (choice) => {
+    let body = {
+      user: currentUserId,
+      room: currentRoomId,
+      vote: choice,
+    };
+    try {
+      xccxv;
+      await vote(movie.name, body);
+      incrementMovieIndex();
+      setNextCardCenter();
+    } catch (error) {
+      showErrorModal();
+      resetCardPosition();
+    }
+  };
+  const setMovieImageToDefault = (e) => {
     setMovieImage(require("../assets/1.jpg"));
   };
+  /**
+   * @returns {PanResponder}
+   */
   const getPanResponder = () => {
     return PanResponder.create({
       onStartShouldSetPanResponder: (evt, gestureState) => true,
       onPanResponderMove: (evt, gestureState) => {
         let newPosition = position;
         newPosition.setValue({ x: gestureState.dx, y: gestureState.dy });
-        moviesContext.mutations.setTopCardPosition(newPosition);
+        setTopCardPosition(newPosition);
       },
       onPanResponderRelease: (evt, gestureState) => {
         if (gestureState.dx > 120) {
-          Animated.spring(position, {
-            toValue: { x: SCREEN_WIDTH + 100, y: gestureState.dy },
-            useNativeDriver: true,
-          }).start(() => {
-            incrementMovieIndex();
-            removeCard();
-          });
+          removeCard("right", gestureState.dy);
         } else if (gestureState.dx < -120) {
-          Animated.spring(position, {
-            toValue: { x: -SCREEN_WIDTH - 100, y: gestureState.dy },
-            useNativeDriver: true,
-          }).start(() => {
-            incrementMovieIndex();
-            removeCard();
-          });
+          removeCard("left", gestureState.dy);
         } else {
-          Animated.spring(position, {
-            toValue: { x: 0, y: 0 },
-            friction: 4,
-            useNativeDriver: true,
-          }).start();
+          resetCardPosition();
         }
       },
     });
@@ -148,7 +223,7 @@ const SwipeCard = (props) => {
   useEffect(() => {
     let panResponder = getPanResponder();
     setPanHandlers(panResponder.panHandlers);
-  }, [moviesContext.state.currentMovieIndex]);
+  }, [currentMovieIndex]);
 
   return (
     <Animated.View {...getComponentProps[type]["card-props"]}>

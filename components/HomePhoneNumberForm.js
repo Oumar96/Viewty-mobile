@@ -12,23 +12,24 @@ import { isEmpty } from "lodash";
 
 const HomePhoneNumberForm = () => {
   const homeContext = useContext(HomeContext);
+  /***********
+   * State
+   ***********/
   const [sendCodeTextColor, setSendCodeTextColor] = useState({
     color: "#0f9bf2",
   });
   const [phoneNumber, setPhoneNumber] = useState("");
   const [error, setError] = useState("");
+
+  /***********
+   * Refs
+   ***********/
   const recaptchaVerifier = useRef(null);
+
+  /***********
+   * Data
+   ***********/
   const attemptInvisibleVerification = true;
-
-  const sendVerification = async () => {
-    const phoneProvider = new firebase.auth.PhoneAuthProvider();
-    const responseVerifcationID = await phoneProvider.verifyPhoneNumber(
-      phoneNumber,
-      recaptchaVerifier.current
-    );
-    homeContext.mutations.setPhoneNumberVerificationId(responseVerifcationID);
-  };
-
   const errors = {
     "auth/captcha-check-failed":
       "reCAPTCHA failed please try again. If the problem persists contact support.",
@@ -38,6 +39,18 @@ const HomePhoneNumberForm = () => {
       "Your device is blocked due to too many requests. Try again later.",
     default:
       "There was an issue processing your request. Please contact support",
+  };
+
+  /***********
+   * Methods
+   ***********/
+  const sendVerification = async () => {
+    const phoneProvider = new firebase.auth.PhoneAuthProvider();
+    const responseVerifcationID = await phoneProvider.verifyPhoneNumber(
+      phoneNumber,
+      recaptchaVerifier.current
+    );
+    homeContext.mutations.setPhoneNumberVerificationId(responseVerifcationID);
   };
 
   const sendCode = async () => {

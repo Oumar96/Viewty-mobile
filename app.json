@@ -25,6 +25,9 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "api": "https://us-central1-view-and-party.cloudfunctions.net/api"
     }
   }
 }
