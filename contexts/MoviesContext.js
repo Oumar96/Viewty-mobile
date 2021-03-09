@@ -1,15 +1,24 @@
 import React from "react";
 
 const MoviesContext = React.createContext({
-    state:{
-        movies:[],
-        currentMovieIndex:0,
-        topCardPosition:null,
-    },
-    mutations:{
-        setCurrentMovieIndex: () =>{},
-        setTopCardPosition:()=>{},
-    },
-})
+  state: {
+    currentUserId: "",
+    currentRoomId: "",
+    movies: [],
+    currentMovieIndex: 0,
+    topCardPosition: null,
+    matchedMovie: [],
+  },
+  mutations: {
+    setCurrentMovieIndex: () => {},
+    setTopCardPosition: () => {},
+    setMatchedMovie: () => {},
+  },
+  actions: {
+    vote: () => {},
+    endRoom: () => {},
+    showErrorModal: () => {},
+  },
+});
 
 export default MoviesContext;
