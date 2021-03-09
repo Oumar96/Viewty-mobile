@@ -1,5 +1,5 @@
-import Constants from 'expo-constants';
+import Constants from "expo-constants";
 
 export default {
-    api: Constants.manifest.extra.api
-}
+  api: Constants.manifest.extra.api,
+};
