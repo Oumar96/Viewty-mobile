@@ -12,6 +12,8 @@ import { isEmpty, upperFirst } from "lodash";
 
 import MoviesContext from "../contexts/MoviesContext.js";
 
+import BaseButton from "./BaseButton.js";
+
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
@@ -86,44 +88,34 @@ const Match = () => {
         />
       </View>
       <View style={styles.choiceButtons}>
-        <TouchableHighlight
-          style={styles.button}
+        <BaseButton
+          type="PRIMARY_TRANSPARENT"
+          text="Complete Room"
           onPress={completeRoom}
-          underlayColor="#0f9bf2"
-        >
-          <View style={styles.buttonContent}>
+          style={styles.button}
+          icon={
             <AntDesign
               name="checkcircleo"
               style={styles.icon}
               size={24}
               color="white"
             />
-            <Text style={styles.buttonText}>Complete Room</Text>
-          </View>
-        </TouchableHighlight>
-        <TouchableHighlight
+          }
+        />
+        <BaseButton
+          type="SECONDARY_TRANSPARENT"
+          text="Continue Swipping"
+          onPress={completeRoom}
           style={styles.button}
-          onPress={continueSwipping}
-          underlayColor="white"
-          onShowUnderlay={() => {
-            setContinueRoomButtonTextColor({ color: "black" });
-          }}
-          onHideUnderlay={() => {
-            setContinueRoomButtonTextColor({ color: "white" });
-          }}
-        >
-          <View style={styles.buttonContent}>
+          icon={
             <MaterialIcons
               name="swipe"
               style={[styles.icon, contineRoomButtonContentColor]}
               size={24}
               color="white"
             />
-            <Text style={[styles.buttonText, contineRoomButtonContentColor]}>
-              Continue Swipping
-            </Text>
-          </View>
-        </TouchableHighlight>
+          }
+        />
       </View>
     </View>
   );
@@ -193,7 +185,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     padding: 10,
     elevation: 2,
-    width: 250,
+    width: 300,
     height: 50,
     justifyContent: "center",
     color: "white",
