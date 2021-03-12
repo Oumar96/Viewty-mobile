@@ -89,6 +89,7 @@ const Match = () => {
       </View>
       <View style={styles.choiceButtons}>
         <BaseButton
+          id={"completeRoomButton"}
           type="PRIMARY_TRANSPARENT"
           text="Complete Room"
           onPress={completeRoom}
@@ -103,6 +104,7 @@ const Match = () => {
           }
         />
         <BaseButton
+          id={"continueSwippingButton"}
           type="SECONDARY_TRANSPARENT"
           text="Continue Swipping"
           onPress={completeRoom}
@@ -110,9 +112,17 @@ const Match = () => {
           icon={
             <MaterialIcons
               name="swipe"
-              style={[styles.icon, contineRoomButtonContentColor]}
+              style={styles.icon}
               size={24}
               color="white"
+            />
+          }
+          underlayIcon={
+            <MaterialIcons
+              name="swipe"
+              style={styles.icon}
+              size={24}
+              color="black"
             />
           }
         />

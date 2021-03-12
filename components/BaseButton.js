@@ -4,14 +4,14 @@ import { StyleSheet, Text, TouchableHighlight, View } from "react-native";
 
 const BaseButton = (props) => {
   const {
+    id = "",
     type = "PRIMARY",
     text = "",
     onPress = () => {},
     icon = null,
+    underlayIcon = null,
     style = {},
   } = props;
-
-  console.log(icon);
 
   const types = {
     PRIMARY_TRANSPARENT: {
@@ -21,7 +21,7 @@ const BaseButton = (props) => {
       },
       underlayColor: "#0f9bf2",
       textColor: "white",
-      underlayTextColor: "black",
+      underlayTextColor: "white",
     },
     SECONDARY_TRANSPARENT: {
       style: {
@@ -35,24 +35,34 @@ const BaseButton = (props) => {
   };
   const currentTypeValues = types[type];
 
-  [buttonTextColor, setButtonTextColor] = useState({
+  const [buttonTextColor, setButtonTextColor] = useState({
     color: currentTypeValues.textColor,
   });
 
+  const [currentIcon, setCurrentIcon] = useState(icon);
+
+  const onShowUnderlay = () => {
+    setButtonTextColor({ color: currentTypeValues.underlayTextColor });
+    if (!isNil(underlayIcon)) {
+      setCurrentIcon(underlayIcon);
+    }
+  };
+  const onHideUnderlay = () => {
+    setButtonTextColor({ color: currentTypeValues.textColor });
+    setCurrentIcon(icon);
+  };
+
   return (
     <TouchableHighlight
+      id={id}
       style={[styles.button, currentTypeValues.style, style]}
       underlayColor={currentTypeValues.underlayColor}
       onPress={onPress}
-      onShowUnderlay={() => {
-        setButtonTextColor({ color: currentTypeValues.underlayTextColor });
-      }}
-      onHideUnderlay={() => {
-        setButtonTextColor({ color: currentTypeValues.textColor });
-      }}
+      onShowUnderlay={onShowUnderlay}
+      onHideUnderlay={onHideUnderlay}
     >
       <View style={styles.buttonContent}>
-        {!isNil(icon) && icon}
+        {currentIcon && currentIcon}
         <Text style={[styles[`${toLower(type)}ButtonText`], buttonTextColor]}>
           {text}
         </Text>
