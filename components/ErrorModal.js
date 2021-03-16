@@ -1,25 +1,14 @@
-import React, { useState } from "react";
-import {
-  Modal,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  View,
-} from "react-native";
+import React from "react";
+import { Modal, StyleSheet, Text, View } from "react-native";
+import BaseButton from "./BaseButton.js";
 
 const ErrorModal = (props) => {
   const { isVisible = true, hide = () => {} } = props;
 
   /***********
-   * State
-   ***********/
-  const [buttonTextColor, setButtonTextColor] = useState({ color: "red" });
-
-  /***********
    * Methods
    ***********/
   const hideModal = () => {
-    setButtonTextColor({ color: "red" });
     hide();
   };
 
@@ -31,19 +20,12 @@ const ErrorModal = (props) => {
             An error occured! Please try again. If the error persists contact
             support
           </Text>
-          <TouchableHighlight
+          <BaseButton
+            type="SECONDARY_NEGATIVE"
             style={styles.buttonClose}
             onPress={hideModal}
-            underlayColor="red"
-            onShowUnderlay={() => {
-              setButtonTextColor({ color: "white" });
-            }}
-            onHideUnderlay={() => {
-              setButtonTextColor({ color: "red" });
-            }}
-          >
-            <Text style={[styles.textStyle, buttonTextColor]}>Close</Text>
-          </TouchableHighlight>
+            text="Close"
+          />
         </View>
       </View>
     </Modal>
@@ -81,18 +63,11 @@ const styles = StyleSheet.create({
     width: 250,
   },
   buttonClose: {
-    backgroundColor: "white",
-    borderColor: "red",
     borderWidth: 1,
     borderRadius: 50,
     padding: 10,
     elevation: 2,
     width: 150,
-  },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
   },
   modalText: {
     marginBottom: 15,

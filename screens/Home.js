@@ -7,10 +7,10 @@ import {
   Dimensions,
   Animated,
   ImageBackground,
-  TouchableHighlight,
 } from "react-native";
 import HomePhoneNumberForm from "../components/HomePhoneNumberForm.js";
 import HomeCodeConfirmation from "../components/HomeCodeConfirmation.js";
+import BaseButton from "../components/BaseButton.js";
 // context
 import HomeContext from "../contexts/HomeContext.js";
 
@@ -110,13 +110,12 @@ const Home = ({ navigation }) => {
           </Animated.View>
           <View style={styles.footer}>
             {isShowingGetStartedButton && (
-              <TouchableHighlight
+              <BaseButton
+                type="PRIMARY"
                 style={styles.getStarted}
-                underlayColor="#8dc3f0"
                 onPress={getStarted}
-              >
-                <Text style={styles.getStartedText}>Get started</Text>
-              </TouchableHighlight>
+                text="Get started"
+              />
             )}
           </View>
         </View>
@@ -174,22 +173,13 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH,
   },
   getStarted: {
-    backgroundColor: "#0f9bf2",
     borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    width: "60%",
     shadowColor: "#000000",
     elevation: 7,
     shadowRadius: 3,
     shadowOpacity: 0.15,
     height: 50,
     width: SCREEN_WIDTH - 50,
-  },
-  getStartedText: {
-    fontSize: 16,
-    fontWeight: "800",
-    color: "white",
   },
   image: {
     height: "100%",

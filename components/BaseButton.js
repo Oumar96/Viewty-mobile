@@ -14,10 +14,37 @@ const BaseButton = (props) => {
   } = props;
 
   const types = {
+    PRIMARY: {
+      style: {
+        borderColor: "#0f9bf2",
+        backgroundColor: "#0f9bf2",
+      },
+      underlayColor: "#0f9bf2",
+      textColor: "white",
+      underlayTextColor: "white",
+    },
+    PRIMARY_NEGATIVE: {
+      style: {
+        borderColor: "#0f9bf2",
+        backgroundColor: "white",
+      },
+      underlayColor: "#0f9bf2",
+      textColor: "#0f9bf2",
+      underlayTextColor: "white",
+    },
+    SECONDARY_NEGATIVE: {
+      style: {
+        borderColor: "red",
+        backgroundColor: "white",
+      },
+      underlayColor: "red",
+      textColor: "red",
+      underlayTextColor: "white",
+    },
     PRIMARY_TRANSPARENT: {
       style: {
         borderColor: "white",
-        backgroundColor: "white",
+        backgroundColor: "transparent",
       },
       underlayColor: "#0f9bf2",
       textColor: "white",
@@ -26,7 +53,7 @@ const BaseButton = (props) => {
     SECONDARY_TRANSPARENT: {
       style: {
         borderColor: "white",
-        backgroundColor: "white",
+        backgroundColor: "transparent",
       },
       underlayColor: "white",
       textColor: "white",
@@ -78,7 +105,6 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     borderWidth: 1,
     padding: 10,
-    elevation: 2,
     justifyContent: "center",
     color: "white",
   },
@@ -86,6 +112,24 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "center",
+  },
+  primaryButtonText: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 15,
+  },
+  primary_negativeButtonText: {
+    color: "#0f9bf2",
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 15,
+  },
+  secondary_negativeButtonText: {
+    color: "red",
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 15,
   },
   primary_transparentButtonText: {
     color: "white",

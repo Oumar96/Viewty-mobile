@@ -49,10 +49,6 @@ const Match = () => {
   const [movieImage, setMovieImage] = useState(
     getMovieImageInitialState(matchedMovie.poster)
   );
-  const [
-    contineRoomButtonContentColor,
-    setContinueRoomButtonTextColor,
-  ] = useState({ color: "white" });
   /***********
    * Methods
    ***********/
@@ -89,7 +85,6 @@ const Match = () => {
       </View>
       <View style={styles.choiceButtons}>
         <BaseButton
-          id={"completeRoomButton"}
           type="PRIMARY_TRANSPARENT"
           text="Complete Room"
           onPress={completeRoom}
@@ -104,7 +99,6 @@ const Match = () => {
           }
         />
         <BaseButton
-          id={"continueSwippingButton"}
           type="SECONDARY_TRANSPARENT"
           text="Continue Swipping"
           onPress={completeRoom}
@@ -189,11 +183,8 @@ const styles = StyleSheet.create({
     color: "white",
   },
   button: {
-    backgroundColor: "transparent",
-    borderColor: "white",
     borderWidth: 1,
     borderRadius: 50,
-    padding: 10,
     elevation: 2,
     width: 300,
     height: 50,
@@ -202,19 +193,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
   },
-  buttonContent: {
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "center",
-  },
   icon: {
     marginRight: 15,
     alignSelf: "flex-end",
-  },
-  buttonText: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: 15,
   },
 });

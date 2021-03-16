@@ -98,12 +98,12 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+        {getInitialScreenInOrder()}
         <Stack.Screen
           options={{ headerShown: false }}
           name="Movies"
           component={Movies}
         />
-        {getInitialScreenInOrder()}
       </Stack.Navigator>
     </NavigationContainer>
   );

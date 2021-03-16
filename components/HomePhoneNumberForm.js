@@ -1,29 +1,21 @@
 import React, { useRef, useState, useContext } from "react";
-// components
-import {
-  StyleSheet,
-  TouchableHighlight,
-  View,
-  Text,
-  Keyboard,
-} from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
-import PhoneInput from "react-native-phone-number-input";
-// context
-import HomeContext from "../contexts/HomeContext.js";
 // libs
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import firebase from "../firebase/firebase.js";
 import { isEmpty } from "lodash";
+// components
+import { StyleSheet, View, Text, Keyboard } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
+import PhoneInput from "react-native-phone-number-input";
+import BaseButton from "./BaseButton.js";
+// context
+import HomeContext from "../contexts/HomeContext.js";
 
 const HomePhoneNumberForm = () => {
   const homeContext = useContext(HomeContext);
   /***********
    * State
    ***********/
-  const [sendCodeTextColor, setSendCodeTextColor] = useState({
-    color: "#0f9bf2",
-  });
   const [phoneNumber, setPhoneNumber] = useState("");
   const [error, setError] = useState("");
 
@@ -90,21 +82,12 @@ const HomePhoneNumberForm = () => {
       )}
       {isEmpty(!phoneNumber) && (
         <View style={styles.sendCodeButtonContainer}>
-          <TouchableHighlight
-            style={styles.sendCodeButton}
-            underlayColor="#0f9bf2"
-            onShowUnderlay={() => {
-              setSendCodeTextColor({ color: "white" });
-            }}
-            onHideUnderlay={() => {
-              setSendCodeTextColor({ color: "#0f9bf2" });
-            }}
+          <BaseButton
+            type="PRIMARY_NEGATIVE"
             onPress={sendCode}
-          >
-            <Text style={[styles.sendCodeText, sendCodeTextColor]}>
-              Send Code
-            </Text>
-          </TouchableHighlight>
+            style={styles.sendCodeButton}
+            text="Send Code"
+          />
         </View>
       )}
       <FirebaseRecaptchaVerifierModal
@@ -155,20 +138,10 @@ const styles = StyleSheet.create({
   sendCodeButton: {
     width: "100%",
     height: 50,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "white",
     borderRadius: 50,
     shadowColor: "#000000",
     elevation: 7,
     shadowRadius: 3,
     shadowOpacity: 0.15,
-    borderWidth: 1,
-    borderColor: "#0f9bf2",
-  },
-  sendCodeText: {
-    fontSize: 16,
-    fontWeight: "800",
-    color: "#0f9bf2",
   },
 });
