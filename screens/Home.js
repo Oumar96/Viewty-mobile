@@ -1,11 +1,21 @@
+// libs
 import * as React from "react";
-import { View, Text } from "react-native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
+// screens
+import Rooms from "./Rooms.js";
+import CreateRoom from "./CreateRoom.js";
+import Settings from "./Settings.js";
+
+const Tab = createBottomTabNavigator();
 
 const Home = () => {
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Home Screen</Text>
-    </View>
+    <Tab.Navigator>
+      <Tab.Screen name="Rooms" component={Rooms} />
+      <Tab.Screen name="Create Room" component={CreateRoom} />
+      <Tab.Screen name="Settings" component={Settings} />
+    </Tab.Navigator>
   );
 };
 

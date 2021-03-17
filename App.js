@@ -1,14 +1,14 @@
+//libs
 import React, { useEffect, useState } from "react";
+import firebase from "./firebase/firebase.js";
 import { useFonts, Pacifico_400Regular } from "@expo-google-fonts/pacifico";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
+// screens
 import SignIn from "./screens/SignIn.js";
 import Movies from "./screens/Movies.js";
 import Home from "./screens/Home.js";
-
-//libs
-import firebase from "./firebase/firebase.js";
 
 const Stack = createStackNavigator();
 
