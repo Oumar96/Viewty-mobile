@@ -5,7 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import SignIn from "./screens/SignIn.js";
 import Movies from "./screens/Movies.js";
-import Rooms from "./screens/Rooms.js";
+import Home from "./screens/Home.js";
 
 //libs
 import firebase from "./firebase/firebase.js";
@@ -26,13 +26,13 @@ export default function App() {
   /***********
    * Methods
    ***********/
-  const getRoomsFirst = () => {
+  const getHomeFirst = () => {
     return (
       <>
         <Stack.Screen
           options={{ headerShown: false }}
-          name="Rooms"
-          component={Rooms}
+          name="Home"
+          component={Home}
         />
         <Stack.Screen
           options={{ headerShown: false }}
@@ -42,7 +42,7 @@ export default function App() {
       </>
     );
   };
-  const getHomeFirst = () => {
+  const getSignInFirst = () => {
     return (
       <>
         <Stack.Screen
@@ -52,8 +52,8 @@ export default function App() {
         />
         <Stack.Screen
           options={{ headerShown: false }}
-          name="Rooms"
-          component={Rooms}
+          name="Home"
+          component={Home}
         />
       </>
     );
@@ -61,9 +61,9 @@ export default function App() {
   const getInitialScreenInOrder = () => {
     let initialScreenInOrder = null;
     if (isSignedIn) {
-      initialScreenInOrder = getRoomsFirst();
-    } else {
       initialScreenInOrder = getHomeFirst();
+    } else {
+      initialScreenInOrder = getSignInFirst();
     }
     return initialScreenInOrder;
   };
@@ -100,8 +100,8 @@ export default function App() {
       <Stack.Navigator>
         {/* <Stack.Screen
           options={{ headerShown: false }}
-          name="Rooms"
-          component={Rooms}
+          name="Home"
+          component={Home}
         /> */}
         {getInitialScreenInOrder()}
         <Stack.Screen
