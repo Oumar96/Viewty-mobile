@@ -3,7 +3,7 @@ import { useFonts, Pacifico_400Regular } from "@expo-google-fonts/pacifico";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import Home from "./screens/Home.js";
+import SignIn from "./screens/SignIn.js";
 import Movies from "./screens/Movies.js";
 import Rooms from "./screens/Rooms.js";
 
@@ -36,8 +36,8 @@ export default function App() {
         />
         <Stack.Screen
           options={{ headerShown: false }}
-          name="Home"
-          component={Home}
+          name="SignIn"
+          component={SignIn}
         />
       </>
     );
@@ -47,8 +47,8 @@ export default function App() {
       <>
         <Stack.Screen
           options={{ headerShown: false }}
-          name="Home"
-          component={Home}
+          name="SignIn"
+          component={SignIn}
         />
         <Stack.Screen
           options={{ headerShown: false }}
@@ -98,6 +98,11 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+        {/* <Stack.Screen
+          options={{ headerShown: false }}
+          name="Rooms"
+          component={Rooms}
+        /> */}
         {getInitialScreenInOrder()}
         <Stack.Screen
           options={{ headerShown: false }}

@@ -1,6 +1,6 @@
 import React from "react";
 
-const HomeContext = React.createContext({
+const SignInContext = React.createContext({
   state: {
     phoneNumberVerificationId: "",
   },
@@ -8,10 +8,10 @@ const HomeContext = React.createContext({
     setPhoneNumberVerificationId: () => {},
   },
   actions: {
-    animateHomeContainerForward: () => {},
-    animateHomeContainerBackward: () => {},
+    animateSignInContainerForward: () => {},
+    animateSignInContainerBackward: () => {},
     navigateToRooms: () => {},
   },
 });
 
-export default HomeContext;
+export default SignInContext;

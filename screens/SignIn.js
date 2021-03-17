@@ -8,20 +8,20 @@ import {
   Animated,
   ImageBackground,
 } from "react-native";
-import HomePhoneNumberForm from "../components/HomePhoneNumberForm.js";
-import HomeCodeConfirmation from "../components/HomeCodeConfirmation.js";
+import SignInPhoneNumberForm from "../components/SignInPhoneNumberForm.js";
+import SignInCodeConfirmation from "../components/SignInCodeConfirmation.js";
 import BaseButton from "../components/BaseButton.js";
 // context
-import HomeContext from "../contexts/HomeContext.js";
+import SignInContext from "../contexts/SignInContext.js";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 
-const Home = ({ navigation }) => {
+const SignIn = ({ navigation }) => {
   /***********
    * Refs
    ***********/
-  const homeNumberPhonePosition = useRef(new Animated.Value(0)).current;
+  const signInNumberPhonePosition = useRef(new Animated.Value(0)).current;
 
   /***********
    * State
@@ -37,10 +37,10 @@ const Home = ({ navigation }) => {
   /***********
    * Data
    ***********/
-  const homePhoneNumberTranslate = {
+  const signInPhoneNumberTranslate = {
     transform: [
       {
-        translateX: homeNumberPhonePosition,
+        translateX: signInNumberPhonePosition,
       },
     ],
   };
@@ -50,18 +50,18 @@ const Home = ({ navigation }) => {
    ***********/
   const getStarted = () => {
     setIsShowingGetStartedButton(false);
-    animateHomeContainerForward();
+    animateSignInContainerForward();
   };
-  const animateHomeContainerForward = () => {
-    Animated.timing(homeNumberPhonePosition, {
+  const animateSignInContainerForward = () => {
+    Animated.timing(signInNumberPhonePosition, {
       toValue: currentContainerPosition - SCREEN_WIDTH,
       duration: 500,
       useNativeDriver: true,
     }).start();
     setCurrentContainerPosition(currentContainerPosition - SCREEN_WIDTH);
   };
-  const animateHomeContainerBackward = () => {
-    Animated.timing(homeNumberPhonePosition, {
+  const animateSignInContainerBackward = () => {
+    Animated.timing(signInNumberPhonePosition, {
       toValue: currentContainerPosition + SCREEN_WIDTH,
       duration: 500,
       useNativeDriver: true,
@@ -74,7 +74,7 @@ const Home = ({ navigation }) => {
   };
 
   return (
-    <HomeContext.Provider
+    <SignInContext.Provider
       value={{
         state: {
           phoneNumberVerificationId,
@@ -83,8 +83,8 @@ const Home = ({ navigation }) => {
           setPhoneNumberVerificationId,
         },
         actions: {
-          animateHomeContainerForward,
-          animateHomeContainerBackward,
+          animateSignInContainerForward,
+          animateSignInContainerBackward,
           navigateToRooms,
         },
       }}
@@ -94,18 +94,18 @@ const Home = ({ navigation }) => {
         source={require("../assets/popcorn.jpg")}
       >
         <View style={styles.container}>
-          <Animated.View style={[styles.content, homePhoneNumberTranslate]}>
+          <Animated.View style={[styles.content, signInPhoneNumberTranslate]}>
             <View style={styles.welcomeMessageContainer}>
               <Text style={styles.welcomeText}>WELCOME TO VIEWTY</Text>
               <Text style={styles.swipeWithFriendsText}>
                 Swipe with friends and find the perfect film for movie night
               </Text>
             </View>
-            <View style={styles.homePhoneNumberFormContainer}>
-              <HomePhoneNumberForm />
+            <View style={styles.signInPhoneNumberFormContainer}>
+              <SignInPhoneNumberForm />
             </View>
-            <View style={styles.homeCodeConfirmationContainer}>
-              <HomeCodeConfirmation />
+            <View style={styles.signInCodeConfirmationContainer}>
+              <SignInCodeConfirmation />
             </View>
           </Animated.View>
           <View style={styles.footer}>
@@ -120,11 +120,11 @@ const Home = ({ navigation }) => {
           </View>
         </View>
       </ImageBackground>
-    </HomeContext.Provider>
+    </SignInContext.Provider>
   );
 };
 
-export default Home;
+export default SignIn;
 
 const styles = StyleSheet.create({
   container: {
@@ -162,12 +162,12 @@ const styles = StyleSheet.create({
     width: 300,
     marginTop: 20,
   },
-  homePhoneNumberFormContainer: {
+  signInPhoneNumberFormContainer: {
     alignItems: "center",
     justifyContent: "center",
     width: SCREEN_WIDTH,
   },
-  homeCodeConfirmationContainer: {
+  signInCodeConfirmationContainer: {
     alignItems: "center",
     justifyContent: "center",
     width: SCREEN_WIDTH,

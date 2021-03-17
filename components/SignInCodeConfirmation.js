@@ -3,22 +3,23 @@ import React, { useState, useContext } from "react";
 import { StyleSheet, TextInput, View, Keyboard } from "react-native";
 import BaseButton from "./BaseButton.js";
 // context
-import HomeContext from "../contexts/HomeContext.js";
+import SignInContext from "../contexts/SignInContext.js";
 // libs
 import firebase from "../firebase/firebase.js";
 
-const HomeCodeConfirmation = () => {
-  const homeContext = useContext(HomeContext);
+const SignInCodeConfirmation = () => {
+  const signInContext = useContext(SignInContext);
   /***********
    * Context State
    ***********/
-  const phoneNumberVerificationId = homeContext.state.phoneNumberVerificationId;
+  const phoneNumberVerificationId =
+    signInContext.state.phoneNumberVerificationId;
   /***********
    * Context Actions
    ***********/
-  const navigateToRooms = homeContext.actions.navigateToRooms;
-  const animateHomeContainerBackward =
-    homeContext.actions.animateHomeContainerBackward;
+  const navigateToRooms = signInContext.actions.navigateToRooms;
+  const animateSignInContainerBackward =
+    signInContext.actions.animateSignInContainerBackward;
   /***********
    * State
    ***********/
@@ -63,7 +64,7 @@ const HomeCodeConfirmation = () => {
         <BaseButton
           type="SECONDARY_NEGATIVE"
           style={styles.cancelButton}
-          onPress={animateHomeContainerBackward}
+          onPress={animateSignInContainerBackward}
           text="Cancel"
         />
       </View>
@@ -71,7 +72,7 @@ const HomeCodeConfirmation = () => {
   );
 };
 
-export default HomeCodeConfirmation;
+export default SignInCodeConfirmation;
 
 const styles = StyleSheet.create({
   codeConfirmation: {
