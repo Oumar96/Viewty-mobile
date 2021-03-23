@@ -16,7 +16,7 @@ export default function App() {
   /***********
    * State
    ***********/
-  const [user, setUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   let [fontsLoaded] = useFonts({
@@ -80,7 +80,7 @@ export default function App() {
           .catch(function (error) {
             console.log(error);
           });
-        setUser(user);
+        setCurrentUser(user);
         setIsSignedIn(true);
         // navigation.navigate("Room");
       }
@@ -98,11 +98,6 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {/* <Stack.Screen
-          options={{ headerShown: false }}
-          name="Home"
-          component={Home}
-        /> */}
         {getInitialScreenInOrder()}
         <Stack.Screen
           options={{ headerShown: false }}
