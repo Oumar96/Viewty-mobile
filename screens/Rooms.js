@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, FlatList } from "react-native";
 import { isEqual, isNil } from "lodash";
 
 import firebase from "../firebase/firebase.js";
+
+import RoomCard from "../components/RoomCard.js";
 
 const USER_ID = "5145753393";
 
@@ -23,6 +25,7 @@ const Rooms = () => {
   }, []);
 
   useEffect(() => {
+    // use api
     roomsRef.once("value", (snapshot) => {
       let snapshotRooms = snapshot.val();
       let rooms = [];
@@ -38,11 +41,15 @@ const Rooms = () => {
     });
   }, [roomIds]);
 
+  const renderRoom = ({ item }) => <RoomCard room={item} />;
+
   return (
     <View style={styles.rooms}>
-      {rooms.map((room) => {
-        return <Text>{room.id}</Text>;
-      })}
+      <FlatList
+        data={rooms}
+        renderItem={renderRoom}
+        keyExtractor={(item) => item.id}
+      />
     </View>
   );
 };
