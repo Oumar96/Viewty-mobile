@@ -1,12 +1,5 @@
 import React, { useState, useContext } from "react";
-import {
-  StyleSheet,
-  Text,
-  Dimensions,
-  Image,
-  TouchableHighlight,
-  View,
-} from "react-native";
+import { StyleSheet, Text, Dimensions, Image, View } from "react-native";
 import { MaterialIcons, AntDesign } from "@expo/vector-icons";
 import { isEmpty, upperFirst } from "lodash";
 
