@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { FlatList } from "react-native";
+import { FlatList, StyleSheet } from "react-native";
 
 import RoomsContext from "../contexts/RoomsContext.js";
 import RoomCard from "./RoomCard.js";
@@ -19,6 +19,7 @@ const RoomCardsList = () => {
 
   return (
     <FlatList
+      style={styles.roomCardsList}
       data={rooms}
       renderItem={renderRoom}
       keyExtractor={(item) => item.id}
@@ -27,3 +28,9 @@ const RoomCardsList = () => {
 };
 
 export default RoomCardsList;
+
+const styles = StyleSheet.create({
+  roomCardsList: {
+    width: "80%",
+  },
+});
