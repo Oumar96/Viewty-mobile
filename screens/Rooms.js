@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, FlatList } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { isEqual, isNil } from "lodash";
 
 import firebase from "../firebase/firebase.js";
 
 import RoomsContext from "../contexts/RoomsContext.js";
 
+// components
+import TopNavBar from "../components/TopNavBar.js";
 import RoomCardsList from "../components/RoomCardsList.js";
 
 const USER_ID = "5145753393";
@@ -14,6 +16,9 @@ const Rooms = () => {
   const roomIdsRef = firebase.database().ref(`users/${USER_ID}/rooms`);
   const roomsRef = firebase.database().ref("rooms");
 
+  /***********
+   * State
+   ***********/
   const [roomIds, setRoomIds] = useState([]);
   const [rooms, setRooms] = useState([]);
 
@@ -51,7 +56,10 @@ const Rooms = () => {
       }}
     >
       <View style={styles.rooms}>
-        <RoomCardsList />
+        <TopNavBar />
+        <View style={styles.roomCardsList}>
+          <RoomCardsList />
+        </View>
       </View>
     </RoomsContext.Provider>
   );
@@ -62,9 +70,12 @@ export default Rooms;
 const styles = StyleSheet.create({
   rooms: {
     flex: 1,
+  },
+  roomCardsList: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
     alignContent: "center",
-    paddingTop: 70,
+    paddingTop: 120,
   },
 });

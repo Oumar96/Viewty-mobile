@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
-  ImageBackground,
-} from "react-native";
+import { View, Text, StyleSheet, Dimensions, Image } from "react-native";
 
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 
@@ -18,22 +12,32 @@ const RoomCard = (props) => {
   let users = room.participants.users;
   return (
     <View style={styles.roomCard}>
-      <ImageBackground
-        style={styles.image}
-        imageStyle={styles.imageStyle}
-        source={require("../assets/gradient.jpg")}
-      >
-        <View style={styles.status}>
-          <Text style={styles.statusText}>Actif</Text>
-        </View>
-        <View style={styles.roomCardUsersContainer}>
+      <View style={styles.roomCardTitle}>
+        <View style={styles.participants}>
           {users.map((user, index) => (
             <Text key={index} style={styles.roomCardUser}>
-              {user}
+              {/* {user} */} John Smith
             </Text>
           ))}
         </View>
-      </ImageBackground>
+        <View style={styles.status}>
+          <Text style={styles.statusText}>active</Text>
+        </View>
+      </View>
+      <View style={styles.roomCardImages}>
+        <Image
+          style={styles.roomCardImageLeft}
+          source={require("../assets/gradient.jpg")}
+        />
+        <Image
+          style={styles.roomCardImageCenter}
+          source={require("../assets/1.jpg")}
+        />
+        <Image
+          style={styles.roomCardImageRight}
+          source={require("../assets/3.jpg")}
+        />
+      </View>
     </View>
   );
 };
@@ -43,41 +47,53 @@ export default RoomCard;
 const styles = StyleSheet.create({
   roomCard: {
     flex: 1,
-    backgroundColor: "red",
-    marginTop: 15,
-    height: SCREEN_HEIGHT / 4,
-    borderRadius: 20,
-  },
-  image: {
-    height: "100%",
-    width: "100%",
-    resizeMode: "cover",
-  },
-  imageStyle: {
-    borderRadius: 20,
-  },
-  roomCardUsersContainer: {
+    backgroundColor: "white",
     marginVertical: 16,
-    marginHorizontal: 16,
-    justifyContent: "center",
-    alignItems: "center",
-    alignContent: "center",
+    height: SCREEN_HEIGHT / 3,
+    borderRadius: 20,
+    shadowColor: "#000000",
+    elevation: 7,
+    shadowRadius: 3,
+    shadowOpacity: 0.15,
   },
-  roomCardUser: {
-    fontSize: 25,
-    fontWeight: "bold",
-    color: "white",
-    marginBottom: 10,
+  roomCardTitle: {
+    flex: 1,
+    padding: 10,
+    flexDirection: "row",
+  },
+  participants: {
+    flex: 4,
   },
   status: {
-    width: "100%",
-    marginTop: 30,
-    paddingRight: 20,
-    alignItems: "flex-end",
+    flex: 1,
   },
   statusText: {
     fontSize: 16,
     fontWeight: "bold",
     color: "#22f253",
+  },
+  roomCardImages: {
+    flex: 3,
+    flexDirection: "row",
+  },
+  roomCardImageLeft: {
+    flex: 1,
+    height: "100%",
+    borderBottomLeftRadius: 20,
+  },
+  roomCardImageCenter: {
+    flex: 1,
+    height: "100%",
+  },
+  roomCardImageRight: {
+    flex: 1,
+    height: "100%",
+    borderBottomRightRadius: 20,
+  },
+  roomCardUser: {
+    fontSize: 25,
+    fontWeight: "bold",
+    color: "black",
+    marginBottom: 10,
   },
 });

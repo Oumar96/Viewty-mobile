@@ -23,6 +23,8 @@ const RoomCardsList = () => {
       data={rooms}
       renderItem={renderRoom}
       keyExtractor={(item) => item.id}
+      showsVerticalScrollIndicator={false}
+      showsHorizontalScrollIndicator={false}
     />
   );
 };
