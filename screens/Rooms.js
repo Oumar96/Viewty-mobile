@@ -4,6 +4,8 @@ import { isEqual, isNil } from "lodash";
 
 import firebase from "../firebase/firebase.js";
 
+import MoviesApi from "../api/Movies.js";
+
 import RoomsContext from "../contexts/RoomsContext.js";
 
 // components
@@ -21,6 +23,68 @@ const Rooms = () => {
    ***********/
   const [roomIds, setRoomIds] = useState([]);
   const [rooms, setRooms] = useState([]);
+  const [moviesDetails, setMovieDetails] = useState([]);
+
+  /***********
+   * Methods
+   ***********/
+
+  /**
+   *
+   * @param {Object} roomsObject,
+   * @returns {Array}
+   */
+  const getRoomsFromSnapshot = (roomsObject) => {
+    let rooms = [];
+    roomIds.forEach((roomId) => {
+      if (!isNil(roomsObject[roomId])) {
+        rooms.push({
+          id: roomId,
+          ...roomsObject[roomId],
+        });
+      }
+    });
+    return rooms;
+  };
+  /**
+   *
+   * @param {Object} roomsObject,
+   * @returns {Array}
+   */
+  const getFirstThreeMovieNamesOfAllRooms = (roomsObject) => {
+    let movieNames = [];
+    roomIds.forEach((roomId) => {
+      if (!isNil(roomsObject[roomId])) {
+        movieNames = [
+          ...movieNames,
+          ...getRoomFirstTrheeMovieNames(roomsObject[roomId]),
+        ];
+      }
+    });
+    return movieNames;
+  };
+
+  /**
+   * @param {Object} room
+   * @returns {Array}
+   */
+  const getRoomFirstTrheeMovieNames = (room) => {
+    let movies = Object.keys(room.movies);
+    return [movies[0], movies[1], movies[2]];
+  };
+  /**
+   *
+   * @param {String} movieNames
+   * @returns {Promise}
+   */
+  const getMoviesDetails = async (movieNames) => {
+    try {
+      let response = await MoviesApi.getMoviesDetails(movieNames);
+      return Promise.resolve(response.data);
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  };
 
   useEffect(() => {
     roomIdsRef.on("value", (snapshot) => {
@@ -32,18 +96,15 @@ const Rooms = () => {
   }, []);
 
   useEffect(() => {
-    roomsRef.once("value", (snapshot) => {
+    roomsRef.once("value", async (snapshot) => {
       let snapshotRooms = snapshot.val();
-      let rooms = [];
-      roomIds.forEach((roomId) => {
-        if (!isNil(snapshotRooms[roomId])) {
-          rooms.push({
-            id: roomId,
-            ...snapshotRooms[roomId],
-          });
-        }
+      let rooms = getRoomsFromSnapshot(snapshotRooms);
+      let movieNames = getFirstThreeMovieNamesOfAllRooms(snapshotRooms);
+      let moviesDetails = await getMoviesDetails({
+        names: movieNames.join(),
       });
       setRooms(rooms);
+      setMovieDetails(moviesDetails);
     });
   }, [roomIds]);
 
@@ -52,6 +113,7 @@ const Rooms = () => {
       value={{
         state: {
           rooms,
+          moviesDetails,
         },
       }}
     >

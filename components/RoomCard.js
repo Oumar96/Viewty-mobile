@@ -4,7 +4,9 @@ import { View, Text, StyleSheet, Dimensions, Image } from "react-native";
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 const RoomCard = (props) => {
-  const { room = {} } = props;
+  const { room = {}, threeMovies = [] } = props;
+
+  console.log("threeMovies", threeMovies);
 
   /***********
    * Data

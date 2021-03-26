@@ -11,11 +11,37 @@ const RoomCardsList = () => {
    * Context State
    ***********/
   const rooms = roomsContext.state.rooms;
+  const moviesDetails = roomsContext.state.moviesDetails;
 
   /***********
    * Methods
    ***********/
-  const renderRoom = ({ item }) => <RoomCard room={item} />;
+
+  /**
+   *
+   * @param {Object} room
+   * @returns {Array}
+   */
+  const getFirstThreeMoviesDetails = (room) => {
+    let roomMovies = Object.keys(room.movies);
+    let firstThreeMoviesDetails = [
+      moviesDetails[roomMovies[0]],
+      moviesDetails[roomMovies[1]],
+      moviesDetails[roomMovies[2]],
+    ];
+
+    return firstThreeMoviesDetails;
+  };
+
+  /**
+   *
+   * @param {Object} room
+   * @returns {JSX}
+   */
+  const renderRoom = ({ item }) => {
+    const firstTrheeMovies = getFirstThreeMoviesDetails(item);
+    return <RoomCard room={item} threeMovies={firstTrheeMovies} />;
+  };
 
   return (
     <FlatList
