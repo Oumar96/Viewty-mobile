@@ -94,7 +94,7 @@ const Match = () => {
         <BaseButton
           type="SECONDARY_TRANSPARENT"
           text="Continue Swipping"
-          onPress={completeRoom}
+          onPress={continueSwipping}
           style={styles.button}
           icon={
             <MaterialIcons
@@ -147,16 +147,16 @@ const styles = StyleSheet.create({
     fontFamily: "Pacifico_400Regular",
   },
   movieMatched: {
-    flex: 4,
+    flex: 5,
     width: "100%",
     justifyContent: "space-around",
     alignItems: "center",
     paddingTop: 20,
   },
   choiceButtons: {
-    flex: 5,
+    flex: 4,
     width: "100%",
-    justifyContent: "center",
+    justifyContent: "flex-end",
     alignItems: "center",
   },
   movieImage: {

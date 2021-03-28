@@ -60,11 +60,11 @@ export default function App() {
   };
   const getInitialScreenInOrder = () => {
     let initialScreenInOrder = null;
-    if (isSignedIn) {
-      initialScreenInOrder = getHomeFirst();
-    } else {
-      initialScreenInOrder = getSignInFirst();
-    }
+    // if (isSignedIn) {
+    initialScreenInOrder = getHomeFirst();
+    // } else {
+    //   initialScreenInOrder = getSignInFirst();
+    // }
     return initialScreenInOrder;
   };
 

@@ -6,7 +6,9 @@ const SCREEN_HEIGHT = Dimensions.get("window").height;
 const RoomCard = (props) => {
   const { room = {}, threeMovies = [] } = props;
 
-  console.log("threeMovies", threeMovies);
+  const firstMovie = { uri: threeMovies[0].poster };
+  const secondMovie = { uri: threeMovies[1].poster };
+  const thirdMovie = { uri: threeMovies[2].poster };
 
   /***********
    * Data
@@ -27,18 +29,9 @@ const RoomCard = (props) => {
         </View>
       </View>
       <View style={styles.roomCardImages}>
-        <Image
-          style={styles.roomCardImageLeft}
-          source={require("../assets/gradient.jpg")}
-        />
-        <Image
-          style={styles.roomCardImageCenter}
-          source={require("../assets/1.jpg")}
-        />
-        <Image
-          style={styles.roomCardImageRight}
-          source={require("../assets/3.jpg")}
-        />
+        <Image style={styles.roomCardImageLeft} source={firstMovie} />
+        <Image style={styles.roomCardImageCenter} source={secondMovie} />
+        <Image style={styles.roomCardImageRight} source={thirdMovie} />
       </View>
     </View>
   );
@@ -59,7 +52,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
   },
   roomCardTitle: {
-    flex: 1,
+    flex: 2,
     padding: 10,
     flexDirection: "row",
   },
@@ -75,7 +68,7 @@ const styles = StyleSheet.create({
     color: "#22f253",
   },
   roomCardImages: {
-    flex: 3,
+    flex: 5,
     flexDirection: "row",
   },
   roomCardImageLeft: {
@@ -93,7 +86,7 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 20,
   },
   roomCardUser: {
-    fontSize: 25,
+    fontSize: 20,
     fontWeight: "bold",
     color: "black",
     marginBottom: 10,
