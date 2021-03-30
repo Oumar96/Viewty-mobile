@@ -1,21 +1,82 @@
 import React from "react";
-import { View, Text, StyleSheet, Dimensions, Image } from "react-native";
+import { isNil } from "lodash";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  Image,
+  Animated,
+} from "react-native";
 
 const SCREEN_HEIGHT = Dimensions.get("window").height;
+const CARD_HEIGHT = SCREEN_HEIGHT / 3;
+const CARD_MARGIN = 32;
 
 const RoomCard = (props) => {
-  const { room = {}, threeMovies = [] } = props;
-
-  const firstMovie = { uri: threeMovies[0].poster };
-  const secondMovie = { uri: threeMovies[1].poster };
-  const thirdMovie = { uri: threeMovies[2].poster };
+  const { index = 0, room = {}, threeMovies = [], yCoordinate = {} } = props;
+  const firstMovie = !isNil(threeMovies[0])
+    ? { uri: threeMovies[0].poster }
+    : require("../assets/1.jpg");
+  const secondMovie = !isNil(threeMovies[1])
+    ? { uri: threeMovies[1].poster }
+    : require("../assets/1.jpg");
+  const thirdMovie = !isNil(threeMovies[2])
+    ? { uri: threeMovies[2].poster }
+    : require("../assets/1.jpg");
 
   /***********
    * Data
    ***********/
   let users = room.participants.users;
+  const position = Animated.subtract(index * CARD_HEIGHT, yCoordinate);
+  const disappearPosition = -CARD_HEIGHT;
+  const topCardPosition = 0;
+  const bottomCardPosition = SCREEN_HEIGHT - CARD_HEIGHT;
+  const appearPosition = SCREEN_HEIGHT;
+  const animateInputPosition = 0.00001 + index * (CARD_HEIGHT + CARD_MARGIN);
+  const animateOutputPosition = -index * (CARD_HEIGHT + CARD_MARGIN);
+  const translateY = Animated.add(
+    yCoordinate,
+    yCoordinate.interpolate({
+      inputRange: [0, animateInputPosition],
+      outputRange: [0, animateOutputPosition],
+      extrapolateRight: "clamp",
+    })
+  );
+  const scale = position.interpolate({
+    inputRange: [
+      disappearPosition,
+      topCardPosition,
+      bottomCardPosition,
+      appearPosition,
+    ],
+    outputRange: [0.5, 1, 1, 0.5],
+    extrapolate: "clamp",
+  });
+  const opacity = position.interpolate({
+    inputRange: [
+      disappearPosition,
+      topCardPosition,
+      bottomCardPosition,
+      appearPosition,
+    ],
+    outputRange: [0.5, 1, 1, 0.5],
+  });
+
+  const animationStyle = {
+    opacity,
+    transform: [
+      {
+        translateY,
+      },
+      {
+        scale,
+      },
+    ],
+  };
   return (
-    <View style={styles.roomCard}>
+    <Animated.View style={[styles.roomCard, animationStyle]}>
       <View style={styles.roomCardTitle}>
         <View style={styles.participants}>
           {users.map((user, index) => (
@@ -33,7 +94,7 @@ const RoomCard = (props) => {
         <Image style={styles.roomCardImageCenter} source={secondMovie} />
         <Image style={styles.roomCardImageRight} source={thirdMovie} />
       </View>
-    </View>
+    </Animated.View>
   );
 };
 
@@ -43,9 +104,8 @@ const styles = StyleSheet.create({
   roomCard: {
     flex: 1,
     backgroundColor: "white",
-    marginVertical: 16,
-    height: SCREEN_HEIGHT / 3,
-    borderRadius: 20,
+    height: CARD_HEIGHT,
+    marginBottom: 3,
     shadowColor: "#000000",
     elevation: 7,
     shadowRadius: 3,
@@ -68,13 +128,12 @@ const styles = StyleSheet.create({
     color: "#22f253",
   },
   roomCardImages: {
-    flex: 5,
+    flex: 6,
     flexDirection: "row",
   },
   roomCardImageLeft: {
     flex: 1,
     height: "100%",
-    borderBottomLeftRadius: 20,
   },
   roomCardImageCenter: {
     flex: 1,
@@ -83,10 +142,9 @@ const styles = StyleSheet.create({
   roomCardImageRight: {
     flex: 1,
     height: "100%",
-    borderBottomRightRadius: 20,
   },
   roomCardUser: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: "bold",
     color: "black",
     marginBottom: 10,
