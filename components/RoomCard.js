@@ -1,13 +1,7 @@
 import React from "react";
 import { isNil } from "lodash";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
-  Image,
-  Animated,
-} from "react-native";
+import { View, Text, StyleSheet, Dimensions, Animated } from "react-native";
+import BaseImage from "./BaseImage.js";
 
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 const CARD_HEIGHT = SCREEN_HEIGHT / 3;
@@ -15,15 +9,9 @@ const CARD_MARGIN = 32;
 
 const RoomCard = (props) => {
   const { index = 0, room = {}, threeMovies = [], yCoordinate = {} } = props;
-  const firstMovie = !isNil(threeMovies[0])
-    ? { uri: threeMovies[0].poster }
-    : require("../assets/1.jpg");
-  const secondMovie = !isNil(threeMovies[1])
-    ? { uri: threeMovies[1].poster }
-    : require("../assets/1.jpg");
-  const thirdMovie = !isNil(threeMovies[2])
-    ? { uri: threeMovies[2].poster }
-    : require("../assets/1.jpg");
+  const firstMovie = !isNil(threeMovies[0]) ? threeMovies[0].poster : null;
+  const secondMovie = !isNil(threeMovies[1]) ? threeMovies[1].poster : null;
+  const thirdMovie = !isNil(threeMovies[2]) ? threeMovies[2].poster : null;
 
   /***********
    * Data
@@ -90,9 +78,9 @@ const RoomCard = (props) => {
         </View>
       </View>
       <View style={styles.roomCardImages}>
-        <Image style={styles.roomCardImageLeft} source={firstMovie} />
-        <Image style={styles.roomCardImageCenter} source={secondMovie} />
-        <Image style={styles.roomCardImageRight} source={thirdMovie} />
+        <BaseImage style={styles.roomCardImageLeft} source={firstMovie} />
+        <BaseImage style={styles.roomCardImageCenter} source={secondMovie} />
+        <BaseImage style={styles.roomCardImageRight} source={thirdMovie} />
       </View>
     </Animated.View>
   );
@@ -106,10 +94,6 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     height: CARD_HEIGHT,
     marginBottom: 3,
-    shadowColor: "#000000",
-    elevation: 7,
-    shadowRadius: 3,
-    shadowOpacity: 0.15,
   },
   roomCardTitle: {
     flex: 2,
