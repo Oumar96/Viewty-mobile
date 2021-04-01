@@ -1097,6 +1097,18 @@
     lodash.pick "^4.4.0"
     lodash.template "^4.5.0"
 
+"@expo/vector-icons@^12.0.4":
+  version "12.0.4"
+  resolved "https://registry.yarnpkg.com/@expo/vector-icons/-/vector-icons-12.0.4.tgz#52061fffab83ca74af52288b5f839b090f7dabed"
+  integrity sha512-/EFbXri7jZmqj1jTY6wpauvMN0DY0Epic003d43yWqrScLlVERaxXrOR07BNuCZvVMHBAzXN4VbOzUUUTq6j8g==
+  dependencies:
+    lodash.frompairs "^4.0.1"
+    lodash.isequal "^4.5.0"
+    lodash.isstring "^4.0.1"
+    lodash.omit "^4.5.0"
+    lodash.pick "^4.4.0"
+    lodash.template "^4.5.0"
+
 "@expo/websql@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@expo/websql/-/websql-1.0.1.tgz#fff0cf9c1baa1f70f9e1d658b7c39a420d9b10a9"

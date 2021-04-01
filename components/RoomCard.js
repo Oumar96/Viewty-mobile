@@ -9,14 +9,19 @@ const CARD_MARGIN = 32;
 
 const RoomCard = (props) => {
   const { index = 0, room = {}, threeMovies = [], yCoordinate = {} } = props;
-  const firstMovie = !isNil(threeMovies[0]) ? threeMovies[0].poster : null;
-  const secondMovie = !isNil(threeMovies[1]) ? threeMovies[1].poster : null;
-  const thirdMovie = !isNil(threeMovies[2]) ? threeMovies[2].poster : null;
 
   /***********
    * Data
    ***********/
   let users = room.participants.users;
+  const isRoomEnded = !isNil(room.result);
+  const status = isRoomEnded ? "ended" : "active";
+  const firstMovie = !isNil(threeMovies[0]) ? threeMovies[0].poster : null;
+  const secondMovie = !isNil(threeMovies[1]) ? threeMovies[1].poster : null;
+  const thirdMovie = !isNil(threeMovies[2]) ? threeMovies[2].poster : null;
+  const finalMovie = isRoomEnded ? room.result.movie : null;
+
+  // Animation data
   const position = Animated.subtract(index * CARD_HEIGHT, yCoordinate);
   const disappearPosition = -CARD_HEIGHT;
   const topCardPosition = 0;
@@ -63,6 +68,7 @@ const RoomCard = (props) => {
       },
     ],
   };
+
   return (
     <Animated.View style={[styles.roomCard, animationStyle]}>
       <View style={styles.roomCardTitle}>
@@ -74,13 +80,19 @@ const RoomCard = (props) => {
           ))}
         </View>
         <View style={styles.status}>
-          <Text style={styles.statusText}>active</Text>
+          <Text style={styles[`statusText__${status}`]}>{status}</Text>
         </View>
       </View>
       <View style={styles.roomCardImages}>
-        <BaseImage style={styles.roomCardImageLeft} source={firstMovie} />
-        <BaseImage style={styles.roomCardImageCenter} source={secondMovie} />
-        <BaseImage style={styles.roomCardImageRight} source={thirdMovie} />
+        {isRoomEnded ? (
+          <BaseImage style={styles.roomCardImage} source={finalMovie.poster} />
+        ) : (
+          <>
+            <BaseImage style={styles.roomCardImage} source={firstMovie} />
+            <BaseImage style={styles.roomCardImage} source={secondMovie} />
+            <BaseImage style={styles.roomCardImage} source={thirdMovie} />
+          </>
+        )}
       </View>
     </Animated.View>
   );
@@ -106,24 +118,21 @@ const styles = StyleSheet.create({
   status: {
     flex: 1,
   },
-  statusText: {
-    fontSize: 16,
+  statusText__active: {
+    fontSize: 12,
     fontWeight: "bold",
     color: "#22f253",
+  },
+  statusText__ended: {
+    fontSize: 12,
+    fontWeight: "bold",
+    color: "red",
   },
   roomCardImages: {
     flex: 6,
     flexDirection: "row",
   },
-  roomCardImageLeft: {
-    flex: 1,
-    height: "100%",
-  },
-  roomCardImageCenter: {
-    flex: 1,
-    height: "100%",
-  },
-  roomCardImageRight: {
+  roomCardImage: {
     flex: 1,
     height: "100%",
   },
