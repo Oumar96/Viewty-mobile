@@ -7,6 +7,24 @@ const SCREEN_HEIGHT = Dimensions.get("window").height;
 const CARD_HEIGHT = SCREEN_HEIGHT / 3;
 const CARD_MARGIN = 32;
 
+/**
+ * @param {Boolean} isRoomEnded
+ * @param {Boolean} isRoomPending
+ * @returns {String}
+ */
+const getStatus = (isRoomEnded, isRoomPending) => {
+  let status = "";
+  if (isRoomEnded) {
+    status = "ended";
+  } else if (isRoomPending) {
+    status = "pending";
+  } else {
+    status = "active";
+  }
+
+  return status;
+};
+
 const RoomCard = (props) => {
   const { index = 0, room = {}, threeMovies = [], yCoordinate = {} } = props;
 
@@ -15,10 +33,10 @@ const RoomCard = (props) => {
    ***********/
   let users = room.participants.users;
   const isRoomEnded = !isNil(room.result);
-  const status = isRoomEnded ? "ended" : "active";
-  const firstMovie = !isNil(threeMovies[0]) ? threeMovies[0].poster : null;
-  const secondMovie = !isNil(threeMovies[1]) ? threeMovies[1].poster : null;
-  const thirdMovie = !isNil(threeMovies[2]) ? threeMovies[2].poster : null;
+  const isRoomPending = !isNil(room.participants)
+    ? room.participants.accepted < 2
+    : false;
+  const status = getStatus(isRoomEnded, isRoomPending);
   const finalMovie = isRoomEnded ? room.result.movie : null;
 
   // Animation data
@@ -88,9 +106,13 @@ const RoomCard = (props) => {
           <BaseImage style={styles.roomCardImage} source={finalMovie.poster} />
         ) : (
           <>
-            <BaseImage style={styles.roomCardImage} source={firstMovie} />
-            <BaseImage style={styles.roomCardImage} source={secondMovie} />
-            <BaseImage style={styles.roomCardImage} source={thirdMovie} />
+            {threeMovies.map((movie, index) => (
+              <BaseImage
+                key={index}
+                style={styles.roomCardImage}
+                source={movie.poster}
+              />
+            ))}
           </>
         )}
       </View>
@@ -122,6 +144,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "bold",
     color: "#22f253",
+  },
+  statusText__pending: {
+    fontSize: 12,
+    fontWeight: "bold",
+    color: "#de8a02",
   },
   statusText__ended: {
     fontSize: 12,
