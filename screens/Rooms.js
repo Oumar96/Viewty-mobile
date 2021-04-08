@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { View, StyleSheet } from "react-native";
-import { isEqual, isNil } from "lodash";
+import { isEqual, isNil, isEmpty } from "lodash";
 
 import firebase from "../firebase/firebase.js";
 
 import MoviesApi from "../api/Movies.js";
 
+//contexts
+import HomeContext from "../contexts/HomeContext.js";
 import RoomsContext from "../contexts/RoomsContext.js";
 
 // components
@@ -15,8 +17,12 @@ import RoomCardsList from "../components/RoomCardsList.js";
 const USER_ID = "5145753393";
 
 const Rooms = () => {
-  const roomIdsRef = firebase.database().ref(`users/${USER_ID}/rooms`);
-  const roomsRef = firebase.database().ref("rooms");
+  const homeContext = useContext(HomeContext);
+
+  /***********
+   * Context State
+   ***********/
+  const userId = homeContext.state.userId;
 
   /***********
    * State
@@ -24,6 +30,12 @@ const Rooms = () => {
   const [roomIds, setRoomIds] = useState([]);
   const [rooms, setRooms] = useState([]);
   const [moviesDetails, setMovieDetails] = useState([]);
+
+  /***********
+   * Data
+   ***********/
+  let roomIdsRef = firebase.database().ref(`users/${userId}/rooms`);
+  let roomsRef = firebase.database().ref("rooms");
 
   /***********
    * Methods
@@ -112,6 +124,7 @@ const Rooms = () => {
     <RoomsContext.Provider
       value={{
         state: {
+          userId,
           rooms,
           moviesDetails,
         },

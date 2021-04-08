@@ -3,13 +3,19 @@ import React, { useEffect, useState } from "react";
 import firebase from "./firebase/firebase.js";
 import { useFonts, Pacifico_400Regular } from "@expo-google-fonts/pacifico";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
+import {
+  createStackNavigator,
+  TransitionPresets,
+} from "@react-navigation/stack";
 
 // screens
 import SignIn from "./screens/SignIn.js";
 import Movies from "./screens/Movies.js";
 import Home from "./screens/Home.js";
 
+const TransitionScreenOptions = {
+  ...TransitionPresets.SlideFromRightIOS, // This is where the transition happens
+};
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -97,7 +103,7 @@ export default function App() {
   }
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={TransitionScreenOptions}>
         {getInitialScreenInOrder()}
         <Stack.Screen
           options={{ headerShown: false }}

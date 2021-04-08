@@ -1,6 +1,17 @@
-import React from "react";
+import React, { useContext } from "react";
 import { isNil } from "lodash";
-import { View, Text, StyleSheet, Dimensions, Animated } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  Dimensions,
+  Animated,
+} from "react-native";
+
+// context
+import RoomsContext from "../contexts/RoomsContext.js";
+// components
 import BaseImage from "./BaseImage.js";
 
 const SCREEN_HEIGHT = Dimensions.get("window").height;
@@ -27,6 +38,12 @@ const getStatus = (isRoomEnded, isRoomPending) => {
 
 const RoomCard = (props) => {
   const { index = 0, room = {}, threeMovies = [], yCoordinate = {} } = props;
+  const roomsContext = useContext(RoomsContext);
+
+  /***********
+   * Context State
+   ***********/
+  const userId = roomsContext.state.userId;
 
   /***********
    * Data
@@ -87,35 +104,51 @@ const RoomCard = (props) => {
     ],
   };
 
+  /***********
+   * Methods
+   ***********/
+  const handleClickCard = () => {
+    console.log("yooo", userId, room.id);
+  };
+
   return (
     <Animated.View style={[styles.roomCard, animationStyle]}>
-      <View style={styles.roomCardTitle}>
-        <View style={styles.participants}>
-          {users.map((user, index) => (
-            <Text key={index} style={styles.roomCardUser}>
-              {/* {user} */} John Smith
-            </Text>
-          ))}
-        </View>
-        <View style={styles.status}>
-          <Text style={styles[`statusText__${status}`]}>{status}</Text>
-        </View>
-      </View>
-      <View style={styles.roomCardImages}>
-        {isRoomEnded ? (
-          <BaseImage style={styles.roomCardImage} source={finalMovie.poster} />
-        ) : (
-          <>
-            {threeMovies.map((movie, index) => (
-              <BaseImage
-                key={index}
-                style={styles.roomCardImage}
-                source={movie.poster}
-              />
+      <TouchableOpacity
+        activeOpacity={0.8}
+        style={styles.roomCardTouchable}
+        onPress={handleClickCard}
+      >
+        <View style={styles.roomCardTitle}>
+          <View style={styles.participants}>
+            {users.map((user, index) => (
+              <Text key={index} style={styles.roomCardUser}>
+                {/* {user} */} John Smith
+              </Text>
             ))}
-          </>
-        )}
-      </View>
+          </View>
+          <View style={styles.status}>
+            <Text style={styles[`statusText__${status}`]}>{status}</Text>
+          </View>
+        </View>
+        <View style={styles.roomCardImages}>
+          {isRoomEnded ? (
+            <BaseImage
+              style={styles.roomCardImage}
+              source={finalMovie.poster}
+            />
+          ) : (
+            <>
+              {threeMovies.map((movie, index) => (
+                <BaseImage
+                  key={index}
+                  style={styles.roomCardImage}
+                  source={movie.poster}
+                />
+              ))}
+            </>
+          )}
+        </View>
+      </TouchableOpacity>
     </Animated.View>
   );
 };
@@ -128,6 +161,9 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     height: CARD_HEIGHT,
     marginBottom: 3,
+  },
+  roomCardTouchable: {
+    flex: 1,
   },
   roomCardTitle: {
     flex: 2,

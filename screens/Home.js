@@ -1,8 +1,11 @@
 // libs
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
+import { isEmpty } from "lodash";
 
+// contexts
+import HomeContext from "../contexts/HomeContext.js";
 // screens
 import Rooms from "./Rooms.js";
 import CreateRoom from "./CreateRoom.js";
@@ -52,12 +55,29 @@ const getTabsIcons = ({ route }) => ({
 });
 
 const Home = () => {
-  return (
-    <Tab.Navigator screenOptions={getTabsIcons} tabBarOptions={tabBarOptions}>
-      <Tab.Screen name="Rooms" component={Rooms} />
-      <Tab.Screen name="New" component={CreateRoom} />
-      <Tab.Screen name="Settings" component={Settings} />
-    </Tab.Navigator>
+  const [userId, setUserId] = useState("");
+
+  useEffect(() => {
+    setUserId("5145753394");
+  }, []);
+
+  // add loading state
+  return isEmpty(userId) ? (
+    <></>
+  ) : (
+    <HomeContext.Provider
+      value={{
+        state: {
+          userId,
+        },
+      }}
+    >
+      <Tab.Navigator screenOptions={getTabsIcons} tabBarOptions={tabBarOptions}>
+        <Tab.Screen name="Rooms" component={Rooms} />
+        <Tab.Screen name="New" component={CreateRoom} />
+        <Tab.Screen name="Settings" component={Settings} />
+      </Tab.Navigator>
+    </HomeContext.Provider>
   );
 };
 
