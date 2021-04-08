@@ -13,7 +13,7 @@ import Settings from "./Settings.js";
 
 const Tab = createBottomTabNavigator();
 const tabBarOptions = {
-  activeTintColor: "tomato",
+  activeTintColor: "#0f9bf2",
   inactiveTintColor: "gray",
 };
 
@@ -54,11 +54,18 @@ const getTabsIcons = ({ route }) => ({
   },
 });
 
-const Home = () => {
+const Home = ({ route }) => {
+  /***********
+   * Route Data
+   ***********/
+  const routeUserId = route.params.userId;
+  /***********
+   * Data
+   ***********/
   const [userId, setUserId] = useState("");
 
   useEffect(() => {
-    setUserId("5145753394");
+    setUserId(routeUserId);
   }, []);
 
   // add loading state

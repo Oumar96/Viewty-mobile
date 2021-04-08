@@ -39,6 +39,9 @@ export default function App() {
           options={{ headerShown: false }}
           name="Home"
           component={Home}
+          initialParams={{
+            userId: currentUser.userId,
+          }}
         />
         <Stack.Screen
           options={{ headerShown: false }}
@@ -60,6 +63,9 @@ export default function App() {
           options={{ headerShown: false }}
           name="Home"
           component={Home}
+          initialParams={{
+            userId: currentUser.userId,
+          }}
         />
       </>
     );
@@ -86,9 +92,11 @@ export default function App() {
           .catch(function (error) {
             console.log(error);
           });
-        setCurrentUser(user);
+        // setCurrentUser(user);
+        setCurrentUser({
+          userId: "5145753394", // mock
+        });
         setIsSignedIn(true);
-        // navigation.navigate("Room");
       }
       setIsLoading(false);
     });
