@@ -114,7 +114,7 @@ export default function App() {
       <Stack.Navigator screenOptions={TransitionScreenOptions}>
         {getInitialScreenInOrder()}
         <Stack.Screen
-          options={{ headerShown: false }}
+          // options={{ headerShown: false }}
           name="Movies"
           component={Movies}
         />

@@ -54,7 +54,7 @@ const getTabsIcons = ({ route }) => ({
   },
 });
 
-const Home = ({ route }) => {
+const Home = ({ navigation, route }) => {
   /***********
    * Route Data
    ***********/
@@ -76,6 +76,7 @@ const Home = ({ route }) => {
       value={{
         state: {
           userId,
+          navigation,
         },
       }}
     >

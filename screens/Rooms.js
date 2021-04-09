@@ -23,6 +23,7 @@ const Rooms = () => {
    * Context State
    ***********/
   const userId = homeContext.state.userId;
+  const navigation = homeContext.state.navigation;
 
   /***********
    * State
@@ -127,6 +128,7 @@ const Rooms = () => {
           userId,
           rooms,
           moviesDetails,
+          navigation,
         },
       }}
     >

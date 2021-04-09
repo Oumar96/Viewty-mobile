@@ -44,6 +44,7 @@ const RoomCard = (props) => {
    * Context State
    ***********/
   const userId = roomsContext.state.userId;
+  const navigation = roomsContext.state.navigation;
 
   /***********
    * Data
@@ -108,6 +109,7 @@ const RoomCard = (props) => {
    * Methods
    ***********/
   const handleClickCard = () => {
+    navigation.navigate("Movies");
     console.log("yooo", userId, room.id);
   };
 
