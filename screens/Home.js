@@ -1,190 +1,92 @@
-import React, { useRef, useState } from "react";
-// components
-import {
-  StyleSheet,
-  View,
-  Text,
-  Dimensions,
-  Animated,
-  ImageBackground,
-} from "react-native";
-import HomePhoneNumberForm from "../components/HomePhoneNumberForm.js";
-import HomeCodeConfirmation from "../components/HomeCodeConfirmation.js";
-import BaseButton from "../components/BaseButton.js";
-// context
+// libs
+import React, { useEffect, useState } from "react";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Ionicons, AntDesign } from "@expo/vector-icons";
+import { isEmpty } from "lodash";
+
+// contexts
 import HomeContext from "../contexts/HomeContext.js";
+// screens
+import Rooms from "./Rooms.js";
+import CreateRoom from "./CreateRoom.js";
+import Settings from "./Settings.js";
 
-const SCREEN_WIDTH = Dimensions.get("window").width;
-const SCREEN_HEIGHT = Dimensions.get("window").height;
+const Tab = createBottomTabNavigator();
+const tabBarOptions = {
+  activeTintColor: "#0f9bf2",
+  inactiveTintColor: "gray",
+};
 
-const Home = ({ navigation }) => {
-  /***********
-   * Refs
-   ***********/
-  const homeNumberPhonePosition = useRef(new Animated.Value(0)).current;
-
-  /***********
-   * State
-   ***********/
-  const [currentContainerPosition, setCurrentContainerPosition] = useState(0);
-  const [isShowingGetStartedButton, setIsShowingGetStartedButton] = useState(
-    true
+const getRoomsIcon = (focused, color, size) => {
+  return (
+    <Ionicons
+      name={focused ? "home" : "home-outline"}
+      size={size}
+      color={color}
+    />
   );
-  const [phoneNumberVerificationId, setPhoneNumberVerificationId] = useState(
-    ""
+};
+const getNewIcon = (focused, color, size) => {
+  return (
+    <AntDesign
+      name={focused ? "pluscircle" : "pluscircleo"}
+      size={size}
+      color={color}
+    />
   );
+};
+const getSettingsIcon = (focused, color, size) => {
+  return (
+    <Ionicons
+      name={focused ? "settings" : "settings-outline"}
+      size={size}
+      color={color}
+    />
+  );
+};
+const getTabsIcons = ({ route }) => ({
+  tabBarIcon: ({ focused, color, size }) => {
+    return {
+      Rooms: getRoomsIcon,
+      New: getNewIcon,
+      Settings: getSettingsIcon,
+    }[route.name](focused, color, size);
+  },
+});
 
+const Home = ({ navigation, route }) => {
+  /***********
+   * Route Data
+   ***********/
+  const routeUserId = route.params.userId;
   /***********
    * Data
    ***********/
-  const homePhoneNumberTranslate = {
-    transform: [
-      {
-        translateX: homeNumberPhonePosition,
-      },
-    ],
-  };
+  const [userId, setUserId] = useState("");
 
-  /***********
-   * Methods
-   ***********/
-  const getStarted = () => {
-    setIsShowingGetStartedButton(false);
-    animateHomeContainerForward();
-  };
-  const animateHomeContainerForward = () => {
-    Animated.timing(homeNumberPhonePosition, {
-      toValue: currentContainerPosition - SCREEN_WIDTH,
-      duration: 500,
-      useNativeDriver: true,
-    }).start();
-    setCurrentContainerPosition(currentContainerPosition - SCREEN_WIDTH);
-  };
-  const animateHomeContainerBackward = () => {
-    Animated.timing(homeNumberPhonePosition, {
-      toValue: currentContainerPosition + SCREEN_WIDTH,
-      duration: 500,
-      useNativeDriver: true,
-    }).start();
-    setCurrentContainerPosition(currentContainerPosition + SCREEN_WIDTH);
-  };
+  useEffect(() => {
+    setUserId(routeUserId);
+  }, []);
 
-  const navigateToRooms = () => {
-    navigation.navigate("Rooms");
-  };
-
-  return (
+  // add loading state
+  return isEmpty(userId) ? (
+    <></>
+  ) : (
     <HomeContext.Provider
       value={{
         state: {
-          phoneNumberVerificationId,
-        },
-        mutations: {
-          setPhoneNumberVerificationId,
-        },
-        actions: {
-          animateHomeContainerForward,
-          animateHomeContainerBackward,
-          navigateToRooms,
+          userId,
+          navigation,
         },
       }}
     >
-      <ImageBackground
-        style={styles.image}
-        source={require("../assets/popcorn.jpg")}
-      >
-        <View style={styles.container}>
-          <Animated.View style={[styles.content, homePhoneNumberTranslate]}>
-            <View style={styles.welcomeMessageContainer}>
-              <Text style={styles.welcomeText}>WELCOME TO VIEWTY</Text>
-              <Text style={styles.swipeWithFriendsText}>
-                Swipe with friends and find the perfect film for movie night
-              </Text>
-            </View>
-            <View style={styles.homePhoneNumberFormContainer}>
-              <HomePhoneNumberForm />
-            </View>
-            <View style={styles.homeCodeConfirmationContainer}>
-              <HomeCodeConfirmation />
-            </View>
-          </Animated.View>
-          <View style={styles.footer}>
-            {isShowingGetStartedButton && (
-              <BaseButton
-                type="PRIMARY"
-                style={styles.getStarted}
-                onPress={getStarted}
-                text="Get started"
-              />
-            )}
-          </View>
-        </View>
-      </ImageBackground>
+      <Tab.Navigator screenOptions={getTabsIcons} tabBarOptions={tabBarOptions}>
+        <Tab.Screen name="Rooms" component={Rooms} />
+        <Tab.Screen name="New" component={CreateRoom} />
+        <Tab.Screen name="Settings" component={Settings} />
+      </Tab.Navigator>
     </HomeContext.Provider>
   );
 };
 
 export default Home;
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "rgba(0,0,0,0.5)",
-    justifyContent: "space-around",
-    height: "100%",
-    flex: 1,
-  },
-  content: {
-    alignItems: "center",
-    justifyContent: "center",
-    flexDirection: "row",
-    height: SCREEN_HEIGHT * 0.75,
-    width: SCREEN_WIDTH * 3,
-  },
-  footer: {
-    alignItems: "center",
-    justifyContent: "flex-start",
-  },
-  welcomeMessageContainer: {
-    width: SCREEN_WIDTH,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 80,
-  },
-  welcomeText: {
-    fontSize: 30,
-    color: "white",
-    fontWeight: "800",
-  },
-  swipeWithFriendsText: {
-    fontSize: 18,
-    color: "#dbd8d7",
-    textAlign: "center",
-    width: 300,
-    marginTop: 20,
-  },
-  homePhoneNumberFormContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    width: SCREEN_WIDTH,
-  },
-  homeCodeConfirmationContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    width: SCREEN_WIDTH,
-  },
-  getStarted: {
-    borderRadius: 10,
-    shadowColor: "#000000",
-    elevation: 7,
-    shadowRadius: 3,
-    shadowOpacity: 0.15,
-    height: 50,
-    width: SCREEN_WIDTH - 50,
-  },
-  image: {
-    height: "100%",
-    width: "100%",
-    resizeMode: "cover",
-    borderRadius: 20,
-  },
-});

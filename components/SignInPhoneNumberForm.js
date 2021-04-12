@@ -9,10 +9,10 @@ import { MaterialIcons } from "@expo/vector-icons";
 import PhoneInput from "react-native-phone-number-input";
 import BaseButton from "./BaseButton.js";
 // context
-import HomeContext from "../contexts/HomeContext.js";
+import SignInContext from "../contexts/SignInContext.js";
 
-const HomePhoneNumberForm = () => {
-  const homeContext = useContext(HomeContext);
+const SignInPhoneNumberForm = () => {
+  const signInContext = useContext(SignInContext);
   /***********
    * State
    ***********/
@@ -48,14 +48,14 @@ const HomePhoneNumberForm = () => {
       phoneNumber,
       recaptchaVerifier.current
     );
-    homeContext.mutations.setPhoneNumberVerificationId(responseVerifcationID);
+    signInContext.mutations.setPhoneNumberVerificationId(responseVerifcationID);
   };
 
   const sendCode = async () => {
     try {
       setError("");
       await sendVerification();
-      homeContext.actions.animateHomeContainerForward();
+      signInContext.actions.animateSignInContainerForward();
     } catch (e) {
       if (e.code !== "ERR_FIREBASE_RECAPTCHA_CANCEL") {
         !isEmpty(errors[e.code])
@@ -99,7 +99,7 @@ const HomePhoneNumberForm = () => {
   );
 };
 
-export default HomePhoneNumberForm;
+export default SignInPhoneNumberForm;
 
 const styles = StyleSheet.create({
   phoneNumberForm: {
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     elevation: 7,
     shadowRadius: 3,
     shadowOpacity: 0.1,
-    width: 350,
+    width: "80%",
   },
   textContainerStyle: {
     borderTopRightRadius: 10,
@@ -122,9 +122,9 @@ const styles = StyleSheet.create({
   errorContainer: {
     alignItems: "center",
     flexDirection: "row",
-    justifyContent: "flex-start",
+    justifyContent: "center",
     marginTop: 20,
-    width: 350,
+    width: "80%",
   },
   errorText: {
     fontWeight: "800",
