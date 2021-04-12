@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { View, Animated } from "react-native";
+import { View, Animated, StyleSheet } from "react-native";
 import firebase from "../firebase/firebase.js";
 import { isNil, isEmpty } from "lodash";
 
@@ -16,9 +16,7 @@ import Match from "../components/Match.js";
 const USER_ID = "5145753393";
 const ROOM_ID = "a9ee2bb6-66d7-4e1f-a282-3ecbc01cb707";
 
-const Movies = () => {
-  const moviesRef = firebase.database().ref(`rooms/${ROOM_ID}/movies`);
-
+const Movies = ({ route }) => {
   /***********
    * State
    ***********/
@@ -33,6 +31,13 @@ const Movies = () => {
   const [isShowErrorModal, setIsShowErrorModal] = useState(false);
   const [matchedMovie, setMatchedMovie] = useState(null);
   const [matchedMovieName, setMatchedMovieName] = useState("");
+
+  /***********
+   * Data
+   ***********/
+  const userId = route.params.userId;
+  const roomId = route.params.roomId;
+  const moviesRef = firebase.database().ref(`rooms/${roomId}/movies`);
 
   /***********
    * Methods
@@ -160,8 +165,8 @@ const Movies = () => {
     <MoviesContext.Provider
       value={{
         state: {
-          currentUserId,
-          currentRoomId,
+          currentUserId: userId,
+          currentRoomId: roomId,
           movies,
           currentMovieIndex,
           topCardPosition,
@@ -179,10 +184,8 @@ const Movies = () => {
         },
       }}
     >
-      <View style={{ flex: 1 }}>
-        <View style={{ height: 60 }}></View>
+      <View style={styles.movies}>
         <SwipeCardsList />
-        <View style={{ height: 60 }}></View>
       </View>
       {!isNil(matchedMovie) && <Match />}
       <ErrorModal
@@ -194,3 +197,9 @@ const Movies = () => {
 };
 
 export default Movies;
+
+const styles = StyleSheet.create({
+  movies: {
+    flex: 1,
+  },
+});

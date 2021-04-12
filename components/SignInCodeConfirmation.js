@@ -1,39 +1,28 @@
 import React, { useState, useContext } from "react";
 //components
-import {
-  StyleSheet,
-  TextInput,
-  TouchableHighlight,
-  View,
-  Text,
-  Keyboard,
-} from "react-native";
+import { StyleSheet, TextInput, View, Keyboard } from "react-native";
+import BaseButton from "./BaseButton.js";
 // context
-import HomeContext from "../contexts/HomeContext.js";
+import SignInContext from "../contexts/SignInContext.js";
 // libs
 import firebase from "../firebase/firebase.js";
 
-const HomeCodeConfirmation = () => {
-  const homeContext = useContext(HomeContext);
+const SignInCodeConfirmation = () => {
+  const signInContext = useContext(SignInContext);
   /***********
    * Context State
    ***********/
-  const phoneNumberVerificationId = homeContext.state.phoneNumberVerificationId;
+  const phoneNumberVerificationId =
+    signInContext.state.phoneNumberVerificationId;
   /***********
    * Context Actions
    ***********/
-  const navigateToRooms = homeContext.actions.navigateToRooms;
-  const animateHomeContainerBackward =
-    homeContext.actions.animateHomeContainerBackward;
+  const navigateToRooms = signInContext.actions.navigateToRooms;
+  const animateSignInContainerBackward =
+    signInContext.actions.animateSignInContainerBackward;
   /***********
    * State
    ***********/
-  const [confirmCodeTextColor, setConfirmCodeTextColor] = useState({
-    color: "#0f9bf2",
-  });
-  const [cancelCodeTextColor, setCancelCodeTextColor] = useState({
-    color: "red",
-  });
   const [phoneVerificationCode, setPhoneVerificationCode] = useState("");
 
   /***********
@@ -66,42 +55,24 @@ const HomeCodeConfirmation = () => {
         style={styles.confirmationCodeInput}
       />
       <View style={styles.confirmCodedButtonContainer}>
-        <TouchableHighlight
+        <BaseButton
+          type="PRIMARY_NEGATIVE"
           style={styles.confirmCodeButton}
-          underlayColor="#0f9bf2"
           onPress={confirmCode}
-          onShowUnderlay={() => {
-            setConfirmCodeTextColor({ color: "white" });
-          }}
-          onHideUnderlay={() => {
-            setConfirmCodeTextColor({ color: "#0f9bf2" });
-          }}
-        >
-          <Text style={[styles.confirmCodeText, confirmCodeTextColor]}>
-            Confirm Code
-          </Text>
-        </TouchableHighlight>
-        <TouchableHighlight
+          text="Confirm Code"
+        />
+        <BaseButton
+          type="SECONDARY_NEGATIVE"
           style={styles.cancelButton}
-          underlayColor="red"
-          onShowUnderlay={() => {
-            setCancelCodeTextColor({ color: "white" });
-          }}
-          onHideUnderlay={() => {
-            setCancelCodeTextColor({ color: "red" });
-          }}
-          onPress={animateHomeContainerBackward}
-        >
-          <Text style={[styles.cancelCodeText, cancelCodeTextColor]}>
-            Cancel
-          </Text>
-        </TouchableHighlight>
+          onPress={animateSignInContainerBackward}
+          text="Cancel"
+        />
       </View>
     </View>
   );
 };
 
-export default HomeCodeConfirmation;
+export default SignInCodeConfirmation;
 
 const styles = StyleSheet.create({
   codeConfirmation: {
@@ -109,7 +80,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     textAlign: "center",
-    width: 350,
+    width: "100%",
   },
   confirmationCodeInput: {
     borderRadius: 10,
@@ -134,26 +105,18 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
   confirmCodeButton: {
-    width: 300,
+    width: "100%",
     height: 50,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "white",
     borderRadius: 50,
     shadowColor: "#000000",
     elevation: 7,
     shadowRadius: 3,
     shadowOpacity: 0.15,
-    borderWidth: 1,
-    borderColor: "#0f9bf2",
   },
   cancelButton: {
-    width: 300,
+    width: "100%",
     height: 50,
     marginTop: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "white",
     borderRadius: 50,
     shadowColor: "#000000",
     elevation: 7,
@@ -161,15 +124,5 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
     borderColor: "red",
     borderWidth: 1,
-  },
-  confirmCodeText: {
-    fontSize: 16,
-    fontWeight: "800",
-    color: "#0f9bf2",
-  },
-  cancelCodeText: {
-    fontSize: 16,
-    fontWeight: "800",
-    color: "red",
   },
 });
