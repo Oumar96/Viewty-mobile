@@ -70,7 +70,7 @@ const SignIn = ({ navigation }) => {
   };
 
   const navigateToRooms = () => {
-    navigation.navigate("Rooms");
+    navigation.navigate("Home");
   };
 
   return (

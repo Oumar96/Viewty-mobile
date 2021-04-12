@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     textAlign: "center",
-    width: 350,
+    width: "100%",
   },
   confirmationCodeInput: {
     borderRadius: 10,
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
   confirmCodeButton: {
-    width: 300,
+    width: "100%",
     height: 50,
     borderRadius: 50,
     shadowColor: "#000000",
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
   },
   cancelButton: {
-    width: 300,
+    width: "100%",
     height: 50,
     marginTop: 10,
     borderRadius: 50,

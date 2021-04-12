@@ -3,20 +3,26 @@ import React, { useEffect, useState } from "react";
 import firebase from "./firebase/firebase.js";
 import { useFonts, Pacifico_400Regular } from "@expo-google-fonts/pacifico";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
+import {
+  createStackNavigator,
+  TransitionPresets,
+} from "@react-navigation/stack";
 
 // screens
 import SignIn from "./screens/SignIn.js";
 import Movies from "./screens/Movies.js";
 import Home from "./screens/Home.js";
 
+const TransitionScreenOptions = {
+  ...TransitionPresets.SlideFromRightIOS, // This is where the transition happens
+};
 const Stack = createStackNavigator();
 
 export default function App() {
   /***********
    * State
    ***********/
-  const [user, setUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   let [fontsLoaded] = useFonts({
@@ -24,16 +30,38 @@ export default function App() {
   });
 
   /***********
+   * Data
+   ***********/
+  const headerTitleStyle = {
+    fontWeight: "bold",
+    fontSize: 25,
+    fontFamily: "Pacifico_400Regular",
+  };
+  const headerStyle = {
+    height: 100,
+  };
+  /***********
    * Methods
    ***********/
-  const getHomeFirst = () => {
+  const getHomeScreen = () => {
+    return (
+      <Stack.Screen
+        options={{
+          title: "Viewty",
+          headerTitleStyle,
+          headerStyle,
+        }}
+        name="Home"
+        component={Home}
+        initialParams={{
+          userId: currentUser.userId,
+        }}
+      />
+    );
+  };
+  const getSignInScreen = () => {
     return (
       <>
-        <Stack.Screen
-          options={{ headerShown: false }}
-          name="Home"
-          component={Home}
-        />
         <Stack.Screen
           options={{ headerShown: false }}
           name="SignIn"
@@ -42,19 +70,19 @@ export default function App() {
       </>
     );
   };
+  const getHomeFirst = () => {
+    return (
+      <>
+        {getHomeScreen()}
+        {getSignInScreen()}
+      </>
+    );
+  };
   const getSignInFirst = () => {
     return (
       <>
-        <Stack.Screen
-          options={{ headerShown: false }}
-          name="SignIn"
-          component={SignIn}
-        />
-        <Stack.Screen
-          options={{ headerShown: false }}
-          name="Home"
-          component={Home}
-        />
+        {getSignInScreen()}
+        {getHomeScreen()}
       </>
     );
   };
@@ -80,9 +108,11 @@ export default function App() {
           .catch(function (error) {
             console.log(error);
           });
-        setUser(user);
+        // setCurrentUser(user);
+        setCurrentUser({
+          userId: "5145753394", // mock
+        });
         setIsSignedIn(true);
-        // navigation.navigate("Room");
       }
       setIsLoading(false);
     });
@@ -97,15 +127,13 @@ export default function App() {
   }
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        {/* <Stack.Screen
-          options={{ headerShown: false }}
-          name="Home"
-          component={Home}
-        /> */}
+      <Stack.Navigator screenOptions={TransitionScreenOptions}>
         {getInitialScreenInOrder()}
         <Stack.Screen
-          options={{ headerShown: false }}
+          options={{
+            headerTitleStyle,
+            headerStyle,
+          }}
           name="Movies"
           component={Movies}
         />

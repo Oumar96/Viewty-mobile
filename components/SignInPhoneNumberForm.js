@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     elevation: 7,
     shadowRadius: 3,
     shadowOpacity: 0.1,
-    width: 350,
+    width: "80%",
   },
   textContainerStyle: {
     borderTopRightRadius: 10,
@@ -122,9 +122,9 @@ const styles = StyleSheet.create({
   errorContainer: {
     alignItems: "center",
     flexDirection: "row",
-    justifyContent: "flex-start",
+    justifyContent: "center",
     marginTop: 20,
-    width: 350,
+    width: "80%",
   },
   errorText: {
     fontWeight: "800",
