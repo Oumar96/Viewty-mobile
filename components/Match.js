@@ -1,16 +1,11 @@
 import React, { useState, useContext } from "react";
-import {
-  StyleSheet,
-  Text,
-  Dimensions,
-  Image,
-  TouchableHighlight,
-  View,
-} from "react-native";
+import { StyleSheet, Modal, Text, Dimensions, Image, View } from "react-native";
 import { MaterialIcons, AntDesign } from "@expo/vector-icons";
 import { isEmpty, upperFirst } from "lodash";
 
 import MoviesContext from "../contexts/MoviesContext.js";
+
+import BaseButton from "./BaseButton.js";
 
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 const SCREEN_WIDTH = Dimensions.get("window").width;
@@ -47,10 +42,6 @@ const Match = () => {
   const [movieImage, setMovieImage] = useState(
     getMovieImageInitialState(matchedMovie.poster)
   );
-  const [
-    contineRoomButtonContentColor,
-    setContinueRoomButtonTextColor,
-  ] = useState({ color: "white" });
   /***********
    * Methods
    ***********/
@@ -70,62 +61,64 @@ const Match = () => {
     }
   };
   return (
-    <View style={styles.container}>
-      <View style={styles.newMatch}>
-        <Text style={styles.newMatchText}>New Match!</Text>
+    <Modal animationType="fade" transparent={true} visible={true}>
+      <View style={styles.container}>
+        <View style={styles.newMatch}>
+          <Text style={styles.newMatchText}>New Match!</Text>
+        </View>
+        <View style={styles.movieMatched}>
+          <Text style={styles.bothLikeText}>
+            You and your friend both liked
+          </Text>
+          <Text style={styles.movieNameText}>
+            {upperFirst(matchedMovie.name)}
+          </Text>
+          <Image
+            style={styles.movieImage}
+            source={movieImage}
+            onError={setMovieImageToDefault}
+          />
+        </View>
+        <View style={styles.choiceButtons}>
+          <BaseButton
+            type="PRIMARY_TRANSPARENT"
+            text="Complete Room"
+            onPress={completeRoom}
+            style={styles.button}
+            icon={
+              <AntDesign
+                name="checkcircleo"
+                style={styles.icon}
+                size={24}
+                color="white"
+              />
+            }
+          />
+          <BaseButton
+            type="SECONDARY_TRANSPARENT"
+            text="Continue Swipping"
+            onPress={continueSwipping}
+            style={styles.button}
+            icon={
+              <MaterialIcons
+                name="swipe"
+                style={styles.icon}
+                size={24}
+                color="white"
+              />
+            }
+            underlayIcon={
+              <MaterialIcons
+                name="swipe"
+                style={styles.icon}
+                size={24}
+                color="black"
+              />
+            }
+          />
+        </View>
       </View>
-      <View style={styles.movieMatched}>
-        <Text style={styles.bothLikeText}>You and your friend both liked</Text>
-        <Text style={styles.movieNameText}>
-          {upperFirst(matchedMovie.name)}
-        </Text>
-        <Image
-          style={styles.movieImage}
-          source={movieImage}
-          onError={setMovieImageToDefault}
-        />
-      </View>
-      <View style={styles.choiceButtons}>
-        <TouchableHighlight
-          style={styles.button}
-          onPress={completeRoom}
-          underlayColor="#0f9bf2"
-        >
-          <View style={styles.buttonContent}>
-            <AntDesign
-              name="checkcircleo"
-              style={styles.icon}
-              size={24}
-              color="white"
-            />
-            <Text style={styles.buttonText}>Complete Room</Text>
-          </View>
-        </TouchableHighlight>
-        <TouchableHighlight
-          style={styles.button}
-          onPress={continueSwipping}
-          underlayColor="white"
-          onShowUnderlay={() => {
-            setContinueRoomButtonTextColor({ color: "black" });
-          }}
-          onHideUnderlay={() => {
-            setContinueRoomButtonTextColor({ color: "white" });
-          }}
-        >
-          <View style={styles.buttonContent}>
-            <MaterialIcons
-              name="swipe"
-              style={[styles.icon, contineRoomButtonContentColor]}
-              size={24}
-              color="white"
-            />
-            <Text style={[styles.buttonText, contineRoomButtonContentColor]}>
-              Continue Swipping
-            </Text>
-          </View>
-        </TouchableHighlight>
-      </View>
-    </View>
+    </Modal>
   );
 };
 
@@ -158,16 +151,16 @@ const styles = StyleSheet.create({
     fontFamily: "Pacifico_400Regular",
   },
   movieMatched: {
-    flex: 4,
+    flex: 5,
     width: "100%",
     justifyContent: "space-around",
     alignItems: "center",
     paddingTop: 20,
   },
   choiceButtons: {
-    flex: 5,
+    flex: 4,
     width: "100%",
-    justifyContent: "center",
+    justifyContent: "flex-end",
     alignItems: "center",
   },
   movieImage: {
@@ -187,32 +180,18 @@ const styles = StyleSheet.create({
     color: "white",
   },
   button: {
-    backgroundColor: "transparent",
-    borderColor: "white",
     borderWidth: 1,
     borderRadius: 50,
-    padding: 10,
     elevation: 2,
-    width: 250,
+    width: 300,
     height: 50,
     justifyContent: "center",
     color: "white",
     marginTop: 10,
     marginBottom: 10,
   },
-  buttonContent: {
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "center",
-  },
   icon: {
     marginRight: 15,
     alignSelf: "flex-end",
-  },
-  buttonText: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: 15,
   },
 });

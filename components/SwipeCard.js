@@ -185,7 +185,6 @@ const SwipeCard = (props) => {
       vote: choice,
     };
     try {
-      xccxv;
       await vote(movie.name, body);
       incrementMovieIndex();
       setNextCardCenter();
