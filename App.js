@@ -30,19 +30,38 @@ export default function App() {
   });
 
   /***********
+   * Data
+   ***********/
+  const headerTitleStyle = {
+    fontWeight: "bold",
+    fontSize: 25,
+    fontFamily: "Pacifico_400Regular",
+  };
+  const headerStyle = {
+    height: 100,
+  };
+  /***********
    * Methods
    ***********/
-  const getHomeFirst = () => {
+  const getHomeScreen = () => {
+    return (
+      <Stack.Screen
+        options={{
+          title: "Viewty",
+          headerTitleStyle,
+          headerStyle,
+        }}
+        name="Home"
+        component={Home}
+        initialParams={{
+          userId: currentUser.userId,
+        }}
+      />
+    );
+  };
+  const getSignInScreen = () => {
     return (
       <>
-        <Stack.Screen
-          options={{ headerShown: false }}
-          name="Home"
-          component={Home}
-          initialParams={{
-            userId: currentUser.userId,
-          }}
-        />
         <Stack.Screen
           options={{ headerShown: false }}
           name="SignIn"
@@ -51,22 +70,19 @@ export default function App() {
       </>
     );
   };
+  const getHomeFirst = () => {
+    return (
+      <>
+        {getHomeScreen()}
+        {getSignInScreen()}
+      </>
+    );
+  };
   const getSignInFirst = () => {
     return (
       <>
-        <Stack.Screen
-          options={{ headerShown: false }}
-          name="SignIn"
-          component={SignIn}
-        />
-        <Stack.Screen
-          options={{ headerShown: false }}
-          name="Home"
-          component={Home}
-          initialParams={{
-            userId: currentUser.userId,
-          }}
-        />
+        {getSignInScreen()}
+        {getHomeScreen()}
       </>
     );
   };
@@ -114,7 +130,10 @@ export default function App() {
       <Stack.Navigator screenOptions={TransitionScreenOptions}>
         {getInitialScreenInOrder()}
         <Stack.Screen
-          // options={{ headerShown: false }}
+          options={{
+            headerTitleStyle,
+            headerStyle,
+          }}
           name="Movies"
           component={Movies}
         />

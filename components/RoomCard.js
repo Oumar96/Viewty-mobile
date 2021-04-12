@@ -109,8 +109,10 @@ const RoomCard = (props) => {
    * Methods
    ***********/
   const handleClickCard = () => {
-    navigation.navigate("Movies");
-    console.log("yooo", userId, room.id);
+    navigation.navigate("Movies", {
+      userId,
+      roomId: room.id,
+    });
   };
 
   return (

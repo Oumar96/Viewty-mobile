@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { StyleSheet, Text, Dimensions, Image, View } from "react-native";
+import { StyleSheet, Modal, Text, Dimensions, Image, View } from "react-native";
 import { MaterialIcons, AntDesign } from "@expo/vector-icons";
 import { isEmpty, upperFirst } from "lodash";
 
@@ -61,60 +61,64 @@ const Match = () => {
     }
   };
   return (
-    <View style={styles.container}>
-      <View style={styles.newMatch}>
-        <Text style={styles.newMatchText}>New Match!</Text>
+    <Modal animationType="fade" transparent={true} visible={true}>
+      <View style={styles.container}>
+        <View style={styles.newMatch}>
+          <Text style={styles.newMatchText}>New Match!</Text>
+        </View>
+        <View style={styles.movieMatched}>
+          <Text style={styles.bothLikeText}>
+            You and your friend both liked
+          </Text>
+          <Text style={styles.movieNameText}>
+            {upperFirst(matchedMovie.name)}
+          </Text>
+          <Image
+            style={styles.movieImage}
+            source={movieImage}
+            onError={setMovieImageToDefault}
+          />
+        </View>
+        <View style={styles.choiceButtons}>
+          <BaseButton
+            type="PRIMARY_TRANSPARENT"
+            text="Complete Room"
+            onPress={completeRoom}
+            style={styles.button}
+            icon={
+              <AntDesign
+                name="checkcircleo"
+                style={styles.icon}
+                size={24}
+                color="white"
+              />
+            }
+          />
+          <BaseButton
+            type="SECONDARY_TRANSPARENT"
+            text="Continue Swipping"
+            onPress={continueSwipping}
+            style={styles.button}
+            icon={
+              <MaterialIcons
+                name="swipe"
+                style={styles.icon}
+                size={24}
+                color="white"
+              />
+            }
+            underlayIcon={
+              <MaterialIcons
+                name="swipe"
+                style={styles.icon}
+                size={24}
+                color="black"
+              />
+            }
+          />
+        </View>
       </View>
-      <View style={styles.movieMatched}>
-        <Text style={styles.bothLikeText}>You and your friend both liked</Text>
-        <Text style={styles.movieNameText}>
-          {upperFirst(matchedMovie.name)}
-        </Text>
-        <Image
-          style={styles.movieImage}
-          source={movieImage}
-          onError={setMovieImageToDefault}
-        />
-      </View>
-      <View style={styles.choiceButtons}>
-        <BaseButton
-          type="PRIMARY_TRANSPARENT"
-          text="Complete Room"
-          onPress={completeRoom}
-          style={styles.button}
-          icon={
-            <AntDesign
-              name="checkcircleo"
-              style={styles.icon}
-              size={24}
-              color="white"
-            />
-          }
-        />
-        <BaseButton
-          type="SECONDARY_TRANSPARENT"
-          text="Continue Swipping"
-          onPress={continueSwipping}
-          style={styles.button}
-          icon={
-            <MaterialIcons
-              name="swipe"
-              style={styles.icon}
-              size={24}
-              color="white"
-            />
-          }
-          underlayIcon={
-            <MaterialIcons
-              name="swipe"
-              style={styles.icon}
-              size={24}
-              color="black"
-            />
-          }
-        />
-      </View>
-    </View>
+    </Modal>
   );
 };
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { View, StyleSheet } from "react-native";
-import { isEqual, isNil, isEmpty } from "lodash";
+import { isEqual, isNil } from "lodash";
 
 import firebase from "../firebase/firebase.js";
 
@@ -11,10 +11,7 @@ import HomeContext from "../contexts/HomeContext.js";
 import RoomsContext from "../contexts/RoomsContext.js";
 
 // components
-import TopNavBar from "../components/TopNavBar.js";
 import RoomCardsList from "../components/RoomCardsList.js";
-
-const USER_ID = "5145753393";
 
 const Rooms = () => {
   const homeContext = useContext(HomeContext);
@@ -133,7 +130,6 @@ const Rooms = () => {
       }}
     >
       <View style={styles.rooms}>
-        <TopNavBar />
         <View style={styles.roomCardsList}>
           <RoomCardsList />
         </View>
@@ -153,6 +149,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     alignContent: "center",
-    paddingTop: 120,
   },
 });
