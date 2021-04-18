@@ -12,6 +12,7 @@ import {
 import SignIn from "./screens/SignIn.js";
 import Movies from "./screens/Movies.js";
 import Home from "./screens/Home.js";
+import ExpiredRoom from "./screens/ExpiredRoom.js";
 
 const TransitionScreenOptions = {
   ...TransitionPresets.SlideFromRightIOS, // This is where the transition happens
@@ -40,6 +41,10 @@ export default function App() {
   const headerStyle = {
     height: 100,
   };
+  const defaultScreenOptions = {
+    headerStyle,
+    headerTitleStyle,
+  };
   /***********
    * Methods
    ***********/
@@ -48,8 +53,7 @@ export default function App() {
       <Stack.Screen
         options={{
           title: "Viewty",
-          headerTitleStyle,
-          headerStyle,
+          ...defaultScreenOptions,
         }}
         name="Home"
         component={Home}
@@ -130,12 +134,17 @@ export default function App() {
       <Stack.Navigator screenOptions={TransitionScreenOptions}>
         {getInitialScreenInOrder()}
         <Stack.Screen
-          options={{
-            headerTitleStyle,
-            headerStyle,
-          }}
+          options={defaultScreenOptions}
           name="Movies"
           component={Movies}
+        />
+        <Stack.Screen
+          options={{
+            title: "Expired",
+            ...defaultScreenOptions,
+          }}
+          name="ExpiredRoom"
+          component={ExpiredRoom}
         />
       </Stack.Navigator>
     </NavigationContainer>

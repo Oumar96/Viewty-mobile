@@ -109,9 +109,27 @@ const RoomCard = (props) => {
    * Methods
    ***********/
   const handleClickCard = () => {
+    return {
+      active: goToMovies,
+      pending: goToPendingRoom,
+      ended: goToExpiredRoom,
+    }[status]();
+  };
+
+  const goToMovies = () => {
     navigation.navigate("Movies", {
       userId,
       roomId: room.id,
+    });
+  };
+
+  const goToPendingRoom = () => {
+    console.log("pendingRoom action not created yet");
+  };
+
+  const goToExpiredRoom = () => {
+    navigation.navigate("ExpiredRoom", {
+      room,
     });
   };
 

@@ -1,24 +1,14 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import BaseImage from "../components/BaseImage.js";
 
-const MovieDetails = ({ props }) => {
-  const { room = {} } = props;
-  const movie = room.result.movie;
-  const users = room.participants.users;
+const MovieDetails = (props) => {
+  const { movie = {} } = props;
   return (
     <View style={styles.movieDetails}>
       <BaseImage style={styles.movieImage} source={movie.poster} />
       <View style={styles.movieNameContainer}>
         <Text style={styles.movieName}>{movie.name}</Text>
-      </View>
-
-      <View style={styles.participants}>
-        {users.map((user, index) => (
-          <Text key={index} style={styles.participantName}>
-            {/* {user} */} John Smith
-          </Text>
-        ))}
       </View>
     </View>
   );
@@ -27,10 +17,15 @@ const MovieDetails = ({ props }) => {
 export default MovieDetails;
 
 const styles = StyleSheet.create({
-  movieDetails: {},
-  movieImage: {},
-  movieNameContainer: {},
+  movieDetails: {
+    flex: 1,
+  },
+  movieImage: {
+    flex: 2,
+    height: "100%",
+  },
+  movieNameContainer: {
+    flex: 2,
+  },
   movieName: {},
-  participants: {},
-  participantName: {},
 });
