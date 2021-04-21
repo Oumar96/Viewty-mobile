@@ -12,7 +12,9 @@ const MovieDetails = (props) => {
   const { movie = {} } = props;
   return (
     <View style={styles.movieDetailsContainer}>
-      <BaseImage style={styles.movieImage} source={movie.poster} />
+      <View style={styles.movieImageContainer}>
+        <BaseImage style={styles.movieImage} source={movie.poster} />
+      </View>
       <View style={styles.movieNameContainer}>
         <Text style={styles.movieNameText}>{upperFirst(movie.name)}</Text>
       </View>
@@ -30,9 +32,21 @@ const styles = StyleSheet.create({
   movieDetailsContainer: {
     backgroundColor: "white",
   },
-  movieImage: {
+  movieImageContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 10,
+    paddingHorizontal: "4%",
     height: SCREEN_HEIGHT * 0.55,
-    width: SCREEN_WIDTH,
+    width: "100%",
+  },
+  movieImage: {
+    height: "100%",
+    width: "100%",
+    borderWidth: 3,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    borderColor: "#c9c9c9",
   },
   movieNameContainer: {
     alignItems: "center",
@@ -43,12 +57,12 @@ const styles = StyleSheet.create({
     fontSize: 35,
   },
   delimiter: {
-    width: "90%",
+    width: "92%",
     alignSelf: "center",
     borderTopWidth: 1,
     borderColor: "#c9c9c9",
   },
   movieDescription: {
-    padding: "5%",
+    padding: "4%",
   },
 });

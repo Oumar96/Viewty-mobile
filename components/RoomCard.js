@@ -19,14 +19,14 @@ const CARD_HEIGHT = SCREEN_HEIGHT / 3;
 const CARD_MARGIN = 32;
 
 /**
- * @param {Boolean} isRoomEnded
+ * @param {Boolean} isRoomExpired
  * @param {Boolean} isRoomPending
  * @returns {String}
  */
-const getStatus = (isRoomEnded, isRoomPending) => {
+const getStatus = (isRoomExpired, isRoomPending) => {
   let status = "";
-  if (isRoomEnded) {
-    status = "ended";
+  if (isRoomExpired) {
+    status = "expired";
   } else if (isRoomPending) {
     status = "pending";
   } else {
@@ -50,12 +50,12 @@ const RoomCard = (props) => {
    * Data
    ***********/
   let users = room.participants.users;
-  const isRoomEnded = !isNil(room.result);
+  const isRoomExpired = !isNil(room.result);
   const isRoomPending = !isNil(room.participants)
     ? room.participants.accepted < 2
     : false;
-  const status = getStatus(isRoomEnded, isRoomPending);
-  const finalMovie = isRoomEnded ? room.result.movie : null;
+  const status = getStatus(isRoomExpired, isRoomPending);
+  const finalMovie = isRoomExpired ? room.result.movie : null;
 
   // Animation data
   const position = Animated.subtract(index * CARD_HEIGHT, yCoordinate);
@@ -112,7 +112,7 @@ const RoomCard = (props) => {
     return {
       active: goToMovies,
       pending: goToPendingRoom,
-      ended: goToExpiredRoom,
+      expired: goToExpiredRoom,
     }[status]();
   };
 
@@ -153,7 +153,7 @@ const RoomCard = (props) => {
           </View>
         </View>
         <View style={styles.roomCardImages}>
-          {isRoomEnded ? (
+          {isRoomExpired ? (
             <BaseImage
               style={styles.roomCardImage}
               source={finalMovie.poster}
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#de8a02",
   },
-  statusText__ended: {
+  statusText__expired: {
     fontSize: 12,
     fontWeight: "bold",
     color: "red",
