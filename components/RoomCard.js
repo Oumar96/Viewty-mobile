@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { SharedElement } from "react-navigation-shared-element";
 import { isNil } from "lodash";
 import {
   View,
@@ -154,10 +155,12 @@ const RoomCard = (props) => {
         </View>
         <View style={styles.roomCardImages}>
           {isRoomExpired ? (
-            <BaseImage
-              style={styles.roomCardImage}
-              source={finalMovie.poster}
-            />
+            <SharedElement id={`room-${room.id}`} style={styles.sharedElement}>
+              <BaseImage
+                style={styles.roomCardImage}
+                source={finalMovie.poster}
+              />
+            </SharedElement>
           ) : (
             <>
               {threeMovies.map((movie, index) => (
@@ -226,5 +229,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "black",
     marginBottom: 10,
+  },
+  sharedElement: {
+    flex: 1,
   },
 });

@@ -5,7 +5,7 @@ const RoomsContext = React.createContext({
     userId: "",
     rooms: [],
     moviesDetails: [],
-    navigation: {},
+    navigation: null,
   },
 });
 

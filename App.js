@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import firebase from "./firebase/firebase.js";
 import { useFonts, Pacifico_400Regular } from "@expo-google-fonts/pacifico";
+import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 import { NavigationContainer } from "@react-navigation/native";
 import {
   createStackNavigator,
@@ -17,7 +18,7 @@ import ExpiredRoom from "./screens/ExpiredRoom.js";
 const TransitionScreenOptions = {
   ...TransitionPresets.SlideFromRightIOS, // This is where the transition happens
 };
-const Stack = createStackNavigator();
+const Stack = createSharedElementStackNavigator();
 
 export default function App() {
   /***********
@@ -44,6 +45,17 @@ export default function App() {
   const defaultScreenOptions = {
     headerStyle,
     headerTitleStyle,
+  };
+
+  const expiredRoomOptions = {
+    headerBackTitleVisible: false,
+    cardStyleInterpolator: ({ current: { progress } }) => {
+      return {
+        cardStyle: {
+          opacity: progress,
+        },
+      };
+    },
   };
   /***********
    * Methods
@@ -140,8 +152,9 @@ export default function App() {
         />
         <Stack.Screen
           options={{
-            title: "Expired",
+            headerShown: false,
             ...defaultScreenOptions,
+            ...expiredRoomOptions,
           }}
           name="ExpiredRoom"
           component={ExpiredRoom}

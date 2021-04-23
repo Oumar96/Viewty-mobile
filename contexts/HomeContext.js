@@ -3,7 +3,7 @@ import React from "react";
 const HomeContext = React.createContext({
   state: {
     userId: "",
-    navigation: {},
+    navigation: null,
   },
 });
 

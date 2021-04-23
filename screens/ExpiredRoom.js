@@ -2,10 +2,14 @@ import React from "react";
 import { SafeAreaView, View, Text, ScrollView, StyleSheet } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 
+// context
+import ExpiredRoomContext from "../contexts/ExpiredRoomContext.js";
+
 //components
 import MovieDetails from "../components/MovieDetails.js";
+import { isNil } from "lodash";
 
-const ExpiredRoom = ({ route }) => {
+const ExpiredRoom = ({ navigation, route }) => {
   /***********
    * Data
    ***********/
@@ -13,26 +17,50 @@ const ExpiredRoom = ({ route }) => {
   const selectedMovie = room.result.movie;
   const roomUsers = room.participants.users;
   return (
-    <SafeAreaView style={styles.expiredRoom}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <MovieDetails movie={selectedMovie} />
-        <View style={styles.delimiter}></View>
-        <View style={styles.participants}>
-          <Text style={styles.participantsTitle}>Participants</Text>
-          {roomUsers.map((user, index) => (
-            // <Text>{user.name}</Text>
-            <View
-              style={styles.participantRow}
-              key={`expiredRoom-user${index + 1}`}
-            >
-              <FontAwesome name="user-circle-o" size={24} color="black" />
-              <Text style={styles.participantName}>{"John Smith"}</Text>
-            </View>
-          ))}
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <ExpiredRoomContext.Provider
+      value={{
+        state: {
+          navigation,
+        },
+      }}
+    >
+      <SafeAreaView style={styles.expiredRoom}>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <MovieDetails
+            movie={selectedMovie}
+            sharedElementId={`room-${room.id}`}
+          />
+          <View style={styles.delimiter}></View>
+          <View style={styles.participants}>
+            <Text style={styles.participantsTitle}>Participants</Text>
+            {roomUsers.map((user, index) => (
+              // <Text>{user.name}</Text>
+              <View
+                style={styles.participantRow}
+                key={`expiredRoom-user${index + 1}`}
+              >
+                <FontAwesome name="user-circle-o" size={24} color="black" />
+                <Text style={styles.participantName}>{"John Smith"}</Text>
+              </View>
+            ))}
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </ExpiredRoomContext.Provider>
   );
+};
+
+ExpiredRoom.sharedElements = (route) => {
+  const { room } = route.params;
+  if (!isNil(room.result)) {
+    return [
+      {
+        id: `room-${room.id}`,
+        animation: "move",
+        resize: "clip",
+      },
+    ];
+  }
 };
 
 export default ExpiredRoom;
