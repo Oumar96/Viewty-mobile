@@ -50,9 +50,12 @@ const ExpiredRoom = ({ navigation, route }) => {
   );
 };
 
-ExpiredRoom.sharedElements = (route) => {
+ExpiredRoom.sharedElements = (route, otherRoute) => {
   const { room } = route.params;
   if (!isNil(room.result)) {
+    console.log("route", route);
+
+    console.log("called", otherRoute);
     return [
       {
         id: `room-${room.id}`,
