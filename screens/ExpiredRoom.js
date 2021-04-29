@@ -30,7 +30,6 @@ const ExpiredRoom = ({ navigation, route }) => {
             movie={selectedMovie}
             sharedElementId={`room-${room.id}`}
           />
-          <View style={styles.delimiter}></View>
           <View style={styles.participants}>
             <Text style={styles.participantsTitle}>Participants</Text>
             {roomUsers.map((user, index) => (
@@ -50,7 +49,7 @@ const ExpiredRoom = ({ navigation, route }) => {
   );
 };
 
-ExpiredRoom.sharedElements = (route, otherRoute) => {
+ExpiredRoom.sharedElements = (route) => {
   const { room } = route.params;
   if (!isNil(room.result)) {
     return [
@@ -67,16 +66,10 @@ export default ExpiredRoom;
 
 const styles = StyleSheet.create({
   expiredRoom: {
-    backgroundColor: "white",
+    backgroundColor: "transparent",
   },
   participants: {
     padding: "5%",
-  },
-  delimiter: {
-    width: "92%",
-    alignSelf: "center",
-    borderTopWidth: 1,
-    borderColor: "#c9c9c9",
   },
   participantsTitle: {
     fontWeight: "600",

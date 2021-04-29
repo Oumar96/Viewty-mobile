@@ -53,12 +53,18 @@ export default MovieDetails;
 const styles = StyleSheet.create({
   movieDetailsContainer: {
     backgroundColor: "white",
+    width: "90%",
+    borderRadius: 20,
+    borderColor: "#f2f2f2",
+    alignSelf: "center",
+    elevation: 7,
+    shadowRadius: 3,
+    shadowOpacity: 0.1,
   },
   movieImageContainer: {
     justifyContent: "center",
     alignItems: "center",
-    paddingVertical: 10,
-    paddingHorizontal: "4%",
+    paddingBottom: 10,
     height: SCREEN_HEIGHT * 0.55,
     width: "100%",
   },
