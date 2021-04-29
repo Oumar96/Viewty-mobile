@@ -1,13 +1,13 @@
 import React from "react";
 import { SafeAreaView, View, Text, ScrollView, StyleSheet } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
+import { isNil } from "lodash";
 
 // context
 import ExpiredRoomContext from "../contexts/ExpiredRoomContext.js";
 
 //components
 import MovieDetails from "../components/MovieDetails.js";
-import { isNil } from "lodash";
 
 const ExpiredRoom = ({ navigation, route }) => {
   /***********
@@ -53,9 +53,6 @@ const ExpiredRoom = ({ navigation, route }) => {
 ExpiredRoom.sharedElements = (route, otherRoute) => {
   const { room } = route.params;
   if (!isNil(room.result)) {
-    console.log("route", route);
-
-    console.log("called", otherRoute);
     return [
       {
         id: `room-${room.id}`,

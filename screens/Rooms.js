@@ -137,9 +137,10 @@ const RoomsComponent = ({ navigation }) => {
     </RoomsContext.Provider>
   );
 };
+
 const Rooms = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName="Rooms Component">
       <Stack.Screen
         name="Rooms Component"
         component={RoomsComponent}

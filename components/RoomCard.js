@@ -129,7 +129,6 @@ const RoomCard = (props) => {
   };
 
   const goToExpiredRoom = () => {
-    console.log(navigation.dangerouslyGetState());
     navigation.navigate("ExpiredRoom", {
       room,
     });

@@ -59,28 +59,22 @@ const Home = ({ navigation, route }) => {
    * Route Data
    ***********/
   const routeUserId = route.params.userId;
-  /***********
-   * Data
-   ***********/
-  const [userId, setUserId] = useState("");
-
-  useEffect(() => {
-    setUserId(routeUserId);
-  }, []);
 
   // add loading state
-  return isEmpty(userId) ? (
-    <></>
-  ) : (
+  return (
     <HomeContext.Provider
       value={{
         state: {
-          userId,
+          userId: routeUserId,
           navigation,
         },
       }}
     >
-      <Tab.Navigator screenOptions={getTabsIcons} tabBarOptions={tabBarOptions}>
+      <Tab.Navigator
+        initialRouteName="Rooms"
+        screenOptions={getTabsIcons}
+        tabBarOptions={tabBarOptions}
+      >
         <Tab.Screen name="Rooms" component={Rooms} />
         <Tab.Screen name="New" component={CreateRoom} />
         <Tab.Screen name="Settings" component={Settings} />
