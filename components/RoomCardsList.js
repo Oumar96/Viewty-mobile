@@ -89,6 +89,6 @@ export default RoomCardsList;
 
 const styles = StyleSheet.create({
   roomCardsList: {
-    width: "100%",
+    width: "95%",
   },
 });

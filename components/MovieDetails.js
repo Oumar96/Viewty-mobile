@@ -53,7 +53,7 @@ export default MovieDetails;
 const styles = StyleSheet.create({
   movieDetailsContainer: {
     backgroundColor: "white",
-    width: "90%",
+    width: "95%",
     borderRadius: 20,
     borderColor: "#f2f2f2",
     alignSelf: "center",

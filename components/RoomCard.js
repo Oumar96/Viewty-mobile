@@ -141,18 +141,18 @@ const RoomCard = (props) => {
         style={styles.roomCardTouchable}
         onPress={handleClickCard}
       >
-        <View style={styles.roomCardTitle}>
+        {/* <View style={styles.roomCardTitle}>
           <View style={styles.participants}>
             {users.map((user, index) => (
               <Text key={index} style={styles.roomCardUser}>
-                {/* {user} */} John Smith
+                John Smith
               </Text>
             ))}
           </View>
           <View style={styles.status}>
             <Text style={styles[`statusText__${status}`]}>{status}</Text>
           </View>
-        </View>
+        </View> */}
         <View style={styles.roomCardImages}>
           {isRoomExpired ? (
             <SharedElement id={`room-${room.id}`} style={styles.sharedElement}>
@@ -185,7 +185,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
     height: CARD_HEIGHT,
-    marginBottom: 3,
+    marginBottom: 10,
+    borderRadius: 20,
   },
   roomCardTouchable: {
     flex: 1,
