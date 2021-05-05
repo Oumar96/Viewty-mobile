@@ -12,7 +12,7 @@ import BaseImage from "../components/BaseImage.js";
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 const MovieDetails = (props) => {
-  const { movie = {}, sharedElementId = "" } = props;
+  const { movie = {}, sharedElementId = "", style = {} } = props;
 
   const expiredRoomContext = useContext(ExpiredRoomContext);
 
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
   },
   movieNameText: {
     fontWeight: "600",
-    fontSize: 35,
+    fontSize: 25,
     fontFamily: "FiraSans_400Regular",
     fontWeight: "bold",
   },

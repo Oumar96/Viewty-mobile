@@ -1,6 +1,5 @@
 import React from "react";
-import { SafeAreaView, View, Text, ScrollView, StyleSheet } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
+import { View, Text, ScrollView, StyleSheet } from "react-native";
 import { isNil } from "lodash";
 
 // context
@@ -8,6 +7,7 @@ import ExpiredRoomContext from "../contexts/ExpiredRoomContext.js";
 
 //components
 import MovieDetails from "../components/MovieDetails.js";
+import RoomParticipants from "../components/RoomParticipants.js";
 
 const ExpiredRoom = ({ navigation, route }) => {
   /***********
@@ -30,19 +30,10 @@ const ExpiredRoom = ({ navigation, route }) => {
             movie={selectedMovie}
             sharedElementId={`room-${room.id}`}
           />
-          <View style={styles.participants}>
-            <Text style={styles.participantsTitle}>Participants</Text>
-            {roomUsers.map((user, index) => (
-              // <Text>{user.name}</Text>
-              <View
-                style={styles.participantRow}
-                key={`expiredRoom-user${index + 1}`}
-              >
-                <FontAwesome name="user-circle-o" size={24} color="black" />
-                <Text style={styles.participantName}>{"John Smith"}</Text>
-              </View>
-            ))}
-          </View>
+          <RoomParticipants
+            participants={roomUsers}
+            style={styles.roomParticipants}
+          />
         </ScrollView>
       </View>
     </ExpiredRoomContext.Provider>
@@ -68,22 +59,7 @@ const styles = StyleSheet.create({
   expiredRoom: {
     backgroundColor: "transparent",
   },
-  participants: {
-    padding: "5%",
-  },
-  participantsTitle: {
-    fontWeight: "600",
-    fontSize: 25,
-    marginBottom: 10,
-  },
-  participantName: {
-    fontSize: 20,
-    marginLeft: 10,
-    fontWeight: "600",
-  },
-  participantRow: {
-    flexDirection: "row",
-    marginBottom: 10,
-    paddingLeft: 10,
+  roomParticipants: {
+    marginBottom: 50,
   },
 });
