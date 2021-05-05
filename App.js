@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from "react";
 import firebase from "./firebase/firebase.js";
 import { useFonts, Pacifico_400Regular } from "@expo-google-fonts/pacifico";
+import { FiraSans_400Regular } from "@expo-google-fonts/fira-sans";
+import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 import { NavigationContainer } from "@react-navigation/native";
 import {
   createStackNavigator,
@@ -12,11 +14,12 @@ import {
 import SignIn from "./screens/SignIn.js";
 import Movies from "./screens/Movies.js";
 import Home from "./screens/Home.js";
+import ExpiredRoom from "./screens/ExpiredRoom.js";
 
 const TransitionScreenOptions = {
   ...TransitionPresets.SlideFromRightIOS, // This is where the transition happens
 };
-const Stack = createStackNavigator();
+const Stack = createSharedElementStackNavigator();
 
 export default function App() {
   /***********
@@ -27,6 +30,7 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   let [fontsLoaded] = useFonts({
     Pacifico_400Regular,
+    FiraSans_400Regular,
   });
 
   /***********
@@ -40,6 +44,21 @@ export default function App() {
   const headerStyle = {
     height: 100,
   };
+  const defaultScreenOptions = {
+    headerStyle,
+    headerTitleStyle,
+  };
+
+  const expiredRoomOptions = {
+    headerBackTitleVisible: false,
+    cardStyleInterpolator: ({ current: { progress } }) => {
+      return {
+        cardStyle: {
+          opacity: progress,
+        },
+      };
+    },
+  };
   /***********
    * Methods
    ***********/
@@ -48,8 +67,7 @@ export default function App() {
       <Stack.Screen
         options={{
           title: "Viewty",
-          headerTitleStyle,
-          headerStyle,
+          ...defaultScreenOptions,
         }}
         name="Home"
         component={Home}
@@ -130,12 +148,18 @@ export default function App() {
       <Stack.Navigator screenOptions={TransitionScreenOptions}>
         {getInitialScreenInOrder()}
         <Stack.Screen
-          options={{
-            headerTitleStyle,
-            headerStyle,
-          }}
+          options={defaultScreenOptions}
           name="Movies"
           component={Movies}
+        />
+        <Stack.Screen
+          options={{
+            headerShown: false,
+            ...defaultScreenOptions,
+            ...expiredRoomOptions,
+          }}
+          name="ExpiredRoom"
+          component={ExpiredRoom}
         />
       </Stack.Navigator>
     </NavigationContainer>

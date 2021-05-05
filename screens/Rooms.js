@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { View, StyleSheet } from "react-native";
 import { isEqual, isNil } from "lodash";
 
+import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 import firebase from "../firebase/firebase.js";
 
 import MoviesApi from "../api/Movies.js";
@@ -12,15 +13,14 @@ import RoomsContext from "../contexts/RoomsContext.js";
 
 // components
 import RoomCardsList from "../components/RoomCardsList.js";
-
-const Rooms = () => {
+const Stack = createSharedElementStackNavigator();
+const RoomsComponent = ({ navigation }) => {
   const homeContext = useContext(HomeContext);
 
   /***********
    * Context State
    ***********/
   const userId = homeContext.state.userId;
-  const navigation = homeContext.state.navigation;
 
   /***********
    * State
@@ -138,6 +138,27 @@ const Rooms = () => {
   );
 };
 
+const Rooms = () => {
+  return (
+    <Stack.Navigator initialRouteName="Rooms Component">
+      <Stack.Screen
+        name="Rooms Component"
+        component={RoomsComponent}
+        options={{
+          headerShown: false,
+          headerBackTitleVisible: false,
+          cardStyleInterpolator: ({ current: { progress } }) => {
+            return {
+              cardStyle: {
+                opacity: progress,
+              },
+            };
+          },
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
 export default Rooms;
 
 const styles = StyleSheet.create({

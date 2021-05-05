@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { SharedElement } from "react-navigation-shared-element";
 import { isNil } from "lodash";
 import {
   View,
@@ -15,18 +16,18 @@ import RoomsContext from "../contexts/RoomsContext.js";
 import BaseImage from "./BaseImage.js";
 
 const SCREEN_HEIGHT = Dimensions.get("window").height;
-const CARD_HEIGHT = SCREEN_HEIGHT / 3;
+const CARD_HEIGHT = SCREEN_HEIGHT / 3.5;
 const CARD_MARGIN = 32;
 
 /**
- * @param {Boolean} isRoomEnded
+ * @param {Boolean} isRoomExpired
  * @param {Boolean} isRoomPending
  * @returns {String}
  */
-const getStatus = (isRoomEnded, isRoomPending) => {
+const getStatus = (isRoomExpired, isRoomPending) => {
   let status = "";
-  if (isRoomEnded) {
-    status = "ended";
+  if (isRoomExpired) {
+    status = "expired";
   } else if (isRoomPending) {
     status = "pending";
   } else {
@@ -50,12 +51,12 @@ const RoomCard = (props) => {
    * Data
    ***********/
   let users = room.participants.users;
-  const isRoomEnded = !isNil(room.result);
+  const isRoomExpired = !isNil(room.result);
   const isRoomPending = !isNil(room.participants)
     ? room.participants.accepted < 2
     : false;
-  const status = getStatus(isRoomEnded, isRoomPending);
-  const finalMovie = isRoomEnded ? room.result.movie : null;
+  const status = getStatus(isRoomExpired, isRoomPending);
+  const finalMovie = isRoomExpired ? room.result.movie : null;
 
   // Animation data
   const position = Animated.subtract(index * CARD_HEIGHT, yCoordinate);
@@ -108,10 +109,35 @@ const RoomCard = (props) => {
   /***********
    * Methods
    ***********/
+  const getImageBorderStyle = (index) => {
+    return {
+      0: styles.roomCardImage__left,
+      1: styles.roomCardImage__center,
+      2: styles.roomCardImage__right,
+    }[index];
+  };
   const handleClickCard = () => {
+    return {
+      active: goToMovies,
+      pending: goToPendingRoom,
+      expired: goToExpiredRoom,
+    }[status]();
+  };
+
+  const goToMovies = () => {
     navigation.navigate("Movies", {
       userId,
       roomId: room.id,
+    });
+  };
+
+  const goToPendingRoom = () => {
+    console.log("pendingRoom action not created yet");
+  };
+
+  const goToExpiredRoom = () => {
+    navigation.navigate("ExpiredRoom", {
+      room,
     });
   };
 
@@ -122,30 +148,30 @@ const RoomCard = (props) => {
         style={styles.roomCardTouchable}
         onPress={handleClickCard}
       >
-        <View style={styles.roomCardTitle}>
-          <View style={styles.participants}>
-            {users.map((user, index) => (
-              <Text key={index} style={styles.roomCardUser}>
-                {/* {user} */} John Smith
-              </Text>
-            ))}
-          </View>
-          <View style={styles.status}>
-            <Text style={styles[`statusText__${status}`]}>{status}</Text>
-          </View>
+        <Text style={[styles.status, styles[`statusText__${status}`]]}>
+          {status}
+        </Text>
+        <View style={styles.participants}>
+          {users.map((user, index) => (
+            <Text key={index} style={styles.roomCardUser}>
+              John Smith
+            </Text>
+          ))}
         </View>
         <View style={styles.roomCardImages}>
-          {isRoomEnded ? (
-            <BaseImage
-              style={styles.roomCardImage}
-              source={finalMovie.poster}
-            />
+          {isRoomExpired ? (
+            <SharedElement id={`room-${room.id}`} style={styles.sharedElement}>
+              <BaseImage
+                style={styles.expiredRoomImage}
+                source={finalMovie.poster}
+              />
+            </SharedElement>
           ) : (
             <>
               {threeMovies.map((movie, index) => (
                 <BaseImage
                   key={index}
-                  style={styles.roomCardImage}
+                  style={[styles.roomCardImage, getImageBorderStyle(index)]}
                   source={movie.poster}
                 />
               ))}
@@ -164,49 +190,71 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
     height: CARD_HEIGHT,
-    marginBottom: 3,
+    marginBottom: 10,
+    borderRadius: 20,
   },
   roomCardTouchable: {
     flex: 1,
-  },
-  roomCardTitle: {
-    flex: 2,
-    padding: 10,
-    flexDirection: "row",
+    position: "relative",
   },
   participants: {
-    flex: 4,
+    position: "absolute",
+    zIndex: 1000,
+    bottom: 0,
+    width: "100%",
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    paddingLeft: 20,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
   },
   status: {
-    flex: 1,
-  },
-  statusText__active: {
+    position: "absolute",
+    zIndex: 1000,
+    right: 20,
+    top: 10,
     fontSize: 12,
     fontWeight: "bold",
+  },
+  statusText__active: {
     color: "#22f253",
   },
   statusText__pending: {
-    fontSize: 12,
-    fontWeight: "bold",
     color: "#de8a02",
   },
-  statusText__ended: {
-    fontSize: 12,
-    fontWeight: "bold",
+  statusText__expired: {
     color: "red",
   },
   roomCardImages: {
-    flex: 6,
+    flex: 1,
     flexDirection: "row",
   },
   roomCardImage: {
     flex: 1,
     height: "100%",
   },
+  expiredRoomImage: {
+    flex: 1,
+    height: "100%",
+    borderRadius: 20,
+  },
+  roomCardImage__left: {
+    borderBottomLeftRadius: 20,
+    borderTopLeftRadius: 20,
+  },
+  roomCardImage__right: {
+    borderBottomRightRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  roomCardImage__center: {
+    borderRadius: 0,
+  },
   roomCardUser: {
-    fontSize: 16,
+    fontSize: 26,
     fontWeight: "bold",
-    color: "black",
+    color: "white",
     marginBottom: 10,
+  },
+  sharedElement: {
+    flex: 1,
   },
 });
