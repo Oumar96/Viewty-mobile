@@ -1033,6 +1033,11 @@
   dependencies:
     "@types/hammerjs" "^2.0.36"
 
+"@expo-google-fonts/fira-sans@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@expo-google-fonts/fira-sans/-/fira-sans-0.1.0.tgz#d1a4c2d077ab86634f8b3dfdc7b6081b7e66d82f"
+  integrity sha512-jqUUEsWNR9bEcoobdyWypzx1vF1KM54OfBSRYL7ZsCc2/B8KeDJmLZOmUw75SL289X2XSn4OyHhzP57fVcf/4A==
+
 "@expo-google-fonts/pacifico@^0.1.0":
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/@expo-google-fonts/pacifico/-/pacifico-0.1.0.tgz#f46da10e9eeed7aa3abc2d3e15a1a3b2e4bad6eb"

@@ -24,7 +24,7 @@ const ExpiredRoom = ({ navigation, route }) => {
         },
       }}
     >
-      <SafeAreaView style={styles.expiredRoom}>
+      <View style={styles.expiredRoom}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <MovieDetails
             movie={selectedMovie}
@@ -44,7 +44,7 @@ const ExpiredRoom = ({ navigation, route }) => {
             ))}
           </View>
         </ScrollView>
-      </SafeAreaView>
+      </View>
     </ExpiredRoomContext.Provider>
   );
 };

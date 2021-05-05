@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import firebase from "./firebase/firebase.js";
 import { useFonts, Pacifico_400Regular } from "@expo-google-fonts/pacifico";
+import { FiraSans_400Regular } from "@expo-google-fonts/fira-sans";
 import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 import { NavigationContainer } from "@react-navigation/native";
 import {
@@ -29,6 +30,7 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   let [fontsLoaded] = useFonts({
     Pacifico_400Regular,
+    FiraSans_400Regular,
   });
 
   /***********
