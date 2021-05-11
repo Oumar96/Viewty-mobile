@@ -130,7 +130,8 @@ export default function App() {
         setCurrentUser({
           userId: "5145753394", // mock
         });
-        setIsSignedIn(true);
+        // setIsSignedIn(true); // this will do normal authentication flow
+        setIsSignedIn(false); // this will force to show sign in page
       }
       setIsLoading(false);
     });

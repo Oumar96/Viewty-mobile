@@ -8,7 +8,7 @@ import {
   Animated,
   ImageBackground,
 } from "react-native";
-import SignInPhoneNumberForm from "../components/SignInPhoneNumberForm.js";
+import SignInCredentialsForm from "../components/SignInCredentialsForm.js";
 import SignInCodeConfirmation from "../components/SignInCodeConfirmation.js";
 import BaseButton from "../components/BaseButton.js";
 // context
@@ -101,8 +101,8 @@ const SignIn = ({ navigation }) => {
                 Swipe with friends and find the perfect film for movie night
               </Text>
             </View>
-            <View style={styles.signInPhoneNumberFormContainer}>
-              <SignInPhoneNumberForm />
+            <View style={styles.signInCredentialsFormContainer}>
+              <SignInCredentialsForm />
             </View>
             <View style={styles.signInCodeConfirmationContainer}>
               <SignInCodeConfirmation />
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     width: 300,
     marginTop: 20,
   },
-  signInPhoneNumberFormContainer: {
+  signInCredentialsFormContainer: {
     alignItems: "center",
     justifyContent: "center",
     width: SCREEN_WIDTH,
