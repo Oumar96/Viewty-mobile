@@ -1,15 +1,35 @@
 import React, { useState } from "react";
 import { Entypo } from "@expo/vector-icons";
-import { View, StyleSheet, Text, Pressable } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Pressable,
+  LayoutAnimation,
+} from "react-native";
 import { upperFirst } from "lodash";
 
 const MovieDescription = (props) => {
+  if (
+    Platform.OS === "android" &&
+    UIManager.setLayoutAnimationEnabledExperimental
+  ) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
+
   const { movie } = props;
 
+  /***********
+   * State
+   ***********/
   const [isDescriptionCollapsed, setIsDescriptionCollapsed] = useState(true);
   const [descriptionNumberOfLines, setDescriptionNumberOfLines] = useState(5);
 
+  /***********
+   * Methods
+   ***********/
   const toggleCollapseDescription = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
     setIsDescriptionCollapsed(!isDescriptionCollapsed);
     descriptionNumberOfLines === 5
       ? setDescriptionNumberOfLines(0)
@@ -18,6 +38,7 @@ const MovieDescription = (props) => {
   const getCollapseIconName = () => {
     return isDescriptionCollapsed ? "chevron-thin-down" : "chevron-thin-up";
   };
+
   return (
     <View style={styles.details}>
       <View style={styles.movieNameContainer}>
