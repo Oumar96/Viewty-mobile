@@ -6,8 +6,9 @@ import { isNil } from "lodash";
 import ExpiredRoomContext from "../contexts/ExpiredRoomContext.js";
 
 //components
-import MovieDetails from "../components/MovieDetails.js";
+import MovieBanner from "../components/MovieBanner.js";
 import RoomParticipants from "../components/RoomParticipants.js";
+import MovieDescription from "../components/MovieDescription.js";
 
 const ExpiredRoom = ({ navigation, route }) => {
   /***********
@@ -26,14 +27,17 @@ const ExpiredRoom = ({ navigation, route }) => {
     >
       <View style={styles.expiredRoom}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <MovieDetails
-            movie={selectedMovie}
-            sharedElementId={`room-${room.id}`}
-          />
-          <RoomParticipants
-            participants={roomUsers}
-            style={styles.roomParticipants}
-          />
+          <View style={styles.movieDetailsContainer}>
+            <MovieBanner
+              image={selectedMovie.poster}
+              sharedElementId={`room-${room.id}`}
+            />
+            <MovieDescription movie={selectedMovie} />
+            <RoomParticipants
+              participants={roomUsers}
+              style={styles.roomParticipants}
+            />
+          </View>
         </ScrollView>
       </View>
     </ExpiredRoomContext.Provider>
@@ -56,6 +60,15 @@ ExpiredRoom.sharedElements = (route) => {
 export default ExpiredRoom;
 
 const styles = StyleSheet.create({
+  movieDetailsContainer: {
+    width: "100%",
+    borderRadius: 20,
+    borderColor: "#f2f2f2",
+    alignSelf: "center",
+    elevation: 7,
+    shadowRadius: 3,
+    shadowOpacity: 0.1,
+  },
   expiredRoom: {
     backgroundColor: "transparent",
   },
