@@ -1,10 +1,9 @@
-import React, { useContext } from "react";
+import React from "react";
 import { SharedElement } from "react-navigation-shared-element";
 import { AntDesign } from "@expo/vector-icons";
 import { View, StyleSheet, Dimensions } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
-// context
-import ExpiredRoomContext from "../contexts/ExpiredRoomContext.js";
 // components
 import BaseImage from "./BaseImage.js";
 
@@ -13,12 +12,10 @@ const SCREEN_HEIGHT = Dimensions.get("window").height;
 const MovieBanner = (props) => {
   const { image = null, sharedElementId = "", style = {} } = props;
 
-  const expiredRoomContext = useContext(ExpiredRoomContext);
-
   /***********
    * Data
    ***********/
-  const navigation = expiredRoomContext.state.navigation;
+  const navigation = useNavigation();
 
   return (
     <SharedElement

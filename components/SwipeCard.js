@@ -7,7 +7,11 @@ import {
   Image,
   Animated,
   PanResponder,
+  TouchableOpacity,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { SharedElement } from "react-navigation-shared-element";
+
 import MoviesContext from "../contexts/MoviesContext.js";
 import { isEmpty, upperCase } from "lodash";
 
@@ -124,6 +128,8 @@ const SwipeCard = (props) => {
     },
   };
 
+  const navigation = useNavigation();
+
   /***********
    * Methods
    ***********/
@@ -136,6 +142,12 @@ const SwipeCard = (props) => {
     let newPosition = position;
     newPosition.setValue({ x: 0, y: 0 });
     setTopCardPosition(newPosition);
+  };
+
+  const navigateToMovieDetails = () => {
+    navigation.navigate("MovieDetails", {
+      movie,
+    });
   };
 
   /**
@@ -202,6 +214,7 @@ const SwipeCard = (props) => {
   const getPanResponder = () => {
     return PanResponder.create({
       onStartShouldSetPanResponder: (evt, gestureState) => true,
+      onMoveShouldSetPanResponderCapture: () => true,
       onPanResponderMove: (evt, gestureState) => {
         let newPosition = position;
         newPosition.setValue({ x: gestureState.dx, y: gestureState.dy });
@@ -226,30 +239,38 @@ const SwipeCard = (props) => {
 
   return (
     <Animated.View {...getComponentProps[type]["card-props"]}>
-      <Animated.View
-        style={[
-          { opacity: getComponentProps[type]["like-opacity"] },
-          styles.like,
-        ]}
+      <TouchableOpacity
+        activeOpacity={0.8}
+        style={styles.roomCardTouchable}
+        onPress={navigateToMovieDetails}
       >
-        <Text style={styles.likeText}>LIKE</Text>
-      </Animated.View>
-      <Animated.View
-        style={[
-          { opacity: getComponentProps[type]["dislike-opacity"] },
-          styles.nope,
-        ]}
-      >
-        <Text style={styles.nopeText}>NOPE</Text>
-      </Animated.View>
-      <View style={styles.movieName}>
-        <Text style={styles.movieNameText}>{upperCase(movie.name)}</Text>
-      </View>
-      <Image
-        style={styles.image}
-        source={movieImage}
-        onError={setMovieImageToDefault}
-      />
+        <Animated.View
+          style={[
+            { opacity: getComponentProps[type]["like-opacity"] },
+            styles.like,
+          ]}
+        >
+          <Text style={styles.likeText}>LIKE</Text>
+        </Animated.View>
+        <Animated.View
+          style={[
+            { opacity: getComponentProps[type]["dislike-opacity"] },
+            styles.nope,
+          ]}
+        >
+          <Text style={styles.nopeText}>NOPE</Text>
+        </Animated.View>
+        <View style={styles.movieName}>
+          <Text style={styles.movieNameText}>{upperCase(movie.name)}</Text>
+        </View>
+        <SharedElement id={`movie-${movie.id}`} style={styles.sharedElement}>
+          <Image
+            style={styles.image}
+            source={movieImage}
+            onError={setMovieImageToDefault}
+          />
+        </SharedElement>
+      </TouchableOpacity>
     </Animated.View>
   );
 };
@@ -257,6 +278,10 @@ const SwipeCard = (props) => {
 export default SwipeCard;
 
 const styles = StyleSheet.create({
+  roomCardTouchable: {
+    flex: 1,
+    position: "relative",
+  },
   topCard: {
     height: SCREEN_HEIGHT - 120,
     width: SCREEN_WIDTH,
@@ -319,5 +344,8 @@ const styles = StyleSheet.create({
     width: null,
     resizeMode: "cover",
     borderRadius: 20,
+  },
+  sharedElement: {
+    flex: 1,
   },
 });
