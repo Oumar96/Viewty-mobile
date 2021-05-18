@@ -5,6 +5,8 @@ import { useFonts, Pacifico_400Regular } from "@expo-google-fonts/pacifico";
 import { FiraSans_400Regular } from "@expo-google-fonts/fira-sans";
 import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 import { NavigationContainer } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import {
   createStackNavigator,
   TransitionPresets,
@@ -25,7 +27,7 @@ export default function App() {
   /***********
    * State
    ***********/
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(5145753394);
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   let [fontsLoaded] = useFonts({
@@ -114,14 +116,24 @@ export default function App() {
     return initialScreenInOrder;
   };
 
+  const setTokenForUser = async (token) => {
+    try {
+      console.log("token", token);
+      await AsyncStorage.setItem("@key", token);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
+    firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
+        //make request to get user's session id and
+        //set it using AsyncStorage
         user
           .getIdToken(true)
-          .then(function (idToken) {
-            console.log("===========");
-            console.log(idToken);
+          .then(async function (idToken) {
+            setTokenForUser(idToken);
           })
           .catch(function (error) {
             console.log(error);

@@ -66,20 +66,35 @@ const SignInCredentialsForm = () => {
   };
 
   const sendCode = async () => {
-    // update this
     try {
-      setError("");
-      await sendVerification();
-      signInContext.actions.animateSignInContainerForward();
-    } catch (e) {
-      if (e.code !== "ERR_FIREBASE_RECAPTCHA_CANCEL") {
-        !isEmpty(errors[e.code])
-          ? setError(errors[e.code])
-          : setError(errors["default"]);
-      }
+      await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
+      const userCredential = await firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password);
+      const user = userCredential.user;
+      const idToken = await user.getIdToken();
+      //post token to endpoint
+      //
+      navigateToRooms();
+    } catch (error) {
+      // handle this
     } finally {
       Keyboard.dismiss();
     }
+    // update this
+    // try {
+    //   setError("");
+    //   await sendVerification();
+    //   signInContext.actions.animateSignInContainerForward();
+    // } catch (e) {
+    //   if (e.code !== "ERR_FIREBASE_RECAPTCHA_CANCEL") {
+    //     !isEmpty(errors[e.code])
+    //       ? setError(errors[e.code])
+    //       : setError(errors["default"]);
+    //   }
+    // } finally {
+    //   Keyboard.dismiss();
+    // }
   };
   return (
     <View styles={styles.credentialsForm}>
