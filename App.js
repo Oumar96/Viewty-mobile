@@ -27,7 +27,7 @@ export default function App() {
   /***********
    * State
    ***********/
-  const [currentUser, setCurrentUser] = useState(5145753394);
+  const [currentUser, setCurrentUser] = useState(null);
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   let [fontsLoaded] = useFonts({
@@ -129,7 +129,7 @@ export default function App() {
     firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
         //make request to get user's session id and
-        //set it using AsyncStorage
+        //set it using setTokenForUser
         user
           .getIdToken(true)
           .then(async function (idToken) {
