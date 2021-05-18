@@ -1,10 +1,12 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
+import SearchBar from "../components/SearchBar.js";
+
 const CreateRoom = () => {
   return (
     <View style={styles.createRoom}>
-      <Text>Create Room</Text>
+      <SearchBar />
     </View>
   );
 };
