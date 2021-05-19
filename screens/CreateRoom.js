@@ -6,7 +6,7 @@ import SearchBar from "../components/SearchBar.js";
 const CreateRoom = () => {
   return (
     <View style={styles.createRoom}>
-      <SearchBar />
+      <SearchBar style={styles.searchBar} />
     </View>
   );
 };
@@ -16,7 +16,10 @@ export default CreateRoom;
 const styles = StyleSheet.create({
   createRoom: {
     flex: 1,
-    justifyContent: "center",
     alignItems: "center",
+  },
+  searchBar: {
+    marginVertical: 10,
+    borderRadius: 20,
   },
 });
