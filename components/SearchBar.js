@@ -3,41 +3,34 @@ import { TextInput, StyleSheet, View, Text } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
 const SearchBar = (props) => {
-  const { style = {} } = props;
+  const { style = {}, value = "", handleOnChange = () => {} } = props;
 
-  const [searchValue, setSearchValue] = useState("");
-  const [users, setUsers] = useState([]);
-  const usersArray = [
-    { id: 1, fullName: "John Travolta" },
-    { id: 2, fullName: "Jackie Chan" },
-    { id: 3, fullName: "Big Popa" },
-  ];
+  // const [searchValue, setSearchValue] = useState("");
+  // const [users, setUsers] = useState([]);
+  // const usersArray = [
+  //   { id: 1, fullName: "John Travolta" },
+  //   { id: 2, fullName: "Jackie Chan" },
+  //   { id: 3, fullName: "Big Popa" },
+  // ];
 
-  useEffect(() => {
-    const filteredNames = usersArray.filter(({ fullName }) =>
-      fullName.includes(searchValue)
-    );
-    setUsers(filteredNames);
-  }, [searchValue]);
+  // useEffect(() => {
+  //   const filteredNames = usersArray.filter(({ fullName }) =>
+  //     fullName.includes(searchValue)
+  //   );
+  //   setUsers(filteredNames);
+  // }, [searchValue]);
 
   return (
-    <>
-      <View style={[styles.searchBar, style]}>
-        <AntDesign name="search1" size={20} color="#cccccc" />
-        <TextInput
-          value={searchValue}
-          onChangeText={(text) => setSearchValue(text)}
-          placeholder="Search"
-          placeholderTextColor="#cccccc"
-          style={styles.searchBarInput}
-        />
-      </View>
-      <View>
-        {users.map((user) => (
-          <Text>{user.fullName}</Text>
-        ))}
-      </View>
-    </>
+    <View style={[styles.searchBar, style]}>
+      <AntDesign name="search1" size={20} color="#cccccc" />
+      <TextInput
+        value={value}
+        onChangeText={handleOnChange}
+        placeholder="Search"
+        placeholderTextColor="#cccccc"
+        style={styles.searchBarInput}
+      />
+    </View>
   );
 };
 
