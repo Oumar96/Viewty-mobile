@@ -1,24 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { TextInput, StyleSheet, View, Text } from "react-native";
+import React from "react";
+import { TextInput, StyleSheet, View } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
 const SearchBar = (props) => {
   const { style = {}, value = "", handleOnChange = () => {} } = props;
-
-  // const [searchValue, setSearchValue] = useState("");
-  // const [users, setUsers] = useState([]);
-  // const usersArray = [
-  //   { id: 1, fullName: "John Travolta" },
-  //   { id: 2, fullName: "Jackie Chan" },
-  //   { id: 3, fullName: "Big Popa" },
-  // ];
-
-  // useEffect(() => {
-  //   const filteredNames = usersArray.filter(({ fullName }) =>
-  //     fullName.includes(searchValue)
-  //   );
-  //   setUsers(filteredNames);
-  // }, [searchValue]);
 
   return (
     <View style={[styles.searchBar, style]}>
@@ -26,7 +11,7 @@ const SearchBar = (props) => {
       <TextInput
         value={value}
         onChangeText={handleOnChange}
-        placeholder="Search"
+        placeholder="Search a username"
         placeholderTextColor="#cccccc"
         style={styles.searchBarInput}
       />
@@ -47,6 +32,7 @@ const styles = StyleSheet.create({
     elevation: 7,
     shadowRadius: 1,
     shadowOpacity: 0.1,
+    borderRadius: 20,
     shadowOffset: {
       width: 1,
       height: 1,

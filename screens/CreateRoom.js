@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
+import { isEmpty } from "lodash";
 
 import SearchBar from "../components/SearchBar.js";
+import SearchResultsInstructions from "../components/SearchResultsInstructions.js";
 
 const CreateRoom = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -26,11 +28,15 @@ const CreateRoom = () => {
         value={searchValue}
         handleOnChange={setSearchValue}
       />
-      <View>
-        {users.map((user) => (
-          <Text>{user.fullName}</Text>
-        ))}
-      </View>
+      {isEmpty(searchValue) ? (
+        <SearchResultsInstructions />
+      ) : (
+        <View>
+          {users.map((user) => (
+            <Text>{user.fullName}</Text>
+          ))}
+        </View>
+      )}
     </View>
   );
 };
@@ -44,6 +50,5 @@ const styles = StyleSheet.create({
   },
   searchBar: {
     marginVertical: 10,
-    borderRadius: 20,
   },
 });
