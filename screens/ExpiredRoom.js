@@ -1,15 +1,13 @@
 import React from "react";
-import { View, Text, ScrollView, StyleSheet } from "react-native";
+import { View, ScrollView, StyleSheet } from "react-native";
 import { isNil } from "lodash";
 
-// context
-import ExpiredRoomContext from "../contexts/ExpiredRoomContext.js";
-
 //components
-import MovieDetails from "../components/MovieDetails.js";
+import MovieBanner from "../components/MovieBanner.js";
 import RoomParticipants from "../components/RoomParticipants.js";
+import MovieDescription from "../components/MovieDescription.js";
 
-const ExpiredRoom = ({ navigation, route }) => {
+const ExpiredRoom = ({ route }) => {
   /***********
    * Data
    ***********/
@@ -17,26 +15,21 @@ const ExpiredRoom = ({ navigation, route }) => {
   const selectedMovie = room.result.movie;
   const roomUsers = room.participants.users;
   return (
-    <ExpiredRoomContext.Provider
-      value={{
-        state: {
-          navigation,
-        },
-      }}
-    >
-      <View style={styles.expiredRoom}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <MovieDetails
-            movie={selectedMovie}
+    <View style={styles.expiredRoom}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.movieDetailsContainer}>
+          <MovieBanner
+            image={selectedMovie.poster}
             sharedElementId={`room-${room.id}`}
           />
+          <MovieDescription movie={selectedMovie} />
           <RoomParticipants
             participants={roomUsers}
             style={styles.roomParticipants}
           />
-        </ScrollView>
-      </View>
-    </ExpiredRoomContext.Provider>
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
@@ -56,6 +49,15 @@ ExpiredRoom.sharedElements = (route) => {
 export default ExpiredRoom;
 
 const styles = StyleSheet.create({
+  movieDetailsContainer: {
+    width: "100%",
+    borderRadius: 20,
+    borderColor: "#f2f2f2",
+    alignSelf: "center",
+    elevation: 7,
+    shadowRadius: 3,
+    shadowOpacity: 0.1,
+  },
   expiredRoom: {
     backgroundColor: "transparent",
   },
