@@ -4,19 +4,29 @@ import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import firebase from "../firebase/firebase.js";
 import { isEmpty } from "lodash";
 // components
-import { StyleSheet, View, Text, Keyboard } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Keyboard,
+  TextInput,
+  Dimensions,
+} from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
-import PhoneInput from "react-native-phone-number-input";
 import BaseButton from "./BaseButton.js";
 // context
 import SignInContext from "../contexts/SignInContext.js";
 
-const SignInPhoneNumberForm = () => {
+const SCREEN_WIDTH = Dimensions.get("window").width;
+
+const SignInCredentialsForm = () => {
   const signInContext = useContext(SignInContext);
   /***********
    * State
    ***********/
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   /***********
@@ -29,6 +39,7 @@ const SignInPhoneNumberForm = () => {
    ***********/
   const attemptInvisibleVerification = true;
   const errors = {
+    // update this
     "auth/captcha-check-failed":
       "reCAPTCHA failed please try again. If the problem persists contact support.",
     "auth/invalid-phone-number": "The phone number is invalid",
@@ -39,10 +50,13 @@ const SignInPhoneNumberForm = () => {
       "There was an issue processing your request. Please contact support",
   };
 
+  const isShowingSendCodeButton = !isEmpty(email) && !isEmpty(password);
+
   /***********
    * Methods
    ***********/
   const sendVerification = async () => {
+    // update this
     const phoneProvider = new firebase.auth.PhoneAuthProvider();
     const responseVerifcationID = await phoneProvider.verifyPhoneNumber(
       phoneNumber,
@@ -52,6 +66,7 @@ const SignInPhoneNumberForm = () => {
   };
 
   const sendCode = async () => {
+    // update this
     try {
       setError("");
       await sendVerification();
@@ -67,20 +82,30 @@ const SignInPhoneNumberForm = () => {
     }
   };
   return (
-    <View styles={styles.phoneNumberForm}>
-      <PhoneInput
-        onChangeFormattedText={setPhoneNumber}
-        defaultCode="US"
-        containerStyle={styles.containerStyle}
-        textContainerStyle={styles.textContainerStyle}
-      />
-      {error !== "" && (
+    <View styles={styles.credentialsForm}>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={[styles.input, styles.inputEmail]}
+          onChangeText={setEmail}
+          value={email}
+          placeholder="Email"
+          multiline={false}
+        />
+        <TextInput
+          style={styles.input}
+          onChangeText={setPassword}
+          value={password}
+          placeholder="Password"
+          secureTextEntry={true}
+        />
+      </View>
+      {!isEmpty(error) && (
         <View style={styles.errorContainer}>
           <MaterialIcons name="error" size={24} color="red" />
           <Text style={styles.errorText}>{error}</Text>
         </View>
       )}
-      {isEmpty(!phoneNumber) && (
+      {isShowingSendCodeButton && (
         <View style={styles.sendCodeButtonContainer}>
           <BaseButton
             type="PRIMARY_NEGATIVE"
@@ -99,25 +124,34 @@ const SignInPhoneNumberForm = () => {
   );
 };
 
-export default SignInPhoneNumberForm;
+export default SignInCredentialsForm;
 
 const styles = StyleSheet.create({
-  phoneNumberForm: {
+  credentialsForm: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
     textAlign: "center",
   },
-  containerStyle: {
+  inputContainer: {
     borderRadius: 10,
     elevation: 7,
     shadowRadius: 3,
     shadowOpacity: 0.1,
-    width: "80%",
+    width: SCREEN_WIDTH * 0.75,
+    height: 120,
+    backgroundColor: "white",
+    borderColor: "#bababa",
+    borderWidth: 2,
   },
-  textContainerStyle: {
-    borderTopRightRadius: 10,
-    borderBottomRightRadius: 10,
+  input: {
+    fontSize: 17,
+    height: "50%",
+    paddingHorizontal: 15,
+  },
+  inputEmail: {
+    borderBottomWidth: 1,
+    borderColor: "#f2f2f2",
   },
   errorContainer: {
     alignItems: "center",
@@ -136,7 +170,7 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
   sendCodeButton: {
-    width: "100%",
+    width: "80%",
     height: 50,
     borderRadius: 50,
     shadowColor: "#000000",
