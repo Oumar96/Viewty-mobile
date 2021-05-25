@@ -4,6 +4,7 @@ import { isEmpty } from "lodash";
 
 import SearchBar from "../components/SearchBar.js";
 import SearchResultsInstructions from "../components/SearchResultsInstructions.js";
+import SearchResults from "../components/SearchResults.js";
 
 const CreateRoom = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -16,7 +17,7 @@ const CreateRoom = () => {
 
   useEffect(() => {
     const filteredNames = usersArray.filter(({ fullName }) =>
-      fullName.includes(searchValue)
+      fullName.toUpperCase().includes(searchValue.toUpperCase())
     );
     setUsers(filteredNames);
   }, [searchValue]);
@@ -31,11 +32,7 @@ const CreateRoom = () => {
       {isEmpty(searchValue) ? (
         <SearchResultsInstructions />
       ) : (
-        <View>
-          {users.map((user) => (
-            <Text>{user.fullName}</Text>
-          ))}
-        </View>
+        <SearchResults users={users} style={styles.searchResults} />
       )}
     </View>
   );
@@ -50,5 +47,9 @@ const styles = StyleSheet.create({
   },
   searchBar: {
     marginVertical: 10,
+    width: "90%",
+  },
+  searchResults: {
+    width: "90%",
   },
 });
