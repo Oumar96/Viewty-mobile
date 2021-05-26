@@ -10,14 +10,14 @@ const CreateRoom = () => {
   const [searchValue, setSearchValue] = useState("");
   const [users, setUsers] = useState([]);
   const usersArray = [
-    { id: 1, fullName: "John Travolta" },
-    { id: 2, fullName: "Jackie Chan" },
-    { id: 3, fullName: "Big Popa" },
+    { id: 1, name: "John Travolta" },
+    { id: 2, name: "Jackie Chan" },
+    { id: 3, name: "Big Popa" },
   ];
 
   useEffect(() => {
-    const filteredNames = usersArray.filter(({ fullName }) =>
-      fullName.toUpperCase().includes(searchValue.toUpperCase())
+    const filteredNames = usersArray.filter(({ name }) =>
+      name.toUpperCase().includes(searchValue.toUpperCase())
     );
     setUsers(filteredNames);
   }, [searchValue]);
