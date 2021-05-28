@@ -1,6 +1,7 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import UserItem from "./UserItem.js";
+import BaseButton from "./BaseButton.js";
 
 const SearchResults = (props) => {
   const { users = [], style = {} } = props;
@@ -12,12 +13,15 @@ const SearchResults = (props) => {
   return (
     <View style={[style]}>
       {users.map((user, index) => (
-        <UserItem
-          user={user}
-          key={index}
-          style={styles.userItem}
-          onPress={selectItem}
-        />
+        <View style={styles.userItemContainer}>
+          <UserItem user={user} key={index} style={styles.userItem} />
+          <BaseButton
+            type="PRIMARY_NEGATIVE"
+            style={styles.invite}
+            onPress={selectItem}
+            text="invite"
+          />
+        </View>
       ))}
     </View>
   );
@@ -26,13 +30,21 @@ const SearchResults = (props) => {
 export default SearchResults;
 
 const styles = StyleSheet.create({
-  userItem: {
+  userItemContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     backgroundColor: "white",
-    height: 70,
-    borderColor: "gray",
     borderWidth: 1,
     borderRadius: 5,
     borderColor: "#f2f2f2",
+  },
+  userItem: {
+    height: 70,
     alignItems: "center",
+  },
+  invite: {
+    marginHorizontal: 20,
+    borderRadius: 5,
   },
 });
