@@ -1,19 +1,32 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { isEmpty } from "lodash";
+import { isEmpty, isNil } from "lodash";
 
 import SearchBar from "../components/SearchBar.js";
 import SearchResultsInstructions from "../components/SearchResultsInstructions.js";
 import SearchResults from "../components/SearchResults.js";
+import BaseModal from "../components/BaseModal.js";
 
 const CreateRoom = () => {
   const [searchValue, setSearchValue] = useState("");
   const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
   const usersArray = [
     { id: 1, name: "John Travolta" },
     { id: 2, name: "Jackie Chan" },
     { id: 3, name: "Big Popa" },
   ];
+
+  const removeSelectedUsers = () => {
+    setSelectedUser(null);
+  };
+  const modalText = !isEmpty(selectedUser)
+    ? `Your invitation to ${selectedUser.name} has been sent`
+    : "An error occured please contact support";
+
+  const modalButtonType = !isEmpty(selectedUser) ? "PRIMARY" : "SECONDARY";
+
+  const modalButtonText = !isEmpty(selectedUser) ? "Okay" : "Close";
 
   useEffect(() => {
     const filteredNames = usersArray.filter(({ name }) =>
@@ -34,6 +47,13 @@ const CreateRoom = () => {
       ) : (
         <SearchResults users={users} style={styles.searchResults} />
       )}
+      <BaseModal
+        isVisible={!isNil(selectedUser)}
+        buttonAction={removeSelectedUsers}
+        text={modalText}
+        buttonType={modalButtonType}
+        buttonText={modalButtonText}
+      />
     </View>
   );
 };

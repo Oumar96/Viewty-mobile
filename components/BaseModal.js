@@ -5,18 +5,11 @@ import BaseButton from "./BaseButton.js";
 const BaseModal = (props) => {
   const {
     isVisible = true,
-    hide = () => {},
+    buttonAction = () => {},
     text = "",
     buttonType = "",
     buttonText = "",
   } = props;
-
-  /***********
-   * Methods
-   ***********/
-  const hideModal = () => {
-    hide();
-  };
 
   return (
     <Modal animationType="fade" transparent={true} visible={isVisible}>
@@ -26,7 +19,7 @@ const BaseModal = (props) => {
           <BaseButton
             type={buttonType}
             style={styles.buttonClose}
-            onPress={hideModal}
+            onPress={buttonAction}
             text={buttonText}
           />
         </View>
