@@ -4,11 +4,7 @@ import UserItem from "./UserItem.js";
 import BaseButton from "./BaseButton.js";
 
 const SearchResults = (props) => {
-  const { users = [], style = {} } = props;
-
-  const selectItem = () => {
-    console.log("itemSelected");
-  };
+  const { users = [], style = {}, selectUser = () => {} } = props;
 
   return (
     <View style={[style]}>
@@ -18,7 +14,7 @@ const SearchResults = (props) => {
           <BaseButton
             type="PRIMARY_NEGATIVE"
             style={styles.invite}
-            onPress={selectItem}
+            onPress={() => selectUser(user)}
             text="invite"
           />
         </View>

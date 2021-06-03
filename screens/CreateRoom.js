@@ -17,9 +17,9 @@ const CreateRoom = () => {
     { id: 3, name: "Big Popa" },
   ];
 
-  const removeSelectedUsers = () => {
-    setSelectedUser(null);
-  };
+  /***********
+   * Data
+   ***********/
   const modalText = !isEmpty(selectedUser)
     ? `Your invitation to ${selectedUser.name} has been sent`
     : "An error occured please contact support";
@@ -27,6 +27,20 @@ const CreateRoom = () => {
   const modalButtonType = !isEmpty(selectedUser) ? "PRIMARY" : "SECONDARY";
 
   const modalButtonText = !isEmpty(selectedUser) ? "Okay" : "Close";
+
+  /***********
+   * Methods
+   ***********/
+  const removeSelectedUsers = () => {
+    setSelectedUser(null);
+  };
+  /**
+   *
+   * @param {Object} user
+   */
+  const selectUser = (user) => {
+    setSelectedUser(user);
+  };
 
   useEffect(() => {
     const filteredNames = usersArray.filter(({ name }) =>
@@ -45,7 +59,11 @@ const CreateRoom = () => {
       {isEmpty(searchValue) ? (
         <SearchResultsInstructions />
       ) : (
-        <SearchResults users={users} style={styles.searchResults} />
+        <SearchResults
+          users={users}
+          style={styles.searchResults}
+          onUserSelected={selectUser}
+        />
       )}
       <BaseModal
         isVisible={!isNil(selectedUser)}
