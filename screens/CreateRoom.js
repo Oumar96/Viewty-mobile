@@ -21,12 +21,12 @@ const CreateRoom = () => {
    * Data
    ***********/
   const modalText = !isEmpty(selectedUser)
-    ? `Your invitation to ${selectedUser.name} has been sent`
+    ? `An invitation will be sent to ${selectedUser.name}`
     : "An error occured please contact support";
 
   const modalButtonType = !isEmpty(selectedUser) ? "PRIMARY" : "SECONDARY";
 
-  const modalButtonText = !isEmpty(selectedUser) ? "Okay" : "Close";
+  const modalButtonText = !isEmpty(selectedUser) ? "Confirm" : "Close";
 
   /***********
    * Methods

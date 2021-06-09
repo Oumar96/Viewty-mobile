@@ -4,17 +4,17 @@ import UserItem from "./UserItem.js";
 import BaseButton from "./BaseButton.js";
 
 const SearchResults = (props) => {
-  const { users = [], style = {}, selectUser = () => {} } = props;
+  const { users = [], style = {}, onUserSelected = () => {} } = props;
 
   return (
     <View style={[style]}>
       {users.map((user, index) => (
-        <View style={styles.userItemContainer}>
+        <View key={index} style={styles.userItemContainer}>
           <UserItem user={user} key={index} style={styles.userItem} />
           <BaseButton
             type="PRIMARY_NEGATIVE"
             style={styles.invite}
-            onPress={() => selectUser(user)}
+            onPress={() => onUserSelected(user)}
             text="invite"
           />
         </View>

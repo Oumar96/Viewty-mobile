@@ -10,7 +10,7 @@ import MoviesApi from "../api/Movies.js";
 
 import MoviesContext from "../contexts/MoviesContext.js";
 import SwipeCardsList from "../components/SwipeCardsList.js";
-import ErrorModal from "../components/ErrorModal.js";
+import BaseModal from "../components/BaseModal.js";
 import Match from "../components/Match.js";
 
 const USER_ID = "5145753393";
@@ -38,6 +38,8 @@ const Movies = ({ route }) => {
   const userId = route.params.userId;
   const roomId = route.params.roomId;
   const moviesRef = firebase.database().ref(`rooms/${roomId}/movies`);
+  const errorModalText =
+    "An error occured! Please try again. If the error persists contact support.";
 
   /***********
    * Methods
@@ -188,9 +190,12 @@ const Movies = ({ route }) => {
         <SwipeCardsList />
       </View>
       {!isNil(matchedMovie) && <Match />}
-      <ErrorModal
+      <BaseModal
         isVisible={isShowErrorModal}
-        hide={() => setIsShowErrorModal(false)}
+        buttonAction={() => setIsShowErrorModal(false)}
+        text={errorModalText}
+        buttonType={"SECONDARY_NEGATIVE"}
+        buttonText={"Close"}
       />
     </MoviesContext.Provider>
   );
