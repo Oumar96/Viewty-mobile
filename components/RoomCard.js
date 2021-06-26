@@ -172,7 +172,7 @@ const RoomCard = (props) => {
                 <BaseImage
                   key={index}
                   style={[styles.roomCardImage, getImageBorderStyle(index)]}
-                  source={movie.poster}
+                  source={movie?.poster ?? null}
                 />
               ))}
             </>

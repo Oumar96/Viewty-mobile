@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { View, StyleSheet } from "react-native";
-import { isEqual, isNil } from "lodash";
+import { isEqual, isNil, orderBy } from "lodash";
 
 import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 import firebase from "../firebase/firebase.js";
@@ -96,6 +96,15 @@ const RoomsComponent = ({ navigation }) => {
     }
   };
 
+  /**
+   *
+   * @param {Object} rooms
+   * @returns {Array}
+   */
+  const orderRoomsByCreatedDate = (rooms) => {
+    return orderBy(rooms, "createdAt", ["desc", "asc"]);
+  };
+
   useEffect(() => {
     roomIdsRef.on("value", (snapshot) => {
       let snapshotRoomIds = snapshot.val();
@@ -113,7 +122,8 @@ const RoomsComponent = ({ navigation }) => {
       let moviesDetails = await getMoviesDetails({
         names: movieNames.join(),
       });
-      setRooms(rooms);
+
+      setRooms(orderRoomsByCreatedDate(rooms));
       setMovieDetails(moviesDetails);
     });
   }, [roomIds]);
