@@ -1,8 +1,7 @@
 // libs
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
-import { isEmpty } from "lodash";
 
 // contexts
 import HomeContext from "../contexts/HomeContext.js";

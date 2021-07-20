@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
+
+import UserItem from "./UserItem.js";
 
 const RoomParticipants = (props) => {
   const { participants = [], style = {} } = props;
@@ -9,14 +10,11 @@ const RoomParticipants = (props) => {
     <View style={[styles.participants, style]}>
       <Text style={styles.participantsTitle}>Participants</Text>
       {participants.map((user, index) => (
-        // <Text>{user.name}</Text>
-        <View
-          style={styles.participantRow}
+        <UserItem
+          user={user}
           key={`Room-participants${index + 1}`}
-        >
-          <FontAwesome name="user-circle-o" size={24} color="black" />
-          <Text style={styles.participantName}>{"John Smith"}</Text>
-        </View>
+          style={styles.participantRow}
+        />
       ))}
     </View>
   );
@@ -41,13 +39,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   participantRow: {
-    flexDirection: "row",
     marginBottom: 10,
-    paddingLeft: 10,
-  },
-  participantName: {
-    fontSize: 20,
-    marginLeft: 10,
-    fontWeight: "600",
   },
 });
