@@ -28,6 +28,7 @@ const RoomsComponent = ({ navigation }) => {
   const [roomIds, setRoomIds] = useState([]);
   const [rooms, setRooms] = useState([]);
   const [moviesDetails, setMovieDetails] = useState([]);
+  const [isInitialRoomsFetched, setIsInitalRoomsFetched] = useState(false);
 
   /***********
    * Data
@@ -45,16 +46,18 @@ const RoomsComponent = ({ navigation }) => {
    * @returns {Array}
    */
   const getRoomsFromSnapshot = (roomsObject) => {
-    let rooms = [];
+    let newRooms = [];
     roomIds.forEach((roomId) => {
+      const isCurrentlyInRooms = rooms.some(({ id }) => id === roomId);
       if (!isNil(roomsObject[roomId])) {
-        rooms.push({
+        newRooms.push({
           id: roomId,
+          isNewRoom: !isCurrentlyInRooms && isInitialRoomsFetched,
           ...roomsObject[roomId],
         });
       }
     });
-    return rooms;
+    return newRooms;
   };
   /**
    *
@@ -122,12 +125,11 @@ const RoomsComponent = ({ navigation }) => {
       let moviesDetails = await getMoviesDetails({
         names: movieNames.join(),
       });
-
+      setIsInitalRoomsFetched(true);
       setRooms(orderRoomsByCreatedDate(rooms));
       setMovieDetails(moviesDetails);
     });
   }, [roomIds]);
-
   return (
     <RoomsContext.Provider
       value={{
