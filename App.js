@@ -119,7 +119,7 @@ export default function App() {
   const setTokenForUser = async (token) => {
     try {
       console.log("token", token);
-      await AsyncStorage.setItem("@key", token);
+      await AsyncStorage.setItem("token", token);
     } catch (error) {
       console.log(error);
     }

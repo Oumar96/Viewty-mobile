@@ -70,13 +70,15 @@ const SignInCredentialsForm = () => {
       await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
       const userCredential = await firebase
         .auth()
-        .signInWithEmailAndPassword(email, password);
+        .createUserWithEmailAndPassword(email, password);
       const user = userCredential.user;
       const idToken = await user.getIdToken();
+      console.log("idToken", idToken);
       //post token to endpoint
       //
       navigateToRooms();
     } catch (error) {
+      console.log(error);
       // handle this
     } finally {
       Keyboard.dismiss();
