@@ -17,6 +17,7 @@ import SignIn from "./screens/SignIn.js";
 import Movies from "./screens/Movies.js";
 import Home from "./screens/Home.js";
 import ExpiredRoom from "./screens/ExpiredRoom.js";
+import MovieDetails from "./screens/MovieDetails.js";
 
 const TransitionScreenOptions = {
   ...TransitionPresets.SlideFromRightIOS, // This is where the transition happens
@@ -51,7 +52,7 @@ export default function App() {
     headerTitleStyle,
   };
 
-  const expiredRoomOptions = {
+  const sharedElementOptions = {
     headerBackTitleVisible: false,
     cardStyleInterpolator: ({ current: { progress } }) => {
       return {
@@ -169,10 +170,19 @@ export default function App() {
           options={{
             headerShown: false,
             ...defaultScreenOptions,
-            ...expiredRoomOptions,
+            ...sharedElementOptions,
           }}
           name="ExpiredRoom"
           component={ExpiredRoom}
+        />
+        <Stack.Screen
+          options={{
+            headerShown: false,
+            ...defaultScreenOptions,
+            ...sharedElementOptions,
+          }}
+          name="MovieDetails"
+          component={MovieDetails}
         />
       </Stack.Navigator>
     </NavigationContainer>

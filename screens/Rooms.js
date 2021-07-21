@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { View, StyleSheet } from "react-native";
-import { isEqual, isNil } from "lodash";
+import { isEqual, isNil, orderBy } from "lodash";
 
 import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 import firebase from "../firebase/firebase.js";
@@ -28,6 +28,7 @@ const RoomsComponent = ({ navigation }) => {
   const [roomIds, setRoomIds] = useState([]);
   const [rooms, setRooms] = useState([]);
   const [moviesDetails, setMovieDetails] = useState([]);
+  const [isInitialRoomsFetched, setIsInitalRoomsFetched] = useState(false);
 
   /***********
    * Data
@@ -45,16 +46,18 @@ const RoomsComponent = ({ navigation }) => {
    * @returns {Array}
    */
   const getRoomsFromSnapshot = (roomsObject) => {
-    let rooms = [];
+    let newRooms = [];
     roomIds.forEach((roomId) => {
+      const isCurrentlyInRooms = rooms.some(({ id }) => id === roomId);
       if (!isNil(roomsObject[roomId])) {
-        rooms.push({
+        newRooms.push({
           id: roomId,
+          isNewRoom: !isCurrentlyInRooms && isInitialRoomsFetched,
           ...roomsObject[roomId],
         });
       }
     });
-    return rooms;
+    return newRooms;
   };
   /**
    *
@@ -96,6 +99,15 @@ const RoomsComponent = ({ navigation }) => {
     }
   };
 
+  /**
+   *
+   * @param {Object} rooms
+   * @returns {Array}
+   */
+  const orderRoomsByCreatedDate = (rooms) => {
+    return orderBy(rooms, "createdAt", ["desc", "asc"]);
+  };
+
   useEffect(() => {
     roomIdsRef.on("value", (snapshot) => {
       let snapshotRoomIds = snapshot.val();
@@ -113,11 +125,11 @@ const RoomsComponent = ({ navigation }) => {
       let moviesDetails = await getMoviesDetails({
         names: movieNames.join(),
       });
-      setRooms(rooms);
+      setIsInitalRoomsFetched(true);
+      setRooms(orderRoomsByCreatedDate(rooms));
       setMovieDetails(moviesDetails);
     });
   }, [roomIds]);
-
   return (
     <RoomsContext.Provider
       value={{

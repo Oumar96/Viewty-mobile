@@ -2,29 +2,25 @@ import React from "react";
 import { Modal, StyleSheet, Text, View } from "react-native";
 import BaseButton from "./BaseButton.js";
 
-const ErrorModal = (props) => {
-  const { isVisible = true, hide = () => {} } = props;
-
-  /***********
-   * Methods
-   ***********/
-  const hideModal = () => {
-    hide();
-  };
+const BaseModal = (props) => {
+  const {
+    isVisible = true,
+    buttonAction = () => {},
+    text = "",
+    buttonType = "",
+    buttonText = "",
+  } = props;
 
   return (
     <Modal animationType="fade" transparent={true} visible={isVisible}>
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <Text style={styles.modalText}>
-            An error occured! Please try again. If the error persists contact
-            support
-          </Text>
+          <Text style={styles.modalText}>{text}</Text>
           <BaseButton
-            type="SECONDARY_NEGATIVE"
+            type={buttonType}
             style={styles.buttonClose}
-            onPress={hideModal}
-            text="Close"
+            onPress={buttonAction}
+            text={buttonText}
           />
         </View>
       </View>
@@ -32,7 +28,7 @@ const ErrorModal = (props) => {
   );
 };
 
-export default ErrorModal;
+export default BaseModal;
 
 const styles = StyleSheet.create({
   container: {

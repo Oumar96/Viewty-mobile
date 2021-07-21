@@ -56,6 +56,8 @@ const RoomCard = (props) => {
     ? room.participants.accepted < 2
     : false;
   const status = getStatus(isRoomExpired, isRoomPending);
+  const isNewRoom = room.isNewRoom;
+  // const isNewRoom = true;
   const finalMovie = isRoomExpired ? room.result.movie : null;
 
   // Animation data
@@ -148,6 +150,7 @@ const RoomCard = (props) => {
         style={styles.roomCardTouchable}
         onPress={handleClickCard}
       >
+        {isNewRoom && <View style={styles.newRoom}></View>}
         <Text style={[styles.status, styles[`statusText__${status}`]]}>
           {status}
         </Text>
@@ -172,7 +175,7 @@ const RoomCard = (props) => {
                 <BaseImage
                   key={index}
                   style={[styles.roomCardImage, getImageBorderStyle(index)]}
-                  source={movie.poster}
+                  source={movie?.poster ?? null}
                 />
               ))}
             </>
@@ -256,5 +259,15 @@ const styles = StyleSheet.create({
   },
   sharedElement: {
     flex: 1,
+  },
+  newRoom: {
+    borderColor: "#de8a02",
+    borderWidth: 3,
+    borderRadius: 20,
+    height: "100%",
+    zIndex: 500,
+    position: "absolute",
+    backgroundColor: "rgba(222, 138, 2, 0.2)",
+    width: "100%",
   },
 });
