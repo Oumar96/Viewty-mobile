@@ -75,7 +75,7 @@ export default function App() {
         name="Home"
         component={Home}
         initialParams={{
-          userId: currentUser.userId,
+          userId: currentUser?.userId ?? null,
         }}
       />
     );
