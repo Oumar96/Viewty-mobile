@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 // libs
 import firebase from "../firebase/firebase.js";
 import { isEmpty } from "lodash";
@@ -16,43 +17,44 @@ import BaseButton from "./BaseButton.js";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
-const SignInCredentialsForm = () => {
+const LoginForm = () => {
   /***********
    * State
    ***********/
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmedPassword, setConfirmedPassword] = useState("");
   const [error, setError] = useState("");
 
   /***********
    * Data
    ***********/
-
+  const navigation = useNavigation();
   const isShowingSendCodeButton = !isEmpty(email) && !isEmpty(password);
 
   /***********
    * Methods
    ***********/
 
-  const navigateToHome = () => {};
+  const navigateToHome = (userId) => {
+    navigation.navigate("Home", {
+      userId,
+    });
+  };
 
-  const signUp = async () => {
+  const login = async () => {
     try {
-      if (!isEmpty(confirmedPassword)) {
-        throw new Error("Passwords don't match");
-      }
       setError("");
       await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
       const userCredential = await firebase
         .auth()
-        .createUserWithEmailAndPassword(email, password);
+        .signInWithEmailAndPassword(email, password);
       const user = userCredential.user;
+      console.log(userCredential.user.uid);
       const idToken = await user.getIdToken();
       console.log("idToken", idToken);
       //post token to endpoint
       //
-      navigateToHome();
+      navigateToHome("5145753394");
     } catch (error) {
       setError(error.message);
     } finally {
@@ -63,7 +65,7 @@ const SignInCredentialsForm = () => {
     <View styles={styles.credentialsForm}>
       <View style={styles.inputContainer}>
         <TextInput
-          style={styles.input}
+          style={[styles.input, styles.inputEmail]}
           onChangeText={setEmail}
           value={email}
           placeholder="Email"
@@ -74,13 +76,6 @@ const SignInCredentialsForm = () => {
           onChangeText={setPassword}
           value={password}
           placeholder="Password"
-          secureTextEntry={true}
-        />
-        <TextInput
-          style={styles.input}
-          onChangeText={setConfirmedPassword}
-          value={confirmedPassword}
-          placeholder="Confirm Password"
           secureTextEntry={true}
         />
       </View>
@@ -94,9 +89,9 @@ const SignInCredentialsForm = () => {
         <View style={styles.sendCodeButtonContainer}>
           <BaseButton
             type="PRIMARY_NEGATIVE"
-            onPress={signUp}
+            onPress={login}
             style={styles.sendCodeButton}
-            text="Sign up"
+            text="Login"
           />
         </View>
       )}
@@ -104,7 +99,7 @@ const SignInCredentialsForm = () => {
   );
 };
 
-export default SignInCredentialsForm;
+export default LoginForm;
 
 const styles = StyleSheet.create({
   credentialsForm: {
@@ -119,15 +114,17 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     shadowOpacity: 0.1,
     width: SCREEN_WIDTH * 0.75,
-    height: 180,
+    height: 120,
     backgroundColor: "white",
     borderColor: "#bababa",
     borderWidth: 2,
   },
   input: {
     fontSize: 17,
-    height: "33%",
+    height: "50%",
     paddingHorizontal: 15,
+  },
+  inputEmail: {
     borderBottomWidth: 1,
     borderColor: "#f2f2f2",
   },

@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SignInCredentialsForm from "../components/SignInCredentialsForm.js";
-import SignInCodeConfirmation from "../components/SignInCodeConfirmation.js";
+import LoginForm from "../components/LoginForm.js";
 import BaseButton from "../components/BaseButton.js";
 // context
 import SignInContext from "../contexts/SignInContext.js";
@@ -126,7 +126,7 @@ const SignIn = ({ navigation }) => {
               />
             </View>
             <View style={styles.slide}>
-              {isNewLogin ? <SignInCredentialsForm /> : <Text>Login</Text>}
+              {isNewLogin ? <SignInCredentialsForm /> : <LoginForm />}
             </View>
             {/* <View style={styles.slide}>
               <SignInCodeConfirmation />
