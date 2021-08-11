@@ -13,6 +13,7 @@ import { useNavigation } from "@react-navigation/native";
 import { SharedElement } from "react-navigation-shared-element";
 
 import MoviesContext from "../contexts/MoviesContext.js";
+import CurrentUserContext from "../contexts/CurrentUserContext.js";
 import { isEmpty, upperCase } from "lodash";
 
 const SCREEN_HEIGHT = Dimensions.get("window").height;
@@ -31,10 +32,12 @@ const SwipeCard = (props) => {
   const { type = "top-card", movie = {} } = props;
 
   const moviesContext = useContext(MoviesContext);
+  const currentUser = useContext(CurrentUserContext);
   /***********
    * Context State
    ***********/
-  const currentUserId = moviesContext.state.currentUserId;
+  const currentUserId = currentUser.state.currentUser.userId;
+  const currentUserEmail = currentUser.state.currentUser.email;
   const currentRoomId = moviesContext.state.currentRoomId;
   let currentMovieIndex = moviesContext.state.currentMovieIndex;
   let position = moviesContext.state.topCardPosition;
@@ -191,16 +194,18 @@ const SwipeCard = (props) => {
    * @param {String} vote
    */
   const voteMovie = async (choice) => {
+    console.log(currentUserEmail);
     let body = {
-      user: currentUserId,
+      user: currentUserEmail,
       room: currentRoomId,
       vote: choice,
     };
     try {
-      await vote(movie.name, body);
+      await vote(movie.name.toLowerCase(), body);
       incrementMovieIndex();
       setNextCardCenter();
     } catch (error) {
+      console.log(error.message);
       showErrorModal();
       resetCardPosition();
     }

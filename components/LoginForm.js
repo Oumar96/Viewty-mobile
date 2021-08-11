@@ -1,6 +1,5 @@
 import React, { useState, useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
-
 // libs
 import firebase from "../firebase/firebase.js";
 import { isEmpty } from "lodash";
@@ -13,33 +12,34 @@ import {
   TextInput,
   Dimensions,
 } from "react-native";
+
+import CurrentUserContext from "../contexts/CurrentUserContext.js";
 import { MaterialIcons } from "@expo/vector-icons";
 import BaseButton from "./BaseButton.js";
-import CurrentUserContext from "../contexts/CurrentUserContext.js";
+
 import { setTokenForUser } from "../helpers/authentication.js";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
-const SignInCredentialsForm = () => {
+const LoginForm = () => {
   const currentUserContext = useContext(CurrentUserContext);
   /***********
    * Context Mutations
    ***********/
   const setCurrentUser = currentUserContext.mutations.setCurrentUser;
+
   /***********
    * State
    ***********/
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmedPassword, setConfirmedPassword] = useState("");
   const [error, setError] = useState("");
 
   /***********
    * Data
    ***********/
-
-  const isShowingSendCodeButton = !isEmpty(email) && !isEmpty(password);
   const navigation = useNavigation();
+  const isShowingSendCodeButton = !isEmpty(email) && !isEmpty(password);
 
   /***********
    * Methods
@@ -51,18 +51,15 @@ const SignInCredentialsForm = () => {
     });
   };
 
-  const signUp = async () => {
+  const login = async () => {
     try {
-      if (confirmedPassword !== password) {
-        throw new Error("Passwords don't match");
-      }
       setError("");
       await firebase
         .auth()
         .setPersistence(firebase.auth.Auth.Persistence.LOCAL);
       const userCredential = await firebase
         .auth()
-        .createUserWithEmailAndPassword(email, password);
+        .signInWithEmailAndPassword(email, password);
       const user = userCredential.user;
       const userId = user.uid;
       const idToken = await user.getIdToken();
@@ -73,7 +70,6 @@ const SignInCredentialsForm = () => {
       });
       navigateToHome(user.uid);
     } catch (error) {
-      console.log(error);
       setError(error.message);
     } finally {
       Keyboard.dismiss();
@@ -83,7 +79,7 @@ const SignInCredentialsForm = () => {
     <View styles={styles.credentialsForm}>
       <View style={styles.inputContainer}>
         <TextInput
-          style={styles.input}
+          style={[styles.input, styles.inputEmail]}
           onChangeText={setEmail}
           value={email}
           placeholder="Email"
@@ -94,13 +90,6 @@ const SignInCredentialsForm = () => {
           onChangeText={setPassword}
           value={password}
           placeholder="Password"
-          secureTextEntry={true}
-        />
-        <TextInput
-          style={styles.input}
-          onChangeText={setConfirmedPassword}
-          value={confirmedPassword}
-          placeholder="Confirm Password"
           secureTextEntry={true}
         />
       </View>
@@ -114,9 +103,9 @@ const SignInCredentialsForm = () => {
         <View style={styles.sendCodeButtonContainer}>
           <BaseButton
             type="PRIMARY_NEGATIVE"
-            onPress={signUp}
+            onPress={login}
             style={styles.sendCodeButton}
-            text="Sign up"
+            text="Login"
           />
         </View>
       )}
@@ -124,7 +113,7 @@ const SignInCredentialsForm = () => {
   );
 };
 
-export default SignInCredentialsForm;
+export default LoginForm;
 
 const styles = StyleSheet.create({
   credentialsForm: {
@@ -139,15 +128,17 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     shadowOpacity: 0.1,
     width: SCREEN_WIDTH * 0.75,
-    height: 180,
+    height: 120,
     backgroundColor: "white",
     borderColor: "#bababa",
     borderWidth: 2,
   },
   input: {
     fontSize: 17,
-    height: "33%",
+    height: "50%",
     paddingHorizontal: 15,
+  },
+  inputEmail: {
     borderBottomWidth: 1,
     borderColor: "#f2f2f2",
   },

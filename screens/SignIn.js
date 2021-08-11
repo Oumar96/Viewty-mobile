@@ -8,8 +8,9 @@ import {
   Animated,
   ImageBackground,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import SignInCredentialsForm from "../components/SignInCredentialsForm.js";
-import SignInCodeConfirmation from "../components/SignInCodeConfirmation.js";
+import LoginForm from "../components/LoginForm.js";
 import BaseButton from "../components/BaseButton.js";
 // context
 import SignInContext from "../contexts/SignInContext.js";
@@ -33,6 +34,7 @@ const SignIn = ({ navigation }) => {
   const [phoneNumberVerificationId, setPhoneNumberVerificationId] = useState(
     ""
   );
+  const [isNewLogin, setIsNewLogin] = useState(true);
 
   /***********
    * Data
@@ -68,6 +70,14 @@ const SignIn = ({ navigation }) => {
     }).start();
     setCurrentContainerPosition(currentContainerPosition + SCREEN_WIDTH);
   };
+  const goToNewUser = () => {
+    setIsNewLogin(true);
+    animateSignInContainerForward();
+  };
+  const goToLogin = () => {
+    setIsNewLogin(false);
+    animateSignInContainerForward();
+  };
 
   const navigateToRooms = () => {
     navigation.navigate("Home");
@@ -101,12 +111,25 @@ const SignIn = ({ navigation }) => {
                 Swipe with friends and find the perfect film for movie night
               </Text>
             </View>
-            <View style={styles.signInCredentialsFormContainer}>
-              <SignInCredentialsForm />
+            <View style={styles.slide}>
+              <BaseButton
+                style={styles.choice}
+                text="New User"
+                onPress={goToNewUser}
+              />
+              <BaseButton
+                style={styles.choice}
+                text="Already a user"
+                type="PRIMARY_NEGATIVE"
+                onPress={goToLogin}
+              />
             </View>
-            <View style={styles.signInCodeConfirmationContainer}>
+            <View style={styles.slide}>
+              {isNewLogin ? <SignInCredentialsForm /> : <LoginForm />}
+            </View>
+            {/* <View style={styles.slide}>
               <SignInCodeConfirmation />
-            </View>
+            </View> */}
           </Animated.View>
           <View style={styles.footer}>
             {isShowingGetStartedButton && (
@@ -162,15 +185,16 @@ const styles = StyleSheet.create({
     width: 300,
     marginTop: 20,
   },
-  signInCredentialsFormContainer: {
+  slide: {
     alignItems: "center",
     justifyContent: "center",
     width: SCREEN_WIDTH,
   },
-  signInCodeConfirmationContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    width: SCREEN_WIDTH,
+  choice: {
+    height: 50,
+    marginVertical: 20,
+    borderRadius: 20,
+    width: "50%",
   },
   getStarted: {
     borderRadius: 10,

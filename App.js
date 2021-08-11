@@ -5,6 +5,7 @@ import { useFonts, Pacifico_400Regular } from "@expo-google-fonts/pacifico";
 import { FiraSans_400Regular } from "@expo-google-fonts/fira-sans";
 import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 import { NavigationContainer } from "@react-navigation/native";
+
 import {
   createStackNavigator,
   TransitionPresets,
@@ -16,6 +17,10 @@ import Movies from "./screens/Movies.js";
 import Home from "./screens/Home.js";
 import ExpiredRoom from "./screens/ExpiredRoom.js";
 import MovieDetails from "./screens/MovieDetails.js";
+
+import CurrentUserContext from "./contexts/CurrentUserContext.js";
+
+import { setTokenForUser } from "./helpers/authentication.js";
 
 const TransitionScreenOptions = {
   ...TransitionPresets.SlideFromRightIOS, // This is where the transition happens
@@ -73,7 +78,7 @@ export default function App() {
         name="Home"
         component={Home}
         initialParams={{
-          userId: currentUser.userId,
+          userId: currentUser?.userId ?? null,
         }}
       />
     );
@@ -116,23 +121,20 @@ export default function App() {
   };
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
+    firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
         user
           .getIdToken(true)
-          .then(function (idToken) {
-            console.log("===========");
-            console.log(idToken);
+          .then(async function (idToken) {
+            setTokenForUser(idToken);
           })
-          .catch(function (error) {
-            console.log(error);
-          });
-        // setCurrentUser(user);
+          .catch(function (error) {});
         setCurrentUser({
-          userId: "5145753394", // mock
+          userId: user.uid,
+          email: user.email,
         });
-        // setIsSignedIn(true); // this will do normal authentication flow
-        setIsSignedIn(false); // this will force to show sign in page
+        setIsSignedIn(true); // this will do normal authentication flow
+        // setIsSignedIn(false); // this will force to show sign in page
       }
       setIsLoading(false);
     });
@@ -146,33 +148,44 @@ export default function App() {
     return null; // Update this too
   }
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={TransitionScreenOptions}>
-        {getInitialScreenInOrder()}
-        <Stack.Screen
-          options={defaultScreenOptions}
-          name="Movies"
-          component={Movies}
-        />
-        <Stack.Screen
-          options={{
-            headerShown: false,
-            ...defaultScreenOptions,
-            ...sharedElementOptions,
-          }}
-          name="ExpiredRoom"
-          component={ExpiredRoom}
-        />
-        <Stack.Screen
-          options={{
-            headerShown: false,
-            ...defaultScreenOptions,
-            ...sharedElementOptions,
-          }}
-          name="MovieDetails"
-          component={MovieDetails}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <CurrentUserContext.Provider
+      value={{
+        state: {
+          currentUser,
+        },
+        mutations: {
+          setCurrentUser,
+        },
+      }}
+    >
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={TransitionScreenOptions}>
+          {getInitialScreenInOrder()}
+          <Stack.Screen
+            options={defaultScreenOptions}
+            name="Movies"
+            component={Movies}
+          />
+          <Stack.Screen
+            options={{
+              headerShown: false,
+              ...defaultScreenOptions,
+              ...sharedElementOptions,
+            }}
+            name="ExpiredRoom"
+            component={ExpiredRoom}
+          />
+          <Stack.Screen
+            options={{
+              headerShown: false,
+              ...defaultScreenOptions,
+              ...sharedElementOptions,
+            }}
+            name="MovieDetails"
+            component={MovieDetails}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </CurrentUserContext.Provider>
   );
 }
