@@ -128,9 +128,7 @@ export default function App() {
           .then(async function (idToken) {
             setTokenForUser(idToken);
           })
-          .catch(function (error) {
-            console.log(error);
-          });
+          .catch(function (error) {});
         setCurrentUser({
           userId: user.uid,
           email: user.email,

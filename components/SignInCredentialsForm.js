@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { useNavigation } from "@react-navigation/native";
+
 // libs
 import firebase from "../firebase/firebase.js";
 import { isEmpty } from "lodash";
@@ -14,6 +16,7 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import BaseButton from "./BaseButton.js";
 import CurrentUserContext from "../contexts/CurrentUserContext.js";
+import { setTokenForUser } from "../helpers/authentication.js";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
@@ -36,6 +39,7 @@ const SignInCredentialsForm = () => {
    ***********/
 
   const isShowingSendCodeButton = !isEmpty(email) && !isEmpty(password);
+  const navigation = useNavigation();
 
   /***********
    * Methods
@@ -49,11 +53,13 @@ const SignInCredentialsForm = () => {
 
   const signUp = async () => {
     try {
-      if (!isEmpty(confirmedPassword)) {
+      if (confirmedPassword !== password) {
         throw new Error("Passwords don't match");
       }
       setError("");
-      await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
+      await firebase
+        .auth()
+        .setPersistence(firebase.auth.Auth.Persistence.LOCAL);
       const userCredential = await firebase
         .auth()
         .createUserWithEmailAndPassword(email, password);
@@ -67,6 +73,7 @@ const SignInCredentialsForm = () => {
       });
       navigateToHome(user.uid);
     } catch (error) {
+      console.log(error);
       setError(error.message);
     } finally {
       Keyboard.dismiss();

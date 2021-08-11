@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { View, StyleSheet } from "react-native";
-import { isEqual, isNil, orderBy } from "lodash";
+import { isEqual, isNil, orderBy, isEmpty } from "lodash";
 
 import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 import firebase from "../firebase/firebase.js";
@@ -48,16 +48,18 @@ const RoomsComponent = ({ navigation }) => {
    */
   const getRoomsFromSnapshot = (roomsObject) => {
     let newRooms = [];
-    roomIds.forEach((roomId) => {
-      const isCurrentlyInRooms = rooms.some(({ id }) => id === roomId);
-      if (!isNil(roomsObject[roomId])) {
-        newRooms.push({
-          id: roomId,
-          isNewRoom: !isCurrentlyInRooms && isInitialRoomsFetched,
-          ...roomsObject[roomId],
-        });
-      }
-    });
+    if (roomIds) {
+      roomIds.forEach((roomId) => {
+        const isCurrentlyInRooms = rooms.some(({ id }) => id === roomId);
+        if (!isNil(roomsObject[roomId])) {
+          newRooms.push({
+            id: roomId,
+            isNewRoom: !isCurrentlyInRooms && isInitialRoomsFetched,
+            ...roomsObject[roomId],
+          });
+        }
+      });
+    }
     return newRooms;
   };
   /**
@@ -67,14 +69,16 @@ const RoomsComponent = ({ navigation }) => {
    */
   const getFirstThreeMovieNamesOfAllRooms = (roomsObject) => {
     let movieNames = [];
-    roomIds.forEach((roomId) => {
-      if (!isNil(roomsObject[roomId])) {
-        movieNames = [
-          ...movieNames,
-          ...getRoomFirstTrheeMovieNames(roomsObject[roomId]),
-        ];
-      }
-    });
+    if (roomIds) {
+      roomIds.forEach((roomId) => {
+        if (!isNil(roomsObject[roomId])) {
+          movieNames = [
+            ...movieNames,
+            ...getRoomFirstTrheeMovieNames(roomsObject[roomId]),
+          ];
+        }
+      });
+    }
     return movieNames;
   };
 
@@ -112,7 +116,8 @@ const RoomsComponent = ({ navigation }) => {
   useEffect(() => {
     roomIdsRef.on("value", (snapshot) => {
       let snapshotUserRooms = snapshot.val();
-      const snapshotUserRoomIds = Object.keys(snapshotUserRooms);
+      const snapshotUserRoomIds =
+        !isEmpty(snapshotUserRooms) && Object.keys(snapshotUserRooms);
       if (!isEqual(snapshotUserRoomIds, roomIds)) {
         setRoomIds(snapshotUserRoomIds);
       }
