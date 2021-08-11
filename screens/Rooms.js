@@ -106,7 +106,7 @@ const RoomsComponent = ({ navigation }) => {
    * @returns {Array}
    */
   const orderRoomsByCreatedDate = (rooms) => {
-    return orderBy(rooms, "createdAt", ["desc", "asc"]);
+    return orderBy(rooms, "created_at", ["desc", "asc"]);
   };
 
   useEffect(() => {
@@ -132,6 +132,7 @@ const RoomsComponent = ({ navigation }) => {
       setMovieDetails(moviesDetails);
     });
   }, [roomIds]);
+
   return (
     <RoomsContext.Provider
       value={{

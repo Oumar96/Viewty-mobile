@@ -61,16 +61,15 @@ const LoginForm = () => {
         .auth()
         .signInWithEmailAndPassword(email, password);
       const user = userCredential.user;
-      const userId = userCredential.user.uid;
+      const userId = user.uid;
       const idToken = await user.getIdToken();
       setTokenForUser(idToken);
       setCurrentUser({
         userId,
         email,
       });
-      navigateToHome(userCredential.user.uid);
+      navigateToHome(user.uid);
     } catch (error) {
-      console.log(error);
       setError(error.message);
     } finally {
       Keyboard.dismiss();

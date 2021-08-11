@@ -123,8 +123,6 @@ export default function App() {
   useEffect(() => {
     firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
-        //make request to get user's session id and
-        //set it using setTokenForUser
         user
           .getIdToken(true)
           .then(async function (idToken) {
@@ -133,9 +131,9 @@ export default function App() {
           .catch(function (error) {
             console.log(error);
           });
-        // setCurrentUser(user);
         setCurrentUser({
-          userId: "5145753394", // mock
+          userId: user.uid,
+          email: user.email,
         });
         setIsSignedIn(true); // this will do normal authentication flow
         // setIsSignedIn(false); // this will force to show sign in page

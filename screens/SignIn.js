@@ -71,7 +71,6 @@ const SignIn = ({ navigation }) => {
     setCurrentContainerPosition(currentContainerPosition + SCREEN_WIDTH);
   };
   const goToNewUser = () => {
-    console.log("hello");
     setIsNewLogin(true);
     animateSignInContainerForward();
   };
