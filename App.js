@@ -5,7 +5,6 @@ import { useFonts, Pacifico_400Regular } from "@expo-google-fonts/pacifico";
 import { FiraSans_400Regular } from "@expo-google-fonts/fira-sans";
 import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 import { NavigationContainer } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import {
   createStackNavigator,
@@ -18,6 +17,10 @@ import Movies from "./screens/Movies.js";
 import Home from "./screens/Home.js";
 import ExpiredRoom from "./screens/ExpiredRoom.js";
 import MovieDetails from "./screens/MovieDetails.js";
+
+import CurrentUserContext from "./contexts/CurrentUserContext.js";
+
+import { setTokenForUser } from "./helpers/authentication.js";
 
 const TransitionScreenOptions = {
   ...TransitionPresets.SlideFromRightIOS, // This is where the transition happens
@@ -117,15 +120,6 @@ export default function App() {
     return initialScreenInOrder;
   };
 
-  const setTokenForUser = async (token) => {
-    try {
-      console.log("token", token);
-      await AsyncStorage.setItem("token", token);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
     firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
@@ -143,8 +137,8 @@ export default function App() {
         setCurrentUser({
           userId: "5145753394", // mock
         });
-        // setIsSignedIn(true); // this will do normal authentication flow
-        setIsSignedIn(false); // this will force to show sign in page
+        setIsSignedIn(true); // this will do normal authentication flow
+        // setIsSignedIn(false); // this will force to show sign in page
       }
       setIsLoading(false);
     });
@@ -158,33 +152,44 @@ export default function App() {
     return null; // Update this too
   }
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={TransitionScreenOptions}>
-        {getInitialScreenInOrder()}
-        <Stack.Screen
-          options={defaultScreenOptions}
-          name="Movies"
-          component={Movies}
-        />
-        <Stack.Screen
-          options={{
-            headerShown: false,
-            ...defaultScreenOptions,
-            ...sharedElementOptions,
-          }}
-          name="ExpiredRoom"
-          component={ExpiredRoom}
-        />
-        <Stack.Screen
-          options={{
-            headerShown: false,
-            ...defaultScreenOptions,
-            ...sharedElementOptions,
-          }}
-          name="MovieDetails"
-          component={MovieDetails}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <CurrentUserContext.Provider
+      value={{
+        state: {
+          currentUser,
+        },
+        mutations: {
+          setCurrentUser,
+        },
+      }}
+    >
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={TransitionScreenOptions}>
+          {getInitialScreenInOrder()}
+          <Stack.Screen
+            options={defaultScreenOptions}
+            name="Movies"
+            component={Movies}
+          />
+          <Stack.Screen
+            options={{
+              headerShown: false,
+              ...defaultScreenOptions,
+              ...sharedElementOptions,
+            }}
+            name="ExpiredRoom"
+            component={ExpiredRoom}
+          />
+          <Stack.Screen
+            options={{
+              headerShown: false,
+              ...defaultScreenOptions,
+              ...sharedElementOptions,
+            }}
+            name="MovieDetails"
+            component={MovieDetails}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </CurrentUserContext.Provider>
   );
 }

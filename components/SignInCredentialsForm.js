@@ -13,10 +13,16 @@ import {
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import BaseButton from "./BaseButton.js";
+import CurrentUserContext from "../contexts/CurrentUserContext.js";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const SignInCredentialsForm = () => {
+  const currentUserContext = useContext(CurrentUserContext);
+  /***********
+   * Context Mutations
+   ***********/
+  const setCurrentUser = currentUserContext.mutations.setCurrentUser;
   /***********
    * State
    ***********/
@@ -35,7 +41,11 @@ const SignInCredentialsForm = () => {
    * Methods
    ***********/
 
-  const navigateToHome = () => {};
+  const navigateToHome = (userId) => {
+    navigation.navigate("Home", {
+      userId,
+    });
+  };
 
   const signUp = async () => {
     try {
@@ -48,11 +58,14 @@ const SignInCredentialsForm = () => {
         .auth()
         .createUserWithEmailAndPassword(email, password);
       const user = userCredential.user;
+      const userId = user.uid;
       const idToken = await user.getIdToken();
-      console.log("idToken", idToken);
-      //post token to endpoint
-      //
-      navigateToHome();
+      setTokenForUser(idToken);
+      setCurrentUser({
+        userId,
+        email,
+      });
+      navigateToHome(user.uid);
     } catch (error) {
       setError(error.message);
     } finally {

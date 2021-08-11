@@ -14,6 +14,7 @@ import RoomsContext from "../contexts/RoomsContext.js";
 // components
 import RoomCardsList from "../components/RoomCardsList.js";
 const Stack = createSharedElementStackNavigator();
+
 const RoomsComponent = ({ navigation }) => {
   const homeContext = useContext(HomeContext);
 
@@ -110,9 +111,10 @@ const RoomsComponent = ({ navigation }) => {
 
   useEffect(() => {
     roomIdsRef.on("value", (snapshot) => {
-      let snapshotRoomIds = snapshot.val();
-      if (!isEqual(snapshotRoomIds, roomIds)) {
-        setRoomIds(snapshotRoomIds);
+      let snapshotUserRooms = snapshot.val();
+      const snapshotUserRoomIds = Object.keys(snapshotUserRooms);
+      if (!isEqual(snapshotUserRoomIds, roomIds)) {
+        setRoomIds(snapshotUserRoomIds);
       }
     });
   }, []);

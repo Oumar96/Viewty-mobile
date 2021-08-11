@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import { View, Animated, StyleSheet } from "react-native";
 import firebase from "../firebase/firebase.js";
@@ -13,10 +13,18 @@ import SwipeCardsList from "../components/SwipeCardsList.js";
 import BaseModal from "../components/BaseModal.js";
 import Match from "../components/Match.js";
 
+import CurrentUserContext from "../contexts/CurrentUserContext.js";
+
 const USER_ID = "5145753393";
 const ROOM_ID = "a9ee2bb6-66d7-4e1f-a282-3ecbc01cb707";
 
 const Movies = ({ route }) => {
+  const currentUserContext = useContext(CurrentUserContext);
+  /***********
+   * Context State
+   ***********/
+  const currentUser = currentUserContext.state.currentUser;
+
   /***********
    * State
    ***********/
@@ -107,7 +115,9 @@ const Movies = ({ route }) => {
         names: getConcatenatedMovieName(roomMovies),
       });
       for (let roomMovie in roomMovies) {
-        const isCurrentUserVoted = !isNil(roomMovies[roomMovie][USER_ID]);
+        const isCurrentUserVoted = roomMovies[roomMovie].voted?.includes(
+          currentUser.email
+        );
         if (!isCurrentUserVoted) {
           let movieDetails = !isNil(moviesDetails[roomMovie])
             ? moviesDetails[roomMovie]
@@ -144,7 +154,9 @@ const Movies = ({ route }) => {
       let isMovieInCurrentMovies = currentMovies.some(
         (movie) => movie.name === addedMovieName
       );
-      let isCurrentUserVoted = !isNil(addedMovieValues[USER_ID]);
+      let isCurrentUserVoted = addedMovieValues.voted?.includes(
+        currentUser.email
+      );
       if (
         !isMovieInCurrentMovies &&
         !isEmpty(initialMovies) &&

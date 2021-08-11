@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
 // libs
 import firebase from "../firebase/firebase.js";
@@ -12,12 +12,22 @@ import {
   TextInput,
   Dimensions,
 } from "react-native";
+
+import CurrentUserContext from "../contexts/CurrentUserContext.js";
 import { MaterialIcons } from "@expo/vector-icons";
 import BaseButton from "./BaseButton.js";
+
+import { setTokenForUser } from "../helpers/authentication.js";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const LoginForm = () => {
+  const currentUserContext = useContext(CurrentUserContext);
+  /***********
+   * Context Mutations
+   ***********/
+  const setCurrentUser = currentUserContext.mutations.setCurrentUser;
+
   /***********
    * State
    ***********/
@@ -44,18 +54,23 @@ const LoginForm = () => {
   const login = async () => {
     try {
       setError("");
-      await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
+      await firebase
+        .auth()
+        .setPersistence(firebase.auth.Auth.Persistence.LOCAL);
       const userCredential = await firebase
         .auth()
         .signInWithEmailAndPassword(email, password);
       const user = userCredential.user;
-      console.log(userCredential.user.uid);
+      const userId = userCredential.user.uid;
       const idToken = await user.getIdToken();
-      console.log("idToken", idToken);
-      //post token to endpoint
-      //
-      navigateToHome("5145753394");
+      setTokenForUser(idToken);
+      setCurrentUser({
+        userId,
+        email,
+      });
+      navigateToHome(userCredential.user.uid);
     } catch (error) {
+      console.log(error);
       setError(error.message);
     } finally {
       Keyboard.dismiss();
