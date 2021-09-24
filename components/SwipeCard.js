@@ -194,7 +194,6 @@ const SwipeCard = (props) => {
    * @param {String} vote
    */
   const voteMovie = async (choice) => {
-    console.log(currentUserEmail);
     let body = {
       user: currentUserEmail,
       room: currentRoomId,
@@ -205,7 +204,6 @@ const SwipeCard = (props) => {
       incrementMovieIndex();
       setNextCardCenter();
     } catch (error) {
-      console.log(error.message);
       showErrorModal();
       resetCardPosition();
     }
