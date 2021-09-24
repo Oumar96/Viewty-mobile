@@ -113,7 +113,7 @@ const SignInCredentialsForm = () => {
       {isShowingSendCodeButton && (
         <View style={styles.sendCodeButtonContainer}>
           <BaseButton
-            type="PRIMARY_NEGATIVE"
+            type="PRIMARY"
             onPress={signUp}
             style={styles.sendCodeButton}
             text="Sign up"

@@ -8,12 +8,10 @@ import {
   Animated,
   ImageBackground,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import SignInCredentialsForm from "../components/SignInCredentialsForm.js";
 import LoginForm from "../components/LoginForm.js";
 import BaseButton from "../components/BaseButton.js";
 // context
-import SignInContext from "../contexts/SignInContext.js";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_HEIGHT = Dimensions.get("window").height;
@@ -30,9 +28,6 @@ const SignIn = ({ navigation }) => {
   const [currentContainerPosition, setCurrentContainerPosition] = useState(0);
   const [isShowingGetStartedButton, setIsShowingGetStartedButton] = useState(
     true
-  );
-  const [phoneNumberVerificationId, setPhoneNumberVerificationId] = useState(
-    ""
   );
   const [isNewLogin, setIsNewLogin] = useState(true);
 
@@ -79,71 +74,54 @@ const SignIn = ({ navigation }) => {
     animateSignInContainerForward();
   };
 
-  const navigateToRooms = () => {
-    navigation.navigate("Home");
-  };
-
   return (
-    <SignInContext.Provider
-      value={{
-        state: {
-          phoneNumberVerificationId,
-        },
-        mutations: {
-          setPhoneNumberVerificationId,
-        },
-        actions: {
-          animateSignInContainerForward,
-          animateSignInContainerBackward,
-          navigateToRooms,
-        },
-      }}
+    <ImageBackground
+      style={styles.image}
+      source={require("../assets/popcorn.jpg")}
     >
-      <ImageBackground
-        style={styles.image}
-        source={require("../assets/popcorn.jpg")}
-      >
-        <View style={styles.container}>
-          <Animated.View style={[styles.content, signInPhoneNumberTranslate]}>
-            <View style={styles.welcomeMessageContainer}>
-              <Text style={styles.welcomeText}>WELCOME TO VIEWTY</Text>
-              <Text style={styles.swipeWithFriendsText}>
-                Swipe with friends and find the perfect film for movie night
-              </Text>
-            </View>
-            <View style={styles.slide}>
-              <BaseButton
-                style={styles.choice}
-                text="New User"
-                onPress={goToNewUser}
-              />
-              <BaseButton
-                style={styles.choice}
-                text="Already a user"
-                type="PRIMARY_NEGATIVE"
-                onPress={goToLogin}
-              />
-            </View>
-            <View style={styles.slide}>
-              {isNewLogin ? <SignInCredentialsForm /> : <LoginForm />}
-            </View>
-            {/* <View style={styles.slide}>
-              <SignInCodeConfirmation />
-            </View> */}
-          </Animated.View>
-          <View style={styles.footer}>
-            {isShowingGetStartedButton && (
-              <BaseButton
-                type="PRIMARY"
-                style={styles.getStarted}
-                onPress={getStarted}
-                text="Get started"
-              />
-            )}
+      <View style={styles.container}>
+        <Animated.View style={[styles.content, signInPhoneNumberTranslate]}>
+          <View style={styles.welcomeMessageContainer}>
+            <Text style={styles.welcomeText}>WELCOME TO VIEWTY</Text>
+            <Text style={styles.swipeWithFriendsText}>
+              Swipe with friends and find the perfect film for movie night
+            </Text>
           </View>
+          <View style={styles.slide}>
+            <BaseButton
+              style={styles.choice}
+              text="New User"
+              onPress={goToNewUser}
+            />
+            <BaseButton
+              style={styles.choice}
+              text="Already a user"
+              type="PRIMARY_NEGATIVE"
+              onPress={goToLogin}
+            />
+          </View>
+          <View style={styles.slide}>
+            {isNewLogin ? <SignInCredentialsForm /> : <LoginForm />}
+            <BaseButton
+              type="PRIMARY_NEGATIVE"
+              style={styles.choice}
+              onPress={animateSignInContainerBackward}
+              text="Back"
+            />
+          </View>
+        </Animated.View>
+        <View style={styles.footer}>
+          {isShowingGetStartedButton && (
+            <BaseButton
+              type="PRIMARY"
+              style={styles.getStarted}
+              onPress={getStarted}
+              text="Get started"
+            />
+          )}
         </View>
-      </ImageBackground>
-    </SignInContext.Provider>
+      </View>
+    </ImageBackground>
   );
 };
 
