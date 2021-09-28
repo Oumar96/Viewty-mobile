@@ -15,7 +15,7 @@ import RoomsContext from "../contexts/RoomsContext.js";
 import RoomCardsList from "../components/RoomCardsList.js";
 const Stack = createSharedElementStackNavigator();
 
-const RoomsComponent = ({ navigation }) => {
+const RoomsComponent = () => {
   const homeContext = useContext(HomeContext);
 
   /***********
@@ -143,15 +143,12 @@ const RoomsComponent = ({ navigation }) => {
       value={{
         state: {
           userId,
-          rooms,
-          moviesDetails,
-          navigation,
         },
       }}
     >
       <View style={styles.rooms}>
         <View style={styles.roomCardsList}>
-          <RoomCardsList />
+          <RoomCardsList rooms={rooms} moviesDetails={moviesDetails} />
         </View>
       </View>
     </RoomsContext.Provider>

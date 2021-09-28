@@ -1,19 +1,15 @@
-import React, { useContext } from "react";
+import React from "react";
 import { FlatList, StyleSheet, Animated } from "react-native";
 
-import RoomsContext from "../contexts/RoomsContext.js";
 import RoomCard from "./RoomCard.js";
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
-const RoomCardsList = () => {
-  const roomsContext = useContext(RoomsContext);
-
+const RoomCardsList = (props) => {
   /***********
-   * Context State
+   * Props
    ***********/
-  const rooms = roomsContext.state.rooms;
-  const moviesDetails = roomsContext.state.moviesDetails;
+  const { rooms = [], moviesDetails = [] } = props;
 
   /***********
    * Data

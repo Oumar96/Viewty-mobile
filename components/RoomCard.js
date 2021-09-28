@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { SharedElement } from "react-navigation-shared-element";
+import { useNavigation } from "@react-navigation/native";
 import { isNil } from "lodash";
 import {
   View,
@@ -45,7 +46,7 @@ const RoomCard = (props) => {
    * Context State
    ***********/
   const userId = roomsContext.state.userId;
-  const navigation = roomsContext.state.navigation;
+  const navigation = useNavigation();
 
   /***********
    * Data
