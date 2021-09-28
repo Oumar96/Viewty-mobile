@@ -65,7 +65,6 @@ const Home = ({ navigation, route }) => {
       value={{
         state: {
           userId: routeUserId,
-          navigation,
         },
       }}
     >
