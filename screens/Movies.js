@@ -15,9 +15,6 @@ import Match from "../components/Match.js";
 
 import CurrentUserContext from "../contexts/CurrentUserContext.js";
 
-const USER_ID = "5145753393";
-const ROOM_ID = "a9ee2bb6-66d7-4e1f-a282-3ecbc01cb707";
-
 const Movies = ({ route }) => {
   const currentUserContext = useContext(CurrentUserContext);
   /***********
@@ -30,8 +27,6 @@ const Movies = ({ route }) => {
    ***********/
   const [movies, setMovies] = useState([]);
   const [initialMovies, setInitialMovies] = useState([]);
-  const [currentUserId, setCurrentUserId] = useState(USER_ID);
-  const [currentRoomId, setCurrentRoomId] = useState(ROOM_ID);
   const [currentMovieIndex, setCurrentMovieIndex] = useState(0);
   const [topCardPosition, setTopCardPosition] = useState(
     new Animated.ValueXY()
@@ -43,7 +38,6 @@ const Movies = ({ route }) => {
   /***********
    * Data
    ***********/
-  const userId = route.params.userId;
   const roomId = route.params.roomId;
   const moviesRef = firebase.database().ref(`rooms/${roomId}/movies`);
   const errorModalText =
@@ -179,9 +173,7 @@ const Movies = ({ route }) => {
     <MoviesContext.Provider
       value={{
         state: {
-          currentUserId: userId,
           currentRoomId: roomId,
-          movies,
           currentMovieIndex,
           topCardPosition,
           matchedMovie,
@@ -199,7 +191,7 @@ const Movies = ({ route }) => {
       }}
     >
       <View style={styles.movies}>
-        <SwipeCardsList />
+        <SwipeCardsList movies={movies} />
       </View>
       {!isNil(matchedMovie) && <Match />}
       <BaseModal

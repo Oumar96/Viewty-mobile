@@ -32,12 +32,11 @@ const SwipeCard = (props) => {
   const { type = "top-card", movie = {} } = props;
 
   const moviesContext = useContext(MoviesContext);
-  const currentUser = useContext(CurrentUserContext);
+  const currentUserContext = useContext(CurrentUserContext);
   /***********
    * Context State
    ***********/
-  const currentUserId = currentUser.state.currentUser.userId;
-  const currentUserEmail = currentUser.state.currentUser.email;
+  const currentUserEmail = currentUserContext.state.currentUser.email;
   const currentRoomId = moviesContext.state.currentRoomId;
   let currentMovieIndex = moviesContext.state.currentMovieIndex;
   let position = moviesContext.state.topCardPosition;
