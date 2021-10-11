@@ -102,7 +102,7 @@ const LoginForm = () => {
       {isShowingSendCodeButton && (
         <View style={styles.sendCodeButtonContainer}>
           <BaseButton
-            type="PRIMARY_NEGATIVE"
+            type="PRIMARY"
             onPress={login}
             style={styles.sendCodeButton}
             text="Login"

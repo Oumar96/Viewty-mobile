@@ -2,12 +2,10 @@ import React from "react";
 
 const MoviesContext = React.createContext({
   state: {
-    currentUserId: "",
     currentRoomId: "",
-    movies: [],
     currentMovieIndex: 0,
     topCardPosition: null,
-    matchedMovie: [],
+    matchedMovie: null,
   },
   mutations: {
     setCurrentMovieIndex: () => {},

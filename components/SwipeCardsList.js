@@ -5,13 +5,17 @@ import MoviesContext from "../contexts/MoviesContext.js";
 
 import SwipeCard from "./SwipeCard.js";
 
-const SwipeCardsList = () => {
+const SwipeCardsList = (props) => {
+  /***********
+   * Props
+   ***********/
+  const { movies = [] } = props;
+
   const moviesContext = useContext(MoviesContext);
   /***********
    * Context State
    ***********/
   let currentMovieIndex = moviesContext.state.currentMovieIndex;
-  let movies = moviesContext.state.movies;
 
   /***********
    * Methods
