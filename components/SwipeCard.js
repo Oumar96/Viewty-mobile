@@ -203,6 +203,7 @@ const SwipeCard = (props) => {
       incrementMovieIndex();
       setNextCardCenter();
     } catch (error) {
+      console.log(error);
       showErrorModal();
       resetCardPosition();
     }

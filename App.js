@@ -123,18 +123,13 @@ export default function App() {
   useEffect(() => {
     firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
-        user
-          .getIdToken(true)
-          .then(async function (idToken) {
-            setTokenForUser(idToken);
-          })
-          .catch(function (error) {});
+        const userToken = await user.getIdToken(true);
+        setTokenForUser(userToken);
         setCurrentUser({
           userId: user.uid,
           email: user.email,
         });
-        setIsSignedIn(true); // this will do normal authentication flow
-        // setIsSignedIn(false); // this will force to show sign in page
+        setIsSignedIn(true);
       }
       setIsLoading(false);
     });
