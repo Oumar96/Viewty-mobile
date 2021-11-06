@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { isEmpty, isNil } from "lodash";
+import { isEmpty, isNil, debounce } from "lodash";
 
 import SearchBar from "../components/SearchBar.js";
 import SearchResultsInstructions from "../components/SearchResultsInstructions.js";
@@ -42,6 +42,12 @@ const CreateRoom = () => {
     setSelectedUser(user);
   };
 
+  const handleSearchBarChange = (text) => {
+    debounce(() => {
+      setSearchValue(text);
+    }, 2000);
+  };
+
   useEffect(() => {
     const filteredNames = usersArray.filter(({ name }) =>
       name.toUpperCase().includes(searchValue.toUpperCase())
@@ -54,7 +60,7 @@ const CreateRoom = () => {
       <SearchBar
         style={styles.searchBar}
         value={searchValue}
-        handleOnChange={setSearchValue}
+        onChange={handleSearchBarChange}
       />
       {isEmpty(searchValue) ? (
         <SearchResultsInstructions />
