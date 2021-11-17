@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import React, { useState, useCallback } from "react";
+import { View, StyleSheet } from "react-native";
 import { isEmpty, isNil, debounce } from "lodash";
+
+import UsersApi from "../api/Users.js";
 
 import SearchBar from "../components/SearchBar.js";
 import SearchResultsInstructions from "../components/SearchResultsInstructions.js";
@@ -31,36 +33,46 @@ const CreateRoom = () => {
   /***********
    * Methods
    ***********/
-  const removeSelectedUsers = () => {
-    setSelectedUser(null);
+
+  const getUsers = async (name) => {
+    console.log("debounce called");
+    try {
+      const response = await UsersApi.getUsers({
+        params: {
+          search: name,
+        },
+      });
+      console.log("response", response.data);
+    } catch (e) {
+      console.log(e);
+    }
   };
-  /**
-   *
-   * @param {Object} user
-   */
-  const selectUser = (user) => {
-    setSelectedUser(user);
+  const debouncedGetUsers = useCallback(
+    debounce(async (text) => await getUsers(text), 2000),
+    []
+  );
+
+  const handleSearchValueChange = async (text) => {
+    setSearchValue(text);
+    if (text) {
+      await debouncedGetUsers(text);
+      console.log("after response");
+    }
   };
 
-  const handleSearchBarChange = (text) => {
-    debounce(() => {
-      setSearchValue(text);
-    }, 2000);
-  };
-
-  useEffect(() => {
-    const filteredNames = usersArray.filter(({ name }) =>
-      name.toUpperCase().includes(searchValue.toUpperCase())
-    );
-    setUsers(filteredNames);
-  }, [searchValue]);
+  // useEffect(() => {
+  //   const filteredNames = usersArray.filter(({ name }) =>
+  //     name.toUpperCase().includes(searchValue.toUpperCase())
+  //   );
+  //   setUsers(filteredNames);
+  // }, [searchValue]);
 
   return (
     <View style={styles.createRoom}>
       <SearchBar
         style={styles.searchBar}
         value={searchValue}
-        onChange={handleSearchBarChange}
+        onChange={handleSearchValueChange}
       />
       {isEmpty(searchValue) ? (
         <SearchResultsInstructions />
@@ -68,12 +80,12 @@ const CreateRoom = () => {
         <SearchResults
           users={users}
           style={styles.searchResults}
-          onUserSelected={selectUser}
+          onUserSelected={setSelectedUser}
         />
       )}
       <BaseModal
         isVisible={!isNil(selectedUser)}
-        buttonAction={removeSelectedUsers}
+        buttonAction={() => setSelectedUser}
         text={modalText}
         buttonType={modalButtonType}
         buttonText={modalButtonText}

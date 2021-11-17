@@ -1,20 +1,6 @@
-import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "./api";
 import config from "../config.js";
-const api = config.api;
-
-axios.interceptors.request.use(
-  async (config) => {
-    const token = await AsyncStorage.getItem("token");
-    if (token) {
-      config.headers.Authorization = "Bearer " + token;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+const apiRoute = config.api;
 
 export default {
   /**
@@ -27,8 +13,7 @@ export default {
    * @returns {Promise}
    */
   async vote(movieName, data) {
-    console.log(`${api}/movies/${movieName}/vote`);
-    return await axios.put(`${api}/movies/${movieName}/vote`, data);
+    return await axios.put(`${apiRoute}/movies/${movieName}/vote`, data);
   },
   /**
    *
@@ -37,7 +22,7 @@ export default {
    * @returns {Promise}
    */
   async getMoviesDetails(params) {
-    return await axios.get(`${api}/movies`, {
+    return await axios.get(`${apiRoute}/movies`, {
       params: params,
     });
   },
