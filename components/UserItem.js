@@ -8,7 +8,9 @@ const UserItem = (props) => {
   return (
     <View style={[styles.user, style]}>
       <FontAwesome name="user-circle-o" size={24} color="black" />
-      <Text style={styles.userName}>{user.name /*"John Smith"*/}</Text>
+      <Text numberOfLines={1} style={styles.userName}>
+        {/*user.name*/ user.email}
+      </Text>
     </View>
   );
 };
@@ -21,7 +23,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   userName: {
-    fontSize: 20,
+    fontSize: 14,
     marginLeft: 10,
     fontWeight: "600",
   },

@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
   userItem: {
     height: 70,
     alignItems: "center",
+    maxWidth: "70%",
   },
   invite: {
     marginHorizontal: 20,

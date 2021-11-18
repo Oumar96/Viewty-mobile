@@ -42,7 +42,7 @@ const CreateRoom = () => {
           search: name,
         },
       });
-      console.log("response", response.data);
+      setUsers(response.data.data);
     } catch (e) {
       console.log(e);
     }
@@ -57,15 +57,10 @@ const CreateRoom = () => {
     if (text) {
       await debouncedGetUsers(text);
       console.log("after response");
+    } else {
+      setUsers([]);
     }
   };
-
-  // useEffect(() => {
-  //   const filteredNames = usersArray.filter(({ name }) =>
-  //     name.toUpperCase().includes(searchValue.toUpperCase())
-  //   );
-  //   setUsers(filteredNames);
-  // }, [searchValue]);
 
   return (
     <View style={styles.createRoom}>
@@ -85,7 +80,7 @@ const CreateRoom = () => {
       )}
       <BaseModal
         isVisible={!isNil(selectedUser)}
-        buttonAction={() => setSelectedUser}
+        buttonAction={() => setSelectedUser(null)}
         text={modalText}
         buttonType={modalButtonType}
         buttonText={modalButtonText}
