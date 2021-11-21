@@ -1,8 +1,11 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useContext } from "react";
 import { View, StyleSheet } from "react-native";
 import { isEmpty, isNil, debounce } from "lodash";
+import { Ionicons } from "@expo/vector-icons";
 
 import UsersApi from "../api/Users.js";
+
+import CurrentUserContext from "../contexts/CurrentUserContext.js";
 
 import SearchBar from "../components/SearchBar.js";
 import SearchResultsInstructions from "../components/SearchResultsInstructions.js";
@@ -10,6 +13,9 @@ import SearchResults from "../components/SearchResults.js";
 import BaseModal from "../components/BaseModal.js";
 
 const CreateRoom = () => {
+  const currentUserContext = useContext(CurrentUserContext);
+  const currentUser = currentUserContext.state.currentUser;
+
   const [searchValue, setSearchValue] = useState("");
   const [users, setUsers] = useState([]);
   const [isShowModal, setIsShowModal] = useState(false);
@@ -52,13 +58,19 @@ const CreateRoom = () => {
           search: name,
         },
       });
-      setUsers(response.data.data);
+      const users = response.data.data.filter(
+        ({ email }) => email !== currentUser.email
+      );
+
+      console.log("response", response.data.data);
+      console.log("users", users);
+      setUsers(users);
     } catch (e) {
       console.log(e);
     }
   };
-  const debouncedGetUsers = useCallback(async () => {
-    await debounce(async (text) => await getUsers(text), 2000)();
+  const debouncedGetUsers = useCallback(async (text) => {
+    await debounce(async () => await getUsers(text), 2000)();
   }, []);
 
   const handleSearchValueChange = async (text) => {
@@ -78,15 +90,33 @@ const CreateRoom = () => {
         value={searchValue}
         onChange={handleSearchValueChange}
       />
-      {isEmpty(searchValue) ? (
-        <SearchResultsInstructions />
-      ) : (
-        <SearchResults
-          users={users}
-          style={styles.searchResults}
-          onUserSelected={inviteUser}
-        />
-      )}
+      {(() => {
+        console.log("users", users);
+        if (isEmpty(searchValue)) {
+          return (
+            <SearchResultsInstructions
+              text="Find your friends and start swipping movies."
+              icon={<Ionicons name="happy-outline" size={50} color="#b5b5b5" />}
+            />
+          );
+        } else if (isEmpty(users)) {
+          return (
+            <SearchResultsInstructions
+              textStyle={styles.noUserFoundInstructions}
+              text={`We could not find a user with the email ${searchValue}`}
+              icon={<Ionicons name="sad-outline" size={50} color="red" />}
+            />
+          );
+        } else {
+          return (
+            <SearchResults
+              users={users}
+              style={styles.searchResults}
+              onUserSelected={inviteUser}
+            />
+          );
+        }
+      })()}
       <BaseModal
         isVisible={isShowModal}
         buttonAction={modalButtonAction}
@@ -111,5 +141,8 @@ const styles = StyleSheet.create({
   },
   searchResults: {
     width: "90%",
+  },
+  noUserFoundInstructions: {
+    color: "red",
   },
 });

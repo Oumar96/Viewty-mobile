@@ -1,15 +1,12 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 
 const SearchResultsInstructions = (props) => {
-  const { style = {} } = props;
+  const { style = {}, text = "", icon = null, textStyle = {} } = props;
   return (
     <View style={[styles.instructions, style]}>
-      <Ionicons name="happy-outline" size={50} color="#b5b5b5" />
-      <Text style={styles.instructionsText}>
-        Find your friends and start swipping movies.
-      </Text>
+      {icon}
+      <Text style={[styles.instructionsText, textStyle]}>{text}</Text>
     </View>
   );
 };

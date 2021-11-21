@@ -4,7 +4,6 @@ const apiRoute = config.api;
 
 export default {
   getUsers(data) {
-    console.log(data);
     return api.get(`${apiRoute}/users/`, data);
   },
 };
