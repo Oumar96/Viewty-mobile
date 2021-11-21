@@ -1,9 +1,10 @@
 import React, { useState, useCallback, useContext } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
 import { isEmpty, isNil, debounce } from "lodash";
 import { Ionicons } from "@expo/vector-icons";
 
 import UsersApi from "../api/Users.js";
+import RoomsApi from "../api/Rooms.js";
 
 import CurrentUserContext from "../contexts/CurrentUserContext.js";
 
@@ -22,6 +23,7 @@ const CreateRoom = () => {
   const [modalText, setModalText] = useState(false);
   const [modalButtonType, setModalButtonType] = useState(false);
   const [modalButtonText, setModalButtonText] = useState(false);
+  const [isLoadingSearchResults, setIsLoadingSearchResults] = useState(false);
 
   /***********
    * Methods
@@ -38,9 +40,13 @@ const CreateRoom = () => {
       setModalButtonText("Close");
     }
   };
-  const inviteUser = (user) => {
+  const inviteUser = async (user) => {
     try {
       configureModal("success", user);
+      await RoomsApi.create({
+        user: currentUser.id,
+        invited: ["wyv5WL70X3YeY1jD8sYePuojZGe2"],
+      });
     } catch (e) {
       configureModal("error");
     } finally {
@@ -61,28 +67,23 @@ const CreateRoom = () => {
       const users = response.data.data.filter(
         ({ email }) => email !== currentUser.email
       );
-
-      console.log("response", response.data.data);
-      console.log("users", users);
       setUsers(users);
     } catch (e) {
       console.log(e);
+    } finally {
+      setIsLoadingSearchResults(false);
     }
   };
-  const debouncedGetUsers = useCallback(async (text) => {
-    await debounce(async () => await getUsers(text), 2000)();
-  }, []);
-
-  const handleSearchValueChange = async (text) => {
+  const handleSearchValueChange = useCallback(async (text) => {
+    setIsLoadingSearchResults(true);
     setSearchValue(text);
     if (text) {
-      await debouncedGetUsers(text); // might cause async bugs
+      await debounce(async () => await getUsers(text), 2000)(); // might cause async bugs
     } else {
       setUsers([]);
     }
-  };
+  }, []);
 
-  console.log("modalButtonType", modalButtonType);
   return (
     <View style={styles.createRoom}>
       <SearchBar
@@ -91,7 +92,6 @@ const CreateRoom = () => {
         onChange={handleSearchValueChange}
       />
       {(() => {
-        console.log("users", users);
         if (isEmpty(searchValue)) {
           return (
             <SearchResultsInstructions
@@ -99,6 +99,8 @@ const CreateRoom = () => {
               icon={<Ionicons name="happy-outline" size={50} color="#b5b5b5" />}
             />
           );
+        } else if (isLoadingSearchResults) {
+          return <ActivityIndicator color="#0f9bf2" size="large" />;
         } else if (isEmpty(users)) {
           return (
             <SearchResultsInstructions
