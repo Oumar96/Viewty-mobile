@@ -21,7 +21,7 @@ const CreateRoom = () => {
   const [users, setUsers] = useState([]);
   const [isShowModal, setIsShowModal] = useState(false);
   const [modalText, setModalText] = useState(false);
-  const [modalButtonType, setModalButtonType] = useState(false);
+  const [modalButtonType, setModalButtonType] = useState("PRIMARY");
   const [modalButtonText, setModalButtonText] = useState(false);
   const [isLoadingSearchResults, setIsLoadingSearchResults] = useState(false);
 
@@ -44,8 +44,8 @@ const CreateRoom = () => {
     try {
       configureModal("success", user);
       await RoomsApi.create({
-        user: currentUser.id,
-        invited: ["wyv5WL70X3YeY1jD8sYePuojZGe2"],
+        user: currentUser.email,
+        invited: [user.email],
       });
     } catch (e) {
       configureModal("error");
